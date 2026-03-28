@@ -5,6 +5,8 @@
 
 #include "serverInfo.hpp"
 
+#if (USE_NET)
+
 
 ServerInfo::ServerInfo(const Window& _window, int _position, const ServerData& _data)
 : backplate(_window, 0.48, _position*0.15f+0.175, 0.9, 0.15, 20, 2),
@@ -39,3 +41,5 @@ void ServerInfo::blit() const {
 bool ServerInfo::in(Mouse _mouse) const {
     return backplate.in(_mouse);
 }
+
+#endif  // (USE_NET)

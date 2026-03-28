@@ -8,15 +8,10 @@
 
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
-exitButton(window, 0.04, 0.05, 0.08, Textures::QuitButton),
 settings(window) {}
 
 bool BaseCycle::inputMouseDown() {
     if (settings.click(mouse)) {
-        return true;
-    }
-    if (exitButton.in(mouse)) {
-        App::setNextCycle(Cycle::Menu);
         return true;
     }
     return false;

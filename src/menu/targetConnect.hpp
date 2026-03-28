@@ -7,6 +7,8 @@
 
 #include "../GUI/interface.hpp"
 
+#if (USE_NET)
+
 
 // Menu for target connect at specified address
 class TargetConnect {
@@ -45,3 +47,5 @@ class TargetConnect {
     static void writeBasePort(const char* text);
     static const char* getBasePort();
 };
+
+#endif  // (USE_NET)

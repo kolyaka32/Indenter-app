@@ -7,21 +7,23 @@
 
 #include "../library.hpp"
 
+#if (USE_NET)
+
 
 // Class with getted data from somewhere
 class GetPacket {
- private:
+    private:
     // Address, from which
     sockaddr_in srcAddress;
     socklen_t srcAddressLength;
     // Data, contained in this array
     char buffer[100];
     int length = 0;
-
- public:
+    
+    public:
     // Trying get new data from specified socket
     GetPacket* tryGetData(const SocketType winSocket);
-
+    
     // Working with get data
     const sockaddr_in* getSourceAddress() const;
     int getSourceAddressLength() const;
@@ -45,3 +47,5 @@ T GetPacket::getData(int _offset) const {
     #endif
     return readNet((T)(buffer[_offset]));
 }
+
+#endif  // (USE_NET)

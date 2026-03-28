@@ -7,6 +7,8 @@
 
 #include "../library.hpp"
 
+#if (USE_NET)
+
 
 // Class with data for sending somewhere
 class Message {
@@ -66,3 +68,5 @@ void Message::write(const T _object, const Args ...args) {
     write(_object);
     write(args...);
 }
+
+#endif  // (USE_NET)

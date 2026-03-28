@@ -10,8 +10,8 @@
 enum class Language : unsigned {
     English,
     Russian,
-    German,
-    Bellarusian,
+    //German,
+    //Bellarusian,
 
     // Counter of all languages
     Count,

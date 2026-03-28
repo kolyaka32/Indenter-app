@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 14)
 
 # Creating project
-project(STM-getter)
+project(Indenter)
 
 # Add all source files (that needed) under the src directory
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp" "src/*.rc")
@@ -22,12 +22,15 @@ if (WIN32)
 endif (WIN32)
 
 # Look for a SDL3 package
-#find_package(SDL3 REQUIRED)
-#find_package(SDL3_image REQUIRED)
-#find_package(SDL3_ttf REQUIRED)
+find_package(SDL3 REQUIRED)
+find_package(SDL3_image REQUIRED)
+find_package(SDL3_ttf REQUIRED)
 #find_package(SDL3_mixer REQUIRED)
 #find_package(libzip)
 
 # Link to the actual SDL3 library.
-#target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_mixer::SDL3_mixer SDL3_ttf::SDL3_ttf SDL3_image::SDL3_image SDL3::SDL3)
+#target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_mixer::SDL3_mixer)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_ttf::SDL3_ttf)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_image::SDL3_image)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
 #target_link_libraries(${PROJECT_NAME} PRIVATE libzip::zip)

@@ -14,7 +14,6 @@
 class BaseCycle : public CycleTemplate {
  protected:
     SettingsMenu settings;  // Menu for change settings
-    const GUI::ImageButton exitButton;  // Button for exit from mode
 
  public:
     bool inputMouseDown() override;

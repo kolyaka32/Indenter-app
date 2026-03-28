@@ -8,6 +8,8 @@
 #include "../GUI/interface.hpp"
 #include "serverData.hpp"
 
+#if (USE_NET)
+
 
 // Info of one server as variant for connection
 class ServerInfo {
@@ -24,3 +26,5 @@ class ServerInfo {
     void blit() const;
     bool in(Mouse mouse) const;
 };
+
+#endif  // (USE_NET)

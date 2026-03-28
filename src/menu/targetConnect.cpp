@@ -6,6 +6,8 @@
 #include "targetConnect.hpp"
 #include "../internet/internet.hpp"
 
+#if (USE_NET)
+
 
 // Static objects for save inputted parameters
 bool TargetConnect::active = false;
@@ -168,3 +170,5 @@ void TargetConnect::writeBasePort(const char* _text) {
 const char* TargetConnect::getBasePort() {
     return basePort;
 }
+
+#endif  // (USE_NET)

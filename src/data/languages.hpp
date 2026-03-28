@@ -20,8 +20,9 @@ class LanguagedText {
     static Language currentLanguage;
 
  public:
-    LanguagedText(const std::string englishVariant, const std::string russianVariant,
-        const std::string germanVariant, const std::string bellarussianVariant);
+    /*LanguagedText(const std::string englishVariant, const std::string russianVariant,
+        const std::string germanVariant, const std::string bellarussianVariant);*/
+    LanguagedText(const std::string englishVariant, const std::string russianVariant);
     LanguagedText(const std::string singleVariant);
     LanguagedText(const LanguagedText& copyText) noexcept;
     LanguagedText(LanguagedText&& movedText) noexcept;

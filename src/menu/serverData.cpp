@@ -6,6 +6,8 @@
 #include "serverData.hpp"
 #include "../data/macroses.hpp"
 
+#if (USE_NET)
+
 
 ServerData::ServerData(const sockaddr_in* _address, int _ping)
 : ping(min(_ping, 0)),
@@ -18,3 +20,5 @@ int ServerData::getPing() const {
 const Destination& ServerData::getAddress() const {
     return dest;
 }
+
+#endif  // (USE_NET)

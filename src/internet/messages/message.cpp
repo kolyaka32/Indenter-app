@@ -5,6 +5,8 @@
 
 #include "message.hpp"
 
+#if (USE_NET)
+
 
 const char* Message::getData() const {
     return data;
@@ -13,3 +15,5 @@ const char* Message::getData() const {
 size_t Message::getLength() const {
     return size;
 }
+
+#endif  // (USE_NET)

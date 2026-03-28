@@ -8,11 +8,5 @@
 // Types of cycles, avalible to run
 enum class Cycle {
     None,
-    Menu,
-    Singleplayer,
-    Coop,
-    ServerLobby,
-    ServerGame,
-    ClientLobby,
-    ClientGame,
+    Main,
 };

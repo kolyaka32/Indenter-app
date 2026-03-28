@@ -6,6 +6,8 @@
 #include <cstdio>
 #include "internet.hpp"
 
+#if (USE_NET)
+
 
 Internet::Internet()
 : socket() {
@@ -146,3 +148,5 @@ const GetPacket* Internet::getNewMessages() {
     }
     return nullptr;
 }
+
+#endif  // (USE_NET)

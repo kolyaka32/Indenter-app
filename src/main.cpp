@@ -4,14 +4,12 @@
  */
 
 #include "data/app.hpp"
-#include "game/gameField.hpp"  // Get window width and height
 
 
 // Main function
 int main(int argv, char **args) {
     // Creating main window
-    Window window{GameField::getWindowWidth(), GameField::getWindowHeight(),
-        {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}};
+    Window window{1200, 900, {"Indenter", "Индентер"}};
 
     // Running menu
     App::run(window);

@@ -6,6 +6,8 @@
 #include "indexesArray.hpp"
 #include "../../data/logger.hpp"
 
+#if (USE_NET)
+
 
 template <unsigned length>
 IndexesArray<length>::IndexesArray()
@@ -34,3 +36,5 @@ void IndexesArray<length>::add(Uint8 _index) {
     // Changing caret postion to next
     lastPosition = (lastPosition + 1) % length;
 }
+
+#endif  // (USE_NET)

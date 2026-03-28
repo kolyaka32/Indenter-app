@@ -7,6 +7,8 @@
 
 #include "../internet/destination.hpp"
 
+#if (USE_NET)
+
 
 // Object contains information of server for list
 class ServerData {
@@ -20,3 +22,5 @@ class ServerData {
     int getPing() const;
     const Destination& getAddress() const;
 };
+
+#endif  // (USE_NET)
