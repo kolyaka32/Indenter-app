@@ -1,0 +1,57 @@
+/*
+ * Copyright (C) 2024-2026, Kazankov Nikolay
+ * <nik.kazankov.05@mail.ru>
+ */
+
+#pragma once
+
+#include "testing.hpp"
+
+
+// Global flags of compilation
+// External libraries linkage
+#define USE_SDL_IMAGE        false   // Library for load external images from disk
+#define USE_SDL_MIXER        false   // Library for play sounds/music
+#define USE_SDL_FONT         false   // Library for draw text at screen
+#define USE_NET              false   // Any of libraries for use with internet connection
+#define USE_LIBZIP           false   // Library for compress data to zip archives
+// Use setting file for store data between seccions  
+#define USE_SETTING_FILE     false
+// Preloaded GFX (could be created runtime)
+#define PRELOAD_TEXTURES     false   // Preload textures
+#define PRELOAD_ANIMATIONS   false  // Preload GIF animaions
+#define PRELOAD_FONTS        false   // Preload fonts
+#define PRELOAD_SOUNDS       false   // Preload sounds
+#define PRELOAD_MUSIC        false   // Preload music
+// Use archive for store additional GFX
+#define PRELOAD_DATA PRELOAD_TEXTURES | PRELOAD_FONTS | PRELOAD_ANIMATIONS | PRELOAD_SOUNDS | PRELOAD_MUSIC
+// Additional flags
+#define CAPTURE_AUIO         false  // Flag of using audio capture device
+
+
+// System game name
+#define WINDOW_NAME "STM-getter"
+#define LOG_NAME "log.txt"
+
+// Game-specigfic data
+#define FIELD_LIGHT {255, 206, 158, 255}
+#define FIELD_DARK {206, 139, 71, 255}
+
+// Base file names
+// File with all GFX
+#if (PRELOAD_DATA)
+#define DATA_FILE "data-tic-tac-toe.dat"
+#endif
+
+// File with all saved data (language, settings, volumes...)
+#if (USE_SETTING_FILE)
+#define SETTING_FILE "settings-tic-tac-toe.ini"
+#endif
+
+// Number of active connections in internet part
+#if (USE_NET)
+#define MAX_CONNECTIONS 1
+#define BROADCAST_APP_INDEX 2
+#define BASE_PORT 8000
+#define BROADCAST_PORT 5667
+#endif  // (USE_NET)
