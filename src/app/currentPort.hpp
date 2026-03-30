@@ -16,6 +16,7 @@ private:
     static int selected;
 
     // Graphic part
+    const float arrow = 0.02;
     SDL_FRect background;
     GUI::StaticText texts[5];
 

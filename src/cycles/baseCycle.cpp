@@ -8,18 +8,24 @@
 
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
-settings(window) {}
+settings(_window),
+serialPort(_window, 0.6, 0.2, 0.12, 0.04) {
+    serialPort.reset();
+}
 
 bool BaseCycle::inputMouseDown() {
     if (settings.click(mouse)) {
         return true;
+    }
+    if (int var = serialPort.click(mouse)) {
+        //
     }
     return false;
 }
 
 void BaseCycle::update() {
     settings.update();
-    serial.printStatus();
+    serial.updateConnections();
 }
 
 void BaseCycle::inputMouseUp() {
@@ -28,4 +34,13 @@ void BaseCycle::inputMouseUp() {
 
 void BaseCycle::inputMouseWheel(float _wheelY) {
     settings.scroll(mouse, _wheelY);
+}
+
+void BaseCycle::draw() const {
+    window.setDrawColor(BLACK);
+    window.clear();
+    serialPort.blit();
+    settings.blit();
+
+    window.render();
 }

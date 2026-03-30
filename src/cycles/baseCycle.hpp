@@ -8,19 +8,21 @@
 #include "../data/cycleTemplate.hpp"
 #include "../GUI/interface.hpp"
 #include "../menu/settingsMenu.hpp"
-#include "../serial/serial.hpp"
+#include "../app/currentPort.hpp"
 
 
 // Base cycle for use in any game mode
 class BaseCycle : public CycleTemplate {
  protected:
     SettingsMenu settings;  // Menu for change settings
+    CurrentPort serialPort;
 
  public:
     bool inputMouseDown() override;
     void update() override;
     void inputMouseUp() override;
     void inputMouseWheel(float _wheelY) override;
+    void draw() const override;
 
  public:
     BaseCycle(Window& _window);
