@@ -19,6 +19,7 @@ bool BaseCycle::inputMouseDown() {
 
 void BaseCycle::update() {
     settings.update();
+    serial.printStatus();
 }
 
 void BaseCycle::inputMouseUp() {

@@ -8,6 +8,7 @@
 #include "../data/cycleTemplate.hpp"
 #include "../GUI/interface.hpp"
 #include "../menu/settingsMenu.hpp"
+#include "../serial/serial.hpp"
 
 
 // Base cycle for use in any game mode
