@@ -6,7 +6,8 @@
 #include "serial.hpp"
 
 
-ComPort::ComPort(int _number) {
+ComPort::ComPort(int _number)
+: avaliable(false) {
     // Changing number in name to correct
     name[3] = '0' + _number;
 }
@@ -94,10 +95,10 @@ void Serial::printCommState(DCB dcb) {
 void Serial::updateConnections() {
     char lpTargetPath[1000];
     for (int i=0; i < ports.size(); ++i) {
-        ports[i].avaliable = QueryDosDevice(ports[i].name, lpTargetPath, 100);
-        if (ports[i].avaliable) {
+        //ports[i].avaliable = QueryDosDevice(ports[i].name, lpTargetPath, 100);
+        /*if (ports[i].avaliable) {
             logger.additional("%s:%s avaliable", ports[i].name, lpTargetPath);
-        }
+        }*/
     }
 }
 

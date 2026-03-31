@@ -17,8 +17,8 @@ bool BaseCycle::inputMouseDown() {
     if (settings.click(mouse)) {
         return true;
     }
-    if (int var = serialPort.click(mouse)) {
-        //
+    if (serialPort.click(mouse)) {
+        return true;
     }
     return false;
 }
@@ -37,7 +37,7 @@ void BaseCycle::inputMouseWheel(float _wheelY) {
 }
 
 void BaseCycle::draw() const {
-    window.setDrawColor(BLACK);
+    window.setDrawColor(GREY);
     window.clear();
     serialPort.blit();
     settings.blit();
