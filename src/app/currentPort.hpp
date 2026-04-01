@@ -9,9 +9,9 @@
 #include "../serial/serial.hpp"
 
 
-
+// Class for configuring com port to connect
 class CurrentPort : GUI::Template {
-private:
+ private:
     static bool openned;
     static int selected;
 
@@ -25,15 +25,11 @@ private:
     int count;
     GUI::StaticText texts[5];
 
-public:
+ public:
     CurrentPort(const Window& window, float X, float Y, float W, float H);
     ~CurrentPort();
     void reset();
     void update();
     bool click(const Mouse mouse);  // Return number, if select any
     void blit() const override;
-
-    // Working straight with serial
-    void selectPort(int port);
-    void resetPort();
 };

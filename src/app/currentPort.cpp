@@ -118,7 +118,7 @@ void CurrentPort::update() {
                     // Resetting selected object
                     selected = 0;
                     // Resetting reading
-                    resetPort();
+                    serial.reset();
                 }
             }
         }
@@ -150,7 +150,12 @@ bool CurrentPort::click(const Mouse _mouse) {
             // Resetting flags
             openned = false;
             background.h = height * window.getHeight();
-            selectPort(selected);
+            // Appling action
+            if (selected) {
+                serial.tryConnectTo(ports[selected-1]);
+            } else {
+                serial.reset();
+            }
             return true;
         } else {
             // Openning menu
@@ -204,17 +209,4 @@ void CurrentPort::blit() const {
         //
         texts[selected].blit();
     }
-}
-
-void CurrentPort::selectPort(int _port) {
-    // !
-    if (_port) {
-        // Selecting new port
-    } else {
-        resetPort();
-    }
-}
-
-void CurrentPort::resetPort() {
-    // !
 }

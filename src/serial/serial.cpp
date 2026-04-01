@@ -112,10 +112,35 @@ void Serial::printState() {
     }
 }
 
+void Serial::reset() {
+    avaliable = false;
+}
+
 const char* Serial::readData() {
-    // !
+    // Check, if can read
+    if (avaliable) {
+        //
+        DWORD length = 20;
+        static char buffer[100];
+
+        if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr)) {
+            logger.additional("Read from serial: %s", buffer);
+            return buffer;
+        }
+    }
+    return nullptr;
+}
+
+void Serial::writeData(const char* _data, int _length) {
+    if (avaliable) {
+        DWORD length = 0;
+        if (WriteFile(handle, _data, _length, &length, nullptr)) {
+            logger.additional("Can't write data: %d", GetLastError());
+            return;
+        }
+    }
 }
 
 
 // Global object implementation
-//Serial serial;
+Serial serial;
