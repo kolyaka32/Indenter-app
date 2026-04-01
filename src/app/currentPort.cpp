@@ -32,8 +32,9 @@ void CurrentPort::reset() {
     // Checking, if any ports avaliable
     openned = false;
     selected = 0;
-    count = 1;
+    count = 0;
 
+    // Placing all variants
     for (int i=0; i < ports.size(); ++i) {
         ports[i].updateState();
         if (ports[i].isAvaliable()) {
@@ -42,6 +43,19 @@ void CurrentPort::reset() {
             count++;
         }
     }
+    // Checking selected variant
+    if (selected) {
+        // Moving back to place
+        for (int i=0; i < selected; ++i) {
+            if (ports[i].isAvaliable()) {
+                texts[selected].move(0.0, -height);
+            }
+        }
+        // Trying connected to this port
+        serial.tryConnectTo(ports[selected-1]);
+    }
+    // Counting first variant
+    count++;
 }
 
 void CurrentPort::update() {
