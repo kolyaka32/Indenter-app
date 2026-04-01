@@ -9,7 +9,8 @@
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
 settings(_window),
-serialPort(_window, 0.6, 0.2, 0.12, 0.04) {
+serialPort(_window, 0.6, 0.2, 0.12, 0.04),
+collectedData(_window) {
     serialPort.reset();
 }
 
@@ -26,6 +27,7 @@ bool BaseCycle::inputMouseDown() {
 void BaseCycle::update() {
     settings.update();
     serialPort.update();
+    collectedData.update();
 }
 
 void BaseCycle::inputMouseUp() {

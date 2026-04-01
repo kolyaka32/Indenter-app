@@ -9,6 +9,7 @@
 #include "../GUI/interface.hpp"
 #include "../menu/settingsMenu.hpp"
 #include "../app/currentPort.hpp"
+#include "../app/collectedData.hpp"
 
 
 // Base cycle for use in any game mode
@@ -16,6 +17,7 @@ class BaseCycle : public CycleTemplate {
  protected:
     SettingsMenu settings;  // Menu for change settings
     CurrentPort serialPort;
+    CollectedData collectedData;
 
  public:
     bool inputMouseDown() override;

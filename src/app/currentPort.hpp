@@ -27,7 +27,6 @@ class CurrentPort : GUI::Template {
 
  public:
     CurrentPort(const Window& window, float X, float Y, float W, float H);
-    ~CurrentPort();
     void reset();
     void update();
     bool click(const Mouse mouse);  // Return number, if select any

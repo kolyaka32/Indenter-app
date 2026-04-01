@@ -87,18 +87,35 @@ bool Serial::tryConnectTo(const ComPort _port) {
     // Checking on creation
     if (handle == INVALID_HANDLE_VALUE) {
         //  Handle the error.
-        logger.important("CreateFile failed with error %d", GetLastError());
+        logger.important("Can't open port %d", GetLastError());
         return false;
     }
-    // Build on the current configuration by first retrieving all current
-    if (!GetCommState(handle, &dcb)) {
-        // Handle the error
-        logger.important("GetCommState failed with error %d", GetLastError());
+    //  Fill in some DCB values and set the com state: 
+    //  57,600 bps, 8 data bits, no parity, and 1 stop bit.
+    dcb.BaudRate = 57600;     //  baud rate
+    dcb.ByteSize = 8;           //  data size, xmit and rcv
+    dcb.Parity   = NOPARITY;    //  parity bit
+    dcb.StopBits = ONESTOPBIT;  //  stop bit
+    if (!SetCommState(handle, &dcb)) {
+        //  Handle the error.
+        logger.additional("Can't set state: %d", GetLastError());
         return false;
     }
+    // Setting timeouts
+    COMMTIMEOUTS timeouts = {0};
+    timeouts.ReadIntervalTimeout =         10;
+    timeouts.ReadTotalTimeoutConstant =    10;
+    timeouts.ReadTotalTimeoutMultiplier =  1;
+    timeouts.WriteTotalTimeoutConstant =   10;
+    timeouts.WriteTotalTimeoutMultiplier = 1;
+    if (!SetCommTimeouts(handle, &timeouts)) {
+        logger.important("Can't set timeouts: %d", GetLastError());
+        return false;
+    }
+
     logger.additional("Correctly oppened serial reader at %s", _port.getName());
     avaliable = true;
-
+    printState();
     return true;
 }
 
@@ -113,7 +130,9 @@ void Serial::printState() {
 }
 
 void Serial::reset() {
+    CloseHandle(handle);
     avaliable = false;
+    logger.additional("Closed serial port");
 }
 
 const char* Serial::readData() {
@@ -124,7 +143,9 @@ const char* Serial::readData() {
         static char buffer[100];
 
         if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr)) {
-            logger.additional("Read from serial: %s", buffer);
+            static int i=0;
+            logger.additional("%4d Read from serial: %s", i, buffer);
+            i++;
             return buffer;
         }
     }

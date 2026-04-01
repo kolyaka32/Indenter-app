@@ -26,8 +26,6 @@ height(_H) {
         _window.getWidth()*_W, _window.getHeight()*_H};
 }
 
-CurrentPort::~CurrentPort() {}
-
 void CurrentPort::reset() {
     // Checking, if any ports avaliable
     openned = false;
