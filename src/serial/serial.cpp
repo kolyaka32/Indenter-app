@@ -12,45 +12,32 @@ ComPort::ComPort(int _number)
     name[3] = '0' + _number;
 }
 
-bool ComPort::tryOpen() {
-    //  Open a handle to the specified com port.
-    handle = CreateFile( name,
-        GENERIC_READ | GENERIC_WRITE,
-        0,      //  must be opened with exclusive-access
-        NULL,   //  default security attributes
-        OPEN_EXISTING, //  must use OPEN_EXISTING
-        0,      //  not overlapped I/O
-        NULL ); //  hTemplate must be NULL for comm devices
+bool ComPort::updateState() {
+    static char lpTargetPath[1000];
+    bool previousAvaliable = avaliable;
+    avaliable = QueryDosDevice(name, lpTargetPath, 100);
 
-    if (handle == INVALID_HANDLE_VALUE) {
-        //  Handle the error.
-        logger.additional("CreateFile failed with error %d", GetLastError());
-        return false;
-    }
-    logger.additional("Correctly oppened at %s", name);
-    return true;
+    // Returning true, if changed
+    return avaliable != previousAvaliable;
 }
 
-Serial::Serial()
-: ports {
-    {{3}, {4}, {5}, {6}}
-} {
+bool ComPort::isAvaliable() const {
+    return avaliable;
+}
+
+const char* ComPort::getName() const {
+    return name;
+}
+
+
+Serial::Serial() {
     // Initialize the DCB structure.
     SecureZeroMemory(&dcb, sizeof(DCB));
     dcb.DCBlength = sizeof(DCB);
 
-    // Build on the current configuration by first retrieving all current
-    /*if (!GetCommState(hCom, &dcb)) {
-        // Handle the error
-        logger.additional("GetCommState failed with error %d", GetLastError());
-        return;
-    }
-
-    printCommState(dcb);  //  Output to console
-
     //  Fill in some DCB values and set the com state: 
     //  57,600 bps, 8 data bits, no parity, and 1 stop bit.
-    dcb.BaudRate = 57600;     //  baud rate
+    /*dcb.BaudRate = 57600;     //  baud rate
     dcb.ByteSize = 8;             //  data size, xmit and rcv
     dcb.Parity   = NOPARITY;      //  parity bit
     dcb.StopBits = ONESTOPBIT;    //  stop bit
@@ -83,29 +70,52 @@ Serial::~Serial() {
 
 }
 
-void Serial::printCommState(DCB dcb) {
-    //  Print some of the DCB structure values
-    logger.additional("BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
-        dcb.BaudRate,
-        dcb.ByteSize,
-        dcb.Parity,
-        dcb.StopBits);
+bool Serial::tryConnectTo(const ComPort _port) {
+    // Resetting previous
+    // !
+    avaliable = false;
+
+    //  Open a handle to the specified com port.
+    handle = CreateFile(_port.getName(),
+        GENERIC_READ | GENERIC_WRITE,
+        0,      //  must be opened with exclusive-access
+        NULL,   //  default security attributes
+        OPEN_EXISTING, //  must use OPEN_EXISTING
+        0,      //  not overlapped I/O
+        NULL);  //  hTemplate must be NULL for comm devices
+
+    // Checking on creation
+    if (handle == INVALID_HANDLE_VALUE) {
+        //  Handle the error.
+        logger.important("CreateFile failed with error %d", GetLastError());
+        return false;
+    }
+    // Build on the current configuration by first retrieving all current
+    if (!GetCommState(handle, &dcb)) {
+        // Handle the error
+        logger.important("GetCommState failed with error %d", GetLastError());
+        return false;
+    }
+    logger.additional("Correctly oppened serial reader at %s", _port.getName());
+    avaliable = true;
+
+    return true;
 }
 
-void Serial::updateConnections() {
-    char lpTargetPath[1000];
-    for (int i=0; i < ports.size(); ++i) {
-        ports[i].avaliable = QueryDosDevice(ports[i].name, lpTargetPath, 100);
-        /*if (ports[i].avaliable) {
-            logger.additional("%s:%s avaliable", ports[i].name, lpTargetPath);
-        }*/
+void Serial::printState() {
+    //  Print some of the DCB structure values
+    if (avaliable) {
+        logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
+            dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);
+    } else {
+        logger.additional("Serial reader don't avaliable");
     }
 }
 
-void Serial::tryConnectTo(int _port) {
-
+const char* Serial::readData() {
+    // !
 }
 
 
 // Global object implementation
-Serial serial;
+//Serial serial;

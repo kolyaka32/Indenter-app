@@ -15,8 +15,8 @@ private:
     static bool openned;
     static int selected;
 
-    // Variants, that currently shown
-    static std::array<bool, 4> avaliableTexts;
+    // Array of avaliable com-ports
+    static std::array<ComPort, 4> ports;  // Ports: 3, 4, 5, 6
 
     // Graphic part
     const float arrow = 0.02;

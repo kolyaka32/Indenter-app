@@ -11,13 +11,17 @@
 #include <windows.h>
 #endif
 
-// Structure for storing com-ports data
-struct ComPort {
+// Structure for storing com-ports data and it state
+class ComPort {
+ private:
    bool avaliable = false;
    char name[6] = "COM0";
-   HANDLE handle = INVALID_HANDLE_VALUE;
 
+ public:
    ComPort(int number);
+   bool updateState();  // Update current state of connection and return true, if changed
+   bool isAvaliable() const;
+   const char* getName() const;
    bool tryOpen();
 };
 
@@ -26,19 +30,20 @@ struct ComPort {
 // Class for work with serial port
 class Serial {
  private:
+    // Flag of current state
+    bool avaliable = false;
+
     // Information for interacting by serial-port
     DCB dcb;
+    HANDLE handle = INVALID_HANDLE_VALUE;
 
  public:
     Serial();
     ~Serial();
-    void printCommState(DCB dcb);
-    void updateConnections();
-    void tryConnectTo(int port);
-
-    // Array of com-ports
-   std::array<ComPort, 4> ports;  // Ports: 3, 4, 5, 6
+    bool tryConnectTo(const ComPort port);  // Trying connect to specified port, return true if sucsesful
+    void printState();
+    const char* readData();
 };
 
 // Global object for communication throw serial port
-extern Serial serial;
+//extern Serial serial;

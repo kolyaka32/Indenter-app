@@ -25,7 +25,6 @@ bool BaseCycle::inputMouseDown() {
 
 void BaseCycle::update() {
     settings.update();
-    serial.updateConnections();
     serialPort.update();
 }
 
