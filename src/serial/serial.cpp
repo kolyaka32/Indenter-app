@@ -95,7 +95,7 @@ void Serial::printCommState(DCB dcb) {
 void Serial::updateConnections() {
     char lpTargetPath[1000];
     for (int i=0; i < ports.size(); ++i) {
-        //ports[i].avaliable = QueryDosDevice(ports[i].name, lpTargetPath, 100);
+        ports[i].avaliable = QueryDosDevice(ports[i].name, lpTargetPath, 100);
         /*if (ports[i].avaliable) {
             logger.additional("%s:%s avaliable", ports[i].name, lpTargetPath);
         }*/

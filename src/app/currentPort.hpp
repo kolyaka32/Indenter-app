@@ -22,6 +22,7 @@ private:
     const float arrow = 0.02;
     const float height;
     SDL_FRect background;
+    int count;
     GUI::StaticText texts[5];
 
 public:

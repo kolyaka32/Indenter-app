@@ -21,6 +21,7 @@ class BaseCycle : public CycleTemplate {
     bool inputMouseDown() override;
     void update() override;
     void inputMouseUp() override;
+    void inputKeys(SDL_Keycode key) override;
     void inputMouseWheel(float _wheelY) override;
     void draw() const override;
 

@@ -26,10 +26,26 @@ bool BaseCycle::inputMouseDown() {
 void BaseCycle::update() {
     settings.update();
     serial.updateConnections();
+    serialPort.update();
 }
 
 void BaseCycle::inputMouseUp() {
     settings.unClick();
+}
+
+void BaseCycle::inputKeys(SDL_Keycode _key) {
+    /*switch (_key) {
+    case SDLK_1:
+        serial.ports[0].avaliable ^= 1;
+        break;
+
+    case SDLK_2:
+        serial.ports[1].avaliable ^= 1;
+        break;
+    
+    default:
+        break;
+    }*/
 }
 
 void BaseCycle::inputMouseWheel(float _wheelY) {
