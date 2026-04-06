@@ -47,6 +47,7 @@ void BaseCycle::draw() const {
     window.clear();
     serialPort.blit();
     settings.blit();
+    collectedData.blit();
 
     window.render();
 }

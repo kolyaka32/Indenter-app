@@ -3,14 +3,16 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include "../GUI/interface.hpp"
+#include <vector>
 #include "../serial/serial.hpp"
+#include "frame.hpp"
 
 
 // Class for storing collected data and show it
 class CollectedData : public GUI::Template {
  private:
-    /* data */
+    std::vector<ForceFrame> forceFrames;
+    std::vector<TemperatureFrame> temperatureFrames;
 
  public:
     CollectedData(const Window& window);

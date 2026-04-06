@@ -135,7 +135,7 @@ void Serial::reset() {
     logger.additional("Closed serial port");
 }
 
-const char* Serial::readData() {
+const void* Serial::readData() {
     // Check, if can read
     if (avaliable) {
         //
@@ -144,7 +144,7 @@ const char* Serial::readData() {
 
         if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr)) {
             static int i=0;
-            logger.additional("%4d Read from serial: %s", i, buffer);
+            logger.additional("%4d Read from serial", i);
             i++;
             return buffer;
         }
