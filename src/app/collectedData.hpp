@@ -4,7 +4,7 @@
  */
 
 #include <vector>
-#include "../GUI/interface.hpp"
+#include "../data/app.hpp"
 #include "../serial/serial.hpp"
 
 // Constatnts
@@ -16,16 +16,22 @@ typedef float Temperature;
 
 
 // Class for storing collected data and show it
-class CollectedData : public GUI::Template {
+class CollectedData {
  private:
     std::vector<Force> forces;
     std::vector<Temperature> temperatures;
 
+ protected:
+    bool saved;  // Flag, is last save of file
+    void save(const char* name);
+
  public:
-    CollectedData(const Window& window);
+    CollectedData();
+    ~CollectedData();
     void update();
-    void blit() const override;
+    void blit(const Window& window) const;
 
     // Interacting with files
-    void save(const char* name);
+    bool isSaved();  // Return true, if not saved
+    bool trySaveNew(const char* name);  // Function for save at runtime to new file
 };

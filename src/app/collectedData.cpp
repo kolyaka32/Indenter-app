@@ -8,11 +8,27 @@
 #include "../data/macroses.hpp"
 
 
-CollectedData::CollectedData(const Window& _window)
-: Template(_window) {
+CollectedData::CollectedData()
+: saved(false) {
     // Reserving partly space for frames
     forces.reserve(200);
     temperatures.reserve(200);
+}
+
+CollectedData::~CollectedData() {
+    // Check, if not saved
+    if (!saved) {
+        char buffer[100];
+        int number = 1;
+        // Finding allowable file name
+        do {
+            // Create new name
+            SDL_snprintf(buffer, sizeof(buffer), "data-%d.csv", number);
+            // Checking, file didn't exist
+        } while (INVALID_FILE_ATTRIBUTES != GetFileAttributes(buffer) && GetLastError() == ERROR_FILE_NOT_FOUND);
+        // Saving to file
+        save(buffer);
+    }
 }
 
 void CollectedData::update() {
@@ -23,27 +39,28 @@ void CollectedData::update() {
             data += sizeof(Force);
         }
         temperatures.emplace_back(*(Temperature*)data);
+        saved = false;
     }
 }
 
-void CollectedData::blit() const {
-    window.setDrawColor(BLACK);
+void CollectedData::blit(const Window& _window) const {
+    _window.setDrawColor(BLACK);
     for (int i=0; i < forces.size(); ++i) {
-        window.drawPoint(i, forces[i]*10.0f + 100.0);
+        _window.drawPoint(i, forces[i]*10.0f + 100.0);
     }
-    window.setDrawColor(BLUE);
+    _window.setDrawColor(BLUE);
     for (int i=0; i < temperatures.size(); ++i) {
-        window.drawPoint(i, temperatures[i]+200.0);
+        _window.drawPoint(i, temperatures[i]+200.0);
     }
+}
+
+bool CollectedData::isSaved() {
+    return saved;
 }
 
 void CollectedData::save(const char* _name) {
-    // Creating file name
-    char buffer[100];
-    SDL_snprintf(buffer, sizeof(buffer), "%s.csv", _name);
-
     // Creating output data
-    std::ofstream out{buffer};
+    std::ofstream out{_name};
     // Writing data
     int length = min(temperatures.size(), forces.size()/PACKET_FORCE_LENGTH);
     for (int i=0; i < length; ++i) {
@@ -58,5 +75,21 @@ void CollectedData::save(const char* _name) {
             out << temperatures[i] << '\n';
         }
     }
+    // Closing file
     out.close();
+    // Updating flag
+    saved = true;
+}
+
+bool CollectedData::trySaveNew(const char* _name) {
+    // Creating file name
+    char buffer[100];
+    SDL_snprintf(buffer, sizeof(buffer), "%s.csv", _name);
+    // Check, if already exist
+    if (INVALID_FILE_ATTRIBUTES == GetFileAttributes(buffer)) {
+        return false;
+    }
+    // Save
+    save(buffer);
+    return true;
 }

@@ -17,7 +17,7 @@ class BaseCycle : public CycleTemplate {
  protected:
     SettingsMenu settings;  // Menu for change settings
     CurrentPort serialPort;
-    CollectedData collectedData;
+    static CollectedData collectedData;
 
  public:
     bool inputMouseDown() override;

@@ -6,11 +6,13 @@
 #include "baseCycle.hpp"
 
 
+// Static objects
+CollectedData BaseCycle::collectedData{};
+
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
 settings(_window),
-serialPort(_window, 0.6, 0.2, 0.12, 0.04),
-collectedData(_window) {
+serialPort(_window, 0.6, 0.2, 0.12, 0.04) {
     serialPort.reset();
 }
 
@@ -47,7 +49,7 @@ void BaseCycle::draw() const {
     window.clear();
     serialPort.blit();
     settings.blit();
-    collectedData.blit();
+    collectedData.blit(window);
 
     window.render();
 }
