@@ -60,7 +60,7 @@ bool CollectedData::isSaved() {
 
 void CollectedData::save(const char* _name) {
     // Creating output data
-    std::ofstream out{_name};
+    std::ofstream out{_name, std::ios_base::trunc};
     // Writing data
     int length = min(temperatures.size(), forces.size()/PACKET_FORCE_LENGTH);
     for (int i=0; i < length; ++i) {
@@ -92,4 +92,12 @@ bool CollectedData::trySaveNew(const char* _name) {
     // Save
     save(buffer);
     return true;
+}
+
+void CollectedData::saveAnyway(const char* _name) {
+    // Creating file name
+    char buffer[100];
+    SDL_snprintf(buffer, sizeof(buffer), "%s.csv", _name);
+    // Save anyway
+    save(buffer);
 }

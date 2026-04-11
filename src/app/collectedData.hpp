@@ -34,4 +34,5 @@ class CollectedData {
     // Interacting with files
     bool isSaved();  // Return true, if not saved
     bool trySaveNew(const char* name);  // Function for save at runtime to new file
+    void saveAnyway(const char* name);  // Function for save with replacement
 };
