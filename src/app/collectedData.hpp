@@ -3,6 +3,8 @@
  * <nik.kazankov.05@mail.ru>
  */
 
+#pragma once
+
 #include <vector>
 #include "../data/app.hpp"
 #include "../serial/serial.hpp"
@@ -22,7 +24,7 @@ class CollectedData {
     std::vector<Temperature> temperatures;
 
  protected:
-    bool saved;  // Flag, is last save of file
+    bool saved;  // Flag, is updated since last save
     void save(const char* name);
 
  public:
@@ -32,7 +34,7 @@ class CollectedData {
     void blit(const Window& window) const;
 
     // Interacting with files
-    bool isSaved();  // Return true, if not saved
-    bool trySaveNew(const char* name);  // Function for save at runtime to new file
+    bool isUpdated() const;  // Return true, if updated since last save
+    bool trySaveNew(const char* name);  // Function for save at runtime to new file, return true, if file already exist
     void saveAnyway(const char* name);  // Function for save with replacement
 };

@@ -10,16 +10,21 @@
 #include "../menu/settingsMenu.hpp"
 #include "../app/currentPort.hpp"
 #include "../app/collectedData.hpp"
+#include "../app/saver.hpp"
 
 
 // Base cycle for use in any game mode
 class BaseCycle : public CycleTemplate {
  protected:
-    SettingsMenu settings;  // Menu for change settings
+    // System for selecting port for getting data throw COM-port
     CurrentPort serialPort;
-    static CollectedData collectedData;
 
- public:
+    // Graphical part
+    SettingsMenu settings;  // Menu for change settings
+    GUI::HighlightedStaticText portSelectText;  // Text for informing for select port
+    Saver saver;
+
+ protected:
     bool inputMouseDown() override;
     void update() override;
     void inputMouseUp() override;
@@ -29,4 +34,7 @@ class BaseCycle : public CycleTemplate {
 
  public:
     BaseCycle(Window& _window);
+
+    // Main data-storing system
+    static CollectedData collectedData;
 };
