@@ -4,19 +4,25 @@
  */
 
 #include <vector>
+#include "../GUI/interface.hpp"
 #include "../serial/serial.hpp"
-#include "frame.hpp"
+
+// Constatnts
+#define PACKET_FORCE_LENGTH 5
+
+// Data type
+typedef float Force;
+typedef float Temperature;
 
 
 // Class for storing collected data and show it
 class CollectedData : public GUI::Template {
  private:
-    std::vector<ForceFrame> forceFrames;
-    std::vector<TemperatureFrame> temperatureFrames;
+    std::vector<Force> forces;
+    std::vector<Temperature> temperatures;
 
  public:
     CollectedData(const Window& window);
-    ~CollectedData();
     void update();
     void blit() const override;
 
