@@ -26,6 +26,8 @@ void Saver::reset() {
 
 bool Saver::click(const Mouse _mouse) {
     if (active) {
+        // Check on entering text
+        fileNameTypeBox.click(_mouse);
         // Check, if openned submenu for 
         if (int var = rewriteOptions.click(_mouse)) {
             if (var == 2) {
@@ -60,8 +62,6 @@ bool Saver::click(const Mouse _mouse) {
         if (menuCloseButton.in(_mouse)) {
             active = false;
         }
-        // Check on entering text
-        fileNameTypeBox.click(_mouse);
         return false;
     }
     // Check, if activate current menu
@@ -87,6 +87,7 @@ bool Saver::type(SDL_Keycode _code) {
         }
         // Check, if close menu
         if (_code == SDLK_ESCAPE) {
+            fileNameTypeBox.unclick();
             active = false;
             return true;
         }
@@ -94,6 +95,10 @@ bool Saver::type(SDL_Keycode _code) {
         return true;
     }
     return false;
+}
+
+void Saver::inputText(const char* _text) {
+    fileNameTypeBox.writeString(_text);
 }
 
 void Saver::update() {

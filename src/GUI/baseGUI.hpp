@@ -225,6 +225,7 @@ namespace GUI {
             Color textColor = BLACK, Color backColor = WHITE);
         TypeField(TypeField<bufferSize>&& object) noexcept;
         ~TypeField() noexcept;
+        void reset();                        // Reset current state to unselected
         void writeString(const char* str);   // Write string to buffer at caret position
         void type(SDL_Keycode code);         // Processing special keycodes (like arrows, home, CTRL-C...)
         void update(float mouseX);           // Highlated area of typing

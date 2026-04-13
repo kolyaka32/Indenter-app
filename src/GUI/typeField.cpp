@@ -81,6 +81,24 @@ GUI::TypeField<bufferSize>::~TypeField() noexcept {
 }
 
 template <unsigned bufferSize>
+void GUI::TypeField<bufferSize>::reset() {
+    if (selected) {
+        // Stoping entering any letters
+        window.stopTextInput();
+
+        // Resetting selection
+        selected = false;
+        pressed = false;
+        
+        // Clearing caret
+        showCaret = false;
+        selectLength = 0;
+        
+        //updateSelected();
+    }
+}
+
+template <unsigned bufferSize>
 void GUI::TypeField<bufferSize>::updateTexture() {
     // Checking, if string exsist
     if (length) {
@@ -222,6 +240,9 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
     if (!selected) {
         return;
     }
+
+    // Resetting flag of pressing
+    pressed = false;
 
     // Getting current shft and control state
     SDL_Keymod keyMods = SDL_GetModState();
@@ -390,18 +411,7 @@ bool GUI::TypeField<bufferSize>::click(const Mouse _mouse) {
         updateSelected();
         return false;
     } else if (selected) {
-        // Resetting selection
-        selected = false;
-        pressed = false;
-
-        // Stoping entering any letters
-        window.stopTextInput();
-
-        // Clearing caret
-        showCaret = false;
-        selectLength = 0;
-
-        updateSelected();
+        reset();
 
         // Return, that finish text input
         return true;
@@ -466,16 +476,7 @@ void GUI::TypeField<bufferSize>::setString(const char* _newString) {
     length = min(strlen(_newString), (size_t)bufferSize);
     memcpy(buffer, _newString, length);
 
-    // Resetting
-    selected = false;
-    pressed = false;
-
-    // Stoping entering any letters
-    window.stopTextInput();
-
-    // Clearing caret
-    showCaret = false;
-    selectLength = 0;
+    reset();
 
     updateTexture();
 }

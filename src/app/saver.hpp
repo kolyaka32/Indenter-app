@@ -34,6 +34,7 @@ public:
     bool click(const Mouse mouse);
     void unclick();
     bool type(SDL_Keycode code);
+    void inputText(const char* text);
     void update();
     void blit() const;
 };

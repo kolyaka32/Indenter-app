@@ -34,13 +34,6 @@ bool BaseCycle::inputMouseDown() {
     return false;
 }
 
-void BaseCycle::update() {
-    settings.update();
-    serialPort.update();
-    collectedData.update();
-    saver.update();
-}
-
 void BaseCycle::inputMouseUp() {
     settings.unClick();
     saver.unclick();
@@ -57,6 +50,17 @@ void BaseCycle::inputKeys(SDL_Keycode _key) {
 
 void BaseCycle::inputMouseWheel(float _wheelY) {
     settings.scroll(mouse, _wheelY);
+}
+
+void BaseCycle::inputText(const char* _text) {
+    saver.inputText(_text);
+}
+
+void BaseCycle::update() {
+    settings.update();
+    serialPort.update();
+    collectedData.update();
+    saver.update();
 }
 
 void BaseCycle::draw() const {
