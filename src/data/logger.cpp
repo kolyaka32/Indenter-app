@@ -7,7 +7,10 @@
 
 
 Logger::Logger()
-: logFile(LOG_NAME) {
+#if (CHECK_ALL)
+: logFile(LOG_NAME)
+#endif
+{
     #if (CHECK_ALL)
     // Setting to write without buffering for correct work with errors
     logFile << std::unitbuf;
@@ -17,5 +20,7 @@ Logger::Logger()
 }
 
 Logger::~Logger() noexcept {
+    #if (CHECK_ALL)
     logFile.close();
+    #endif
 }
