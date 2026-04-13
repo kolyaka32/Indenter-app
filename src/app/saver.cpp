@@ -14,9 +14,10 @@ Saver::Saver(const Window& _window)
 notSavedText(_window, 0.08, 0.05, {"Not saved", "Не сохранено"}, Height::Main, WHITE, GUI::Aligment::Left),
 savedInfo(_window, 0.5, 0.1, {"Saved", "Сохранено"}),
 backplate(_window, 0.5, 0.5, 0.25, 0.22, 10, 2),
-menuTitle(_window, 0.5, 0.43, {"Enter file name", "Введите имя файла"}, 1),
-fileNameTypeBox(_window, 0.5, 0.5, "Data"),
-menuSaveButton(_window, 0.5, 0.58, {"Save", "Сохранить"}),
+menuTitle(_window, 0.5, 0.42, {"Enter file name", "Введите имя файла"}, 1),
+fileNameTypeBox(_window, 0.5, 0.48, "Data"),
+menuSaveButton(_window, 0.5, 0.53, {"Save", "Сохранить"}),
+menuCloseButton(_window, 0.5, 0.58, {"Close", "Закрыть"}),
 rewriteOptions(_window, {"Overwrite file?", "Перезаписать файл?"}, {"Yes", "Да"}, {"No", "Нет"}) {}
 
 void Saver::reset() {
@@ -55,6 +56,10 @@ bool Saver::click(const Mouse _mouse) {
             }
             return true;
         }
+        // Check on closing
+        if (menuCloseButton.in(_mouse)) {
+            active = false;
+        }
         // Check on entering text
         fileNameTypeBox.click(_mouse);
         return false;
@@ -71,10 +76,24 @@ void Saver::unclick() {
     fileNameTypeBox.unclick();
 }
 
-void Saver::type(SDL_Keycode _code) {
+bool Saver::type(SDL_Keycode _code) {
     if (active) {
+        // Check, if close overwrite menu
+        if (rewriteOptions.isActive()) {
+            if (_code == SDLK_ESCAPE) {
+                rewriteOptions.reset();
+            }
+            return true;
+        }
+        // Check, if close menu
+        if (_code == SDLK_ESCAPE) {
+            active = false;
+            return true;
+        }
         fileNameTypeBox.type(_code);
+        return true;
     }
+    return false;
 }
 
 void Saver::update() {
@@ -88,6 +107,8 @@ void Saver::update() {
 
 void Saver::blit() const {
     saveButton.blit();
+
+    // Showing text, that not saved
     if (BaseCycle::collectedData.isUpdated()) {
         notSavedText.blit();
     }
@@ -98,6 +119,7 @@ void Saver::blit() const {
         menuTitle.blit();
         fileNameTypeBox.blit();
         menuSaveButton.blit();
+        menuCloseButton.blit();
         rewriteOptions.blit();
     }
 }

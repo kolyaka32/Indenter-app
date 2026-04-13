@@ -47,7 +47,12 @@ void BaseCycle::inputMouseUp() {
 }
 
 void BaseCycle::inputKeys(SDL_Keycode _key) {
-    saver.type(_key);
+    if (saver.type(_key)) {
+        return;
+    }
+    if (_key == SDLK_ESCAPE) {
+        settings.activate();
+    }
 }
 
 void BaseCycle::inputMouseWheel(float _wheelY) {
