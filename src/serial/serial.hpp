@@ -42,7 +42,6 @@ class Serial {
     ~Serial();
     bool tryConnectTo(const ComPort port);  // Trying connect to specified port, return true if sucsesful
     void reset();
-    void printState();
     const void* readData();
     void writeData(const char* data, int length);
 };

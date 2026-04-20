@@ -34,48 +34,17 @@ Serial::Serial() {
     // Initialize the DCB structure.
     SecureZeroMemory(&dcb, sizeof(DCB));
     dcb.DCBlength = sizeof(DCB);
-
-    //  Fill in some DCB values and set the com state: 
-    //  57,600 bps, 8 data bits, no parity, and 1 stop bit.
-    /*dcb.BaudRate = 57600;     //  baud rate
-    dcb.ByteSize = 8;             //  data size, xmit and rcv
-    dcb.Parity   = NOPARITY;      //  parity bit
-    dcb.StopBits = ONESTOPBIT;    //  stop bit
-
-    if (!SetCommState(hCom, &dcb)) {
-        //  Handle the error.
-        logger.additional("SetCommState failed with error %d", GetLastError());
-        return;
-    }
-
-    //  Get the comm config again.
-    /*if (!GetCommState(hCom, &dcb)) {
-       //  Handle the error.
-       logger.additional("GetCommState failed with error %d.\n", GetLastError());
-       return;
-    }
-
-    printCommState(dcb);  //  Output to console*/
-    /*DWORD length = 20;
-    char buffer[20];
-
-    if (ReadFile(hCom, buffer, sizeof(buffer), &length, nullptr)) {
-        logger.additional("Read: %s", buffer);
-    }
-
-    /*logger.additional("Serial port %s successfully reconfigured", pcCommPort);*/
 }
 
 Serial::~Serial() {
-
+    reset();
 }
 
 bool Serial::tryConnectTo(const ComPort _port) {
-    // Resetting previous
-    // !
-    avaliable = false;
+    // Resetting previous connection
+    reset();
 
-    //  Open a handle to the specified com port.
+    // Open a handle to the specified com port.
     handle = CreateFile(_port.getName(),
         GENERIC_READ | GENERIC_WRITE,
         0,      //  must be opened with exclusive-access
@@ -90,14 +59,14 @@ bool Serial::tryConnectTo(const ComPort _port) {
         logger.important("Can't open port %d", GetLastError());
         return false;
     }
-    //  Fill in some DCB values and set the com state: 
-    //  57,600 bps, 8 data bits, no parity, and 1 stop bit.
-    dcb.BaudRate = 57600;     //  baud rate
-    dcb.ByteSize = 8;           //  data size, xmit and rcv
-    dcb.Parity   = NOPARITY;    //  parity bit
-    dcb.StopBits = ONESTOPBIT;  //  stop bit
+    // Fill in some DCB values and set the com state:
+    // 57,600 bps, 8 data bits, no parity, and 1 stop bit.
+    dcb.BaudRate = 57600;       // baud rate
+    dcb.ByteSize = 8;           // data size, xmit and rcv
+    dcb.Parity   = NOPARITY;    // parity bit
+    dcb.StopBits = ONESTOPBIT;  // stop bit
     if (!SetCommState(handle, &dcb)) {
-        //  Handle the error.
+        // Handle the error.
         logger.additional("Can't set state: %d", GetLastError());
         return false;
     }
@@ -115,24 +84,17 @@ bool Serial::tryConnectTo(const ComPort _port) {
 
     logger.additional("Correctly oppened serial reader at %s", _port.getName());
     avaliable = true;
-    printState();
+    logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
+        dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);
     return true;
 }
 
-void Serial::printState() {
-    //  Print some of the DCB structure values
-    if (avaliable) {
-        logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
-            dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);
-    } else {
-        logger.additional("Serial reader don't avaliable");
-    }
-}
-
 void Serial::reset() {
-    CloseHandle(handle);
-    avaliable = false;
-    logger.additional("Closed serial port");
+    if (avaliable) {
+        CloseHandle(handle);
+        avaliable = false;
+        logger.additional("Closed serial port");
+    }
 }
 
 const void* Serial::readData() {
@@ -143,7 +105,7 @@ const void* Serial::readData() {
         static char buffer[100];
 
         if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr)) {
-            static int i=0;
+            static int i=0;  // Counter
             logger.additional("%4d Read from serial", i);
             i++;
             return buffer;
