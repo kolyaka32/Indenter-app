@@ -48,27 +48,23 @@ void CollectedData::update() {
     }
 }
 
-void CollectedData::blit(const Window& _window) const {
-    _window.setDrawColor(BLACK);
-    for (int i=0; i < forces.size(); ++i) {
-        _window.drawPoint(i, forces[i]*10.0f + 100.0);
-    }
-    _window.setDrawColor(BLUE);
-    for (int i=0; i < temperatures.size(); ++i) {
-        _window.drawPoint(i, temperatures[i]+200.0);
-    }
-}
-
 bool CollectedData::isUpdated() const {
     return saved;
+}
+
+const std::vector<Force>& CollectedData::getForces() {
+    return forces;
+}
+
+const std::vector<Temperature>& CollectedData::getTemperatures() {
+    return temperatures;
 }
 
 void CollectedData::save(const char* _name) {
     // Creating output data
     std::ofstream out{_name, std::ios_base::trunc};
     // Writing data
-    int length = min(temperatures.size(), forces.size()/PACKET_FORCE_LENGTH);
-    for (int i=0; i < length; ++i) {
+    for (int i=0; i < temperatures.size(); ++i) {
         // Writing forces at this moment
         for (int j=0; j < PACKET_FORCE_LENGTH; ++j) {
             // Getting current position

@@ -31,7 +31,9 @@ class CollectedData {
     CollectedData();
     ~CollectedData();
     void update();
-    void blit(const Window& window) const;
+
+    const std::vector<Force>& getForces();
+    const std::vector<Temperature>& getTemperatures();
 
     // Interacting with files
     bool isUpdated() const;  // Return true, if updated since last save

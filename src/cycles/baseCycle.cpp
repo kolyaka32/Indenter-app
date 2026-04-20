@@ -14,7 +14,9 @@ BaseCycle::BaseCycle(Window& _window)
 settings(_window),
 portSelectText(_window, 0.09, 0.15, {"COM-port:", "COM-порт:"}, 1),
 serialPort(_window, 0.03, 0.2, 0.12, 0.04),
-saver(_window) {
+saver(_window),
+forceChart(_window, 0.5, 0.1, 0.36, 0.27, collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
+tempertureChart(_window, 0.5, 0.42, 0.36, 0.27, collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}) {
     if (!isRestarted()) {
         serialPort.reset();
         saver.reset();
@@ -71,7 +73,8 @@ void BaseCycle::draw() const {
     // Main part
     portSelectText.blit();
     serialPort.blit();
-    collectedData.blit(window);
+    forceChart.blit();
+    tempertureChart.blit();
 
     // Above menus
     saver.blit();

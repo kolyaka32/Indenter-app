@@ -11,6 +11,7 @@
 #include "../app/currentPort.hpp"
 #include "../app/collectedData.hpp"
 #include "../app/saver.hpp"
+#include "../app/chart.cpp"
 
 
 // Base cycle for use in any game mode
@@ -23,6 +24,8 @@ class BaseCycle : public CycleTemplate {
     SettingsMenu settings;  // Menu for change settings
     GUI::HighlightedStaticText portSelectText;  // Text for informing for select port
     Saver saver;
+    Chart<Force> forceChart;
+    Chart<Temperature> tempertureChart;
 
  protected:
     bool inputMouseDown() override;
