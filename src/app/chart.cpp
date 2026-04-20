@@ -15,7 +15,7 @@ maxValue(_maxValue),
 drawRect({_X*_window.getWidth(), _Y*_window.getHeight(), _W*_window.getWidth(), _H*_window.getHeight()}),
 param(_param),
 color(_color),
-title(_window, _X+_W/2, _Y-0.015, std::move(_title), 1) {}
+title(_window, _X+_W/2, _Y-0.018, std::move(_title), 1) {}
 
 template <typename T>
 void Chart<T>::blit() const {

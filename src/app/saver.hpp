@@ -15,9 +15,9 @@ protected:
     static bool active;
 
     // Always visibal graphical part
-    GUI::ImageButton saveButton;   // Button for openning current menu
-    GUI::StaticText notSavedText;  // Text, that current data not saved
-    GUI::InfoBox savedInfo;        // Additional info of correct file save
+    GUI::HighlightedStaticText notSavedText;  // Text, that current data not saved
+    GUI::TextButton saveButton;               // Button for openning current menu
+    GUI::InfoBox savedInfo;                   // Additional info of correct file save
 
     // Hidden menu graphical part
     GUI::RoundedBackplate backplate;       // Backplate for better visability

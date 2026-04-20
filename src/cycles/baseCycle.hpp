@@ -22,7 +22,13 @@ class BaseCycle : public CycleTemplate {
 
     // Graphical part
     SettingsMenu settings;  // Menu for change settings
-    GUI::HighlightedStaticText portSelectText;  // Text for informing for select port
+
+    // Main menu
+    GUI::RoundedBackplate mainBackplate;
+    GUI::HighlightedStaticText panelText;
+    GUI::HighlightedStaticText portSelectText;
+    GUI::TextButton startButton;
+    GUI::TextButton stopButton;
     Saver saver;
     Chart<Force> forceChart;
     Chart<Temperature> tempertureChart;

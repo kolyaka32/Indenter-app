@@ -12,11 +12,15 @@ CollectedData BaseCycle::collectedData{};
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
 settings(_window),
-portSelectText(_window, 0.09, 0.15, {"COM-port:", "COM-порт:"}, 1),
-serialPort(_window, 0.03, 0.2, 0.12, 0.04),
+mainBackplate(_window, 0.15, 0.5, 0.28, 0.9, 20.0, 2.0, {140, 140, 140, 255}),
+panelText(_window, 0.15, 0.1, {"Control", "Управление"}, 1),
+portSelectText(_window, 0.15, 0.15, {"COM-port:", "COM-порт:"}, 1),
+serialPort(_window, 0.15, 0.2, 0.12, 0.04),
+startButton(_window, 0.15, 0.4, {"Start", "Старт"}),
+stopButton(_window, 0.15, 0.4, {"Stop", "Стоп"}),
 saver(_window),
-forceChart(_window, 0.5, 0.1, 0.36, 0.27, collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
-tempertureChart(_window, 0.5, 0.42, 0.36, 0.27, collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}) {
+forceChart(_window, 0.45, 0.1, 0.4, 0.3, collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
+tempertureChart(_window, 0.45, 0.45, 0.4, 0.3, collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}) {
     if (!isRestarted()) {
         serialPort.reset();
         saver.reset();
@@ -71,6 +75,7 @@ void BaseCycle::draw() const {
     window.clear();
     
     // Main part
+    mainBackplate.blit();
     portSelectText.blit();
     serialPort.blit();
     forceChart.blit();
