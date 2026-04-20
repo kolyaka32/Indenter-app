@@ -13,7 +13,7 @@ BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
 settings(_window),
 mainBackplate(_window, 0.15, 0.5, 0.28, 0.9, 20.0, 2.0, {140, 140, 140, 255}),
-panelText(_window, 0.15, 0.1, {"Control", "Управление"}, 1),
+panelText(_window, 0.15, 0.08, {"Control", "Управление"}, 2, Height::Info),
 portSelectText(_window, 0.15, 0.15, {"COM-port:", "COM-порт:"}, 1),
 serialPort(_window, 0.15, 0.2, 0.12, 0.04),
 startButton(_window, 0.15, 0.4, {"Start", "Старт"}),
@@ -76,6 +76,7 @@ void BaseCycle::draw() const {
     
     // Main part
     mainBackplate.blit();
+    panelText.blit();
     portSelectText.blit();
     serialPort.blit();
     forceChart.blit();

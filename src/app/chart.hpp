@@ -16,6 +16,7 @@ private:
     const SDL_Color color;
     const std::vector<T>& param;
     GUI::HighlightedStaticText title;
+    GUI::StaticText marks[5];
 
 public:
     Chart(const Window& window, float X, float Y, float W, float H, const std::vector<T>& param,
