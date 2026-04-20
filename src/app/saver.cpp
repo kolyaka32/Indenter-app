@@ -4,7 +4,7 @@
  */
 
 #include "saver.hpp"
-#include "../cycles/baseCycle.hpp"
+#include "collectedData.hpp"
 
 bool Saver::active = false;
 
@@ -32,7 +32,7 @@ bool Saver::click(const Mouse _mouse) {
         if (int var = rewriteOptions.click(_mouse)) {
             if (var == 2) {
                 // Writing anyway
-                BaseCycle::collectedData.saveAnyway(fileNameTypeBox.getString());
+                collectedData.saveAnyway(fileNameTypeBox.getString());
                 // Closing submenu
                 rewriteOptions.reset();
                 // Showing, that saved
@@ -48,7 +48,7 @@ bool Saver::click(const Mouse _mouse) {
         // Check, if trying save
         if (menuSaveButton.in(_mouse)) {
             // Trying save
-            if (BaseCycle::collectedData.trySaveNew(fileNameTypeBox.getString())) {
+            if (collectedData.trySaveNew(fileNameTypeBox.getString())) {
                 rewriteOptions.activate();
             } else {
                 // Showing, that saved
@@ -114,7 +114,7 @@ void Saver::blit() const {
     saveButton.blit();
 
     // Showing text, that not saved
-    if (BaseCycle::collectedData.isUpdated()) {
+    if (collectedData.isUpdated()) {
         notSavedText.blit();
     }
     savedInfo.blit();

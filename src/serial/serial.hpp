@@ -30,16 +30,12 @@ class ComPort {
 // Class for work with serial port
 class Serial {
  private:
-    // Flag of current state
-    bool avaliable = false;
-
     // Information for interacting by serial-port
     DCB dcb;
     HANDLE handle = INVALID_HANDLE_VALUE;
 
  public:
     Serial();
-    ~Serial();
     bool tryConnectTo(const ComPort port);  // Trying connect to specified port, return true if sucsesful
     void reset();
     const void* readData();

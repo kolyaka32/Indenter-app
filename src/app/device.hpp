@@ -6,6 +6,7 @@
 #pragma once
 
 #include "../data/app.hpp"
+#include "../serial/serial.hpp"
 
 
 // Class for interact with device and store it state
@@ -26,12 +27,14 @@ public:
     };
 
     void disconnect();
-    void connect();
+    void connectTo(const ComPort port);
+    void start();
+    void stop();
 
     // Cycle interact
     void update();
 
-    States state;
+    States state = NotConnected;
 };
 
 // Object store state of device and interact with him

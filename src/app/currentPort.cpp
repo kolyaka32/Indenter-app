@@ -4,6 +4,7 @@
  */
 
 #include "currentPort.hpp"
+#include "device.hpp"
 
 
 bool CurrentPort::openned = false;
@@ -41,16 +42,16 @@ void CurrentPort::reset() {
             count++;
         }
     }
-    // Checking selected variant
+    // Checking, if find avaliable variant
     if (selected) {
-        // Moving back to place
+        // Moving it back to place
         for (int i=0; i < selected; ++i) {
             if (ports[i].isAvaliable()) {
                 texts[selected].move(0.0, -height);
             }
         }
-        // Trying connected to this port
-        serial.tryConnectTo(ports[selected-1]);
+        // Trying connected to it
+        device.connectTo(ports[selected-1]);
     }
     // Counting first variant
     count++;
@@ -130,7 +131,7 @@ void CurrentPort::update() {
                     // Resetting selected object
                     selected = 0;
                     // Resetting reading
-                    serial.reset();
+                    device.disconnect();
                 }
             }
         }
@@ -164,9 +165,11 @@ bool CurrentPort::click(const Mouse _mouse) {
             background.h = height * window.getHeight();
             // Appling action
             if (selected) {
-                serial.tryConnectTo(ports[selected-1]);
+                // Connecting to new selected
+                device.connectTo(ports[selected-1]);
             } else {
-                serial.reset();
+                // Disconnecting (if has connection)
+                device.disconnect();
             }
             return true;
         } else {

@@ -36,14 +36,7 @@ Serial::Serial() {
     dcb.DCBlength = sizeof(DCB);
 }
 
-Serial::~Serial() {
-    reset();
-}
-
 bool Serial::tryConnectTo(const ComPort _port) {
-    // Resetting previous connection
-    reset();
-
     // Open a handle to the specified com port.
     handle = CreateFile(_port.getName(),
         GENERIC_READ | GENERIC_WRITE,
@@ -83,44 +76,35 @@ bool Serial::tryConnectTo(const ComPort _port) {
     }
 
     logger.additional("Correctly oppened serial reader at %s", _port.getName());
-    avaliable = true;
     logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
         dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);
     return true;
 }
 
 void Serial::reset() {
-    if (avaliable) {
-        CloseHandle(handle);
-        avaliable = false;
-        logger.additional("Closed serial port");
-    }
+    CloseHandle(handle);
+    logger.additional("Closed serial port");
 }
 
 const void* Serial::readData() {
-    // Check, if can read
-    if (avaliable) {
-        //
-        DWORD length = 20;
-        static char buffer[100];
+    //
+    DWORD length = 20;
+    static char buffer[100];
 
-        if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr)) {
-            static int i=0;  // Counter
-            logger.additional("%4d Read from serial", i);
-            i++;
-            return buffer;
-        }
+    if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr)) {
+        static int i=0;  // Counter
+        logger.additional("%4d Read from serial", i);
+        i++;
+        return buffer;
     }
     return nullptr;
 }
 
 void Serial::writeData(const char* _data, int _length) {
-    if (avaliable) {
-        DWORD length = 0;
-        if (WriteFile(handle, _data, _length, &length, nullptr)) {
-            logger.additional("Can't write data: %d", GetLastError());
-            return;
-        }
+    DWORD length = 0;
+    if (WriteFile(handle, _data, _length, &length, nullptr)) {
+        logger.additional("Can't write data: %d", GetLastError());
+        return;
     }
 }
 

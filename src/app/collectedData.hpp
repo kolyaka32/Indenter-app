@@ -7,7 +7,6 @@
 
 #include <vector>
 #include "../data/app.hpp"
-#include "../serial/serial.hpp"
 
 // Constatnts
 #define PACKET_FORCE_LENGTH 5
@@ -30,7 +29,7 @@ class CollectedData {
  public:
     CollectedData();
     ~CollectedData();
-    void update();
+    void addFrame(const char* data);
 
     const std::vector<Force>& getForces();
     const std::vector<Temperature>& getTemperatures();
@@ -40,3 +39,6 @@ class CollectedData {
     bool trySaveNew(const char* name);  // Function for save at runtime to new file, return true, if file already exist
     void saveAnyway(const char* name);  // Function for save with replacement
 };
+
+// Main data-storing object
+extern CollectedData collectedData;

@@ -8,6 +8,9 @@
 #include "../data/macroses.hpp"
 
 
+// Main data-storing object
+CollectedData collectedData{};
+
 CollectedData::CollectedData()
 : saved(true) {
     // Reserving partly space for frames
@@ -36,16 +39,14 @@ CollectedData::~CollectedData() {
     }
 }
 
-void CollectedData::update() {
-    if (const void* data = serial.readData()) {
-        // Getted new frame
-        for (int i=0; i < PACKET_FORCE_LENGTH; ++i) {
-            forces.emplace_back(*(Force*)data);
-            data += sizeof(Force);
-        }
-        temperatures.emplace_back(*(Temperature*)data);
-        saved = true;
+void CollectedData::addFrame(const char* _data) {
+    // Getted new frame
+    for (int i=0; i < PACKET_FORCE_LENGTH; ++i) {
+        forces.emplace_back(*(Force*)_data);
+        _data += sizeof(Force);
     }
+    temperatures.emplace_back(*(Temperature*)_data);
+    saved = true;
 }
 
 bool CollectedData::isUpdated() const {

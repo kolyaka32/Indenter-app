@@ -17,11 +17,11 @@ param(_param),
 color(_color),
 title(_window, _X+_W/2, _Y-0.018, std::move(_title), 1),
 marks {
-    {_window, _X, _Y, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _maxValue},
-    {_window, _X, _Y+_H/4, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _maxValue*3/4+_minValue/4},
-    {_window, _X, _Y+_H/2, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _maxValue/2+_minValue/2},
-    {_window, _X, _Y+_H*3/4, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _maxValue/4+_minValue*3/4},
-    {_window, _X, _Y+_H, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _minValue},
+    {_window, _X-0.01f, _Y, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _maxValue},
+    {_window, _X-0.01f, _Y+_H/4, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _maxValue*3/4+_minValue/4},
+    {_window, _X-0.01f, _Y+_H/2, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _maxValue/2+_minValue/2},
+    {_window, _X-0.01f, _Y+_H*3/4, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _maxValue/4+_minValue*3/4},
+    {_window, _X-0.01f, _Y+_H, {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right, _minValue},
 } {}
 
 template <typename T>
