@@ -207,7 +207,7 @@ bool CurrentPort::click(const Mouse _mouse) {
 }
 
 void CurrentPort::blit() const {
-    window.setDrawColor(WHITE);
+    window.setDrawColor(GREY);
     window.drawRect(background);
 
     // Check, if openned
