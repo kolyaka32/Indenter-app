@@ -13,18 +13,20 @@ std::array<ComPort, 4> CurrentPort::ports {
     {{3}, {4}, {5}, {6}}
 };
 
-CurrentPort::CurrentPort(const Window& _window, float _X, float _Y, float _W, float _H)
+CurrentPort::CurrentPort(const Window& _window, float _X, float _Y, float _W, float _H, float _thickness)
 : Template(_window),
 texts {
-    {_window, _X-_W/2+arrow, _Y,    {"Not selected", "Не выбран"}, Height::Main, BLACK, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {ports[0].getName()},          Height::Main, BLACK, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {ports[1].getName()},          Height::Main, BLACK, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {ports[2].getName()},          Height::Main, BLACK, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {ports[3].getName()},          Height::Main, BLACK, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y,    {"Not selected", "Не выбран"}, 1, Height::Main, WHITE, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {ports[0].getName()},          1, Height::Main, WHITE, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {ports[1].getName()},          1, Height::Main, WHITE, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {ports[2].getName()},          1, Height::Main, WHITE, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {ports[3].getName()},          1, Height::Main, WHITE, GUI::Aligment::Left},
 },
 height(_H) {
     background = {_window.getWidth()*(_X-_W/2), _window.getHeight()*(_Y-_H/2),
         _window.getWidth()*_W, _window.getHeight()*_H};
+    foreground = {_window.getWidth()*(_X-_W/2)+_thickness, _window.getHeight()*(_Y-_H/2)+_thickness,
+        _window.getWidth()*_W-2*_thickness, _window.getHeight()*_H-2*_thickness};
 }
 
 void CurrentPort::reset() {
@@ -74,6 +76,7 @@ void CurrentPort::update() {
                 // If showing
                 if (openned) {
                     background.h += height*window.getHeight();
+                    foreground.h += height*window.getHeight();
                     // Moving all texts after it down
                     for (int j=i+1; j < ports.size(); ++j) {
                         if (ports[j].isAvaliable()) {
@@ -94,6 +97,7 @@ void CurrentPort::update() {
                 // If showing in menu
                 if (openned) {
                     background.h -= height*window.getHeight();
+                    foreground.h -= height*window.getHeight();
                     // Moving it back to start
                     for (int j=0; j < i; ++j) {
                         if (ports[j].isAvaliable()) {
@@ -162,7 +166,14 @@ bool CurrentPort::click(const Mouse _mouse) {
             }
             // Resetting flags
             openned = false;
-            background.h = height * window.getHeight();
+            for (int i=0; i < ports.size(); ++i) {
+                if (ports[i].isAvaliable()) {
+                    background.h -= height * window.getHeight();
+                    foreground.h -= height * window.getHeight();
+                }
+            }
+            background.h -= 0.2f * height * window.getHeight();
+            foreground.h -= 0.2f * height * window.getHeight();
             // Appling action
             if (selected) {
                 // Connecting to new selected
@@ -183,7 +194,14 @@ bool CurrentPort::click(const Mouse _mouse) {
                     }
                 }
             }
-            background.h *= (count + 0.2f);
+            for (int i=0; i < selected; ++i) {
+                if (ports[i].isAvaliable()) {
+                    background.h += height * window.getHeight();
+                    foreground.h += height * window.getHeight();
+                }
+            }
+            background.h += 0.2f * height * window.getHeight();
+            foreground.h += 0.2f * height * window.getHeight();
             return true;
         }
     } else {
@@ -198,8 +216,15 @@ bool CurrentPort::click(const Mouse _mouse) {
                 }
             }
             // Resetting flags and size
+            for (int i=0; i < selected; ++i) {
+                if (ports[i].isAvaliable()) {
+                    background.h -= height * window.getHeight();
+                    foreground.h -= height * window.getHeight();
+                }
+            }
+            background.h -= 0.2f * height * window.getHeight();
+            foreground.h -= 0.2f * height * window.getHeight();
             openned = false;
-            background.h = height * window.getHeight();
             return true;
         }
     }
@@ -207,8 +232,11 @@ bool CurrentPort::click(const Mouse _mouse) {
 }
 
 void CurrentPort::blit() const {
-    window.setDrawColor(GREY);
+    window.setDrawColor(BLACK);
     window.drawRect(background);
+
+    window.setDrawColor(GREY);
+    window.drawRect(foreground);
 
     // Check, if openned
     if (openned) {

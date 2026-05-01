@@ -9,9 +9,9 @@
 bool Saver::active = false;
 
 
-Saver::Saver(const Window& _window)
-: notSavedText(_window, 0.15, 0.85, {"Not saved", "Не сохранено"}, 1),
-saveButton(_window, 0.15, 0.9, {"Save", "Сохранить"}),
+Saver::Saver(const Window& _window, float _X, float _Y)
+: notSavedText(_window, _X, _Y-0.05, {"Not saved", "Не сохранено"}, 1),
+saveButton(_window, _X, _Y, {"Save", "Сохранить"}),
 savedInfo(_window, 0.5, 0.1, {"Saved", "Сохранено"}),
 backplate(_window, 0.5, 0.5, 0.25, 0.22, 10, 2),
 menuTitle(_window, 0.5, 0.42, {"Enter file name", "Введите имя файла"}, 1),

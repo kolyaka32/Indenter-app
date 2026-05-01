@@ -28,7 +28,7 @@ protected:
     GUI::TwoOptionBox rewriteOptions;      // Option box for check, if want to rewrite file
 
 public:
-    Saver(const Window& window);
+    Saver(const Window& window, float X, float Y);
     void reset();
 
     bool click(const Mouse mouse);

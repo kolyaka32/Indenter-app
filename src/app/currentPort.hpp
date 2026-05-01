@@ -22,11 +22,12 @@ class CurrentPort : GUI::Template {
     const float arrow = 0.02;
     const float height;
     SDL_FRect background;
+    SDL_FRect foreground;
     int count;
-    GUI::StaticText texts[5];
+    GUI::HighlightedStaticText texts[5];
 
  public:
-    CurrentPort(const Window& window, float X, float Y, float W, float H);
+    CurrentPort(const Window& window, float X, float Y, float W, float H, float frameThickness);
     void reset();
     void update();
     bool click(const Mouse mouse);  // Return number, if select any

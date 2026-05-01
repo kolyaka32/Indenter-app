@@ -9,14 +9,14 @@
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
 settings(_window),
-mainBackplate(_window, 0.15, 0.5, 0.28, 0.9, 20.0, 2.0, {140, 140, 140, 255}),
-panelText(_window, 0.15, 0.08, {"Control", "Управление"}, 2, Height::Info),
-portSelectText(_window, 0.15, 0.15, {"COM-port:", "COM-порт:"}, 1),
-serialPort(_window, 0.15, 0.2, 0.15, 0.04),
-deviceInterface(_window, 0.15, 0.4),
-saver(_window),
-forceChart(_window, 0.45, 0.1, 0.4, 0.3, collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
-tempertureChart(_window, 0.45, 0.45, 0.4, 0.3, collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}) {
+mainBackplate(_window, 0.13, 0.5, 0.24, 0.9, 20.0, 2.0, {140, 140, 140, 255}),
+panelText(_window, 0.13, 0.08, {"Control", "Управление"}, 2, Height::Info),
+portSelectText(_window, 0.13, 0.15, {"COM-port:", "COM-порт:"}, 2),
+serialPort(_window, 0.13, 0.2, 0.15, 0.04, 2.0),
+deviceInterface(_window, 0.13, 0.4),
+saver(_window, 0.13, 0.9),
+forceChart(_window, 0.4, 0.1, 0.55, 0.35, collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
+tempertureChart(_window, 0.4, 0.6, 0.55, 0.35, collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}) {
     if (!isRestarted()) {
         serialPort.reset();
         saver.reset();
