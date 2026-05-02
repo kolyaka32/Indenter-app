@@ -11,10 +11,7 @@
 
 // Class for interact with device and store it state
 class Device {
-private:
-    /* data */
-
-public:
+ public:
     Device();
     ~Device();
 

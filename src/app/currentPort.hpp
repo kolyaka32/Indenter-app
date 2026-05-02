@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../GUI/interface.hpp"
-#include "../serial/serial.hpp"
+#include "../serial/comPort.hpp"
 
 
 // Class for configuring com port to connect
