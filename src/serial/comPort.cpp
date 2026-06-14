@@ -6,6 +6,10 @@
 #include "comPort.hpp"
 
 
+std::array<ComPort, 4> comPorts {
+    {{3}, {4}, {5}, {6}}
+};
+
 ComPort::ComPort(int _number)
 : avaliable(false) {
     // Changing number in name to correct

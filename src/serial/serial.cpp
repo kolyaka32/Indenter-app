@@ -12,7 +12,7 @@ Serial::Serial() {
     dcb.DCBlength = sizeof(DCB);
 }
 
-bool Serial::tryConnectTo(const ComPort _port) {
+bool Serial::tryConnectTo(const ComPort& _port) {
     // Open a handle to the specified com port.
     handle = CreateFile(_port.getName(),
         GENERIC_READ | GENERIC_WRITE,
@@ -81,6 +81,8 @@ void Serial::writeData(const char* _data, int _length) {
     if (WriteFile(handle, _data, _length, &length, nullptr)) {
         logger.additional("Can't write data: %d", GetLastError());
         return;
+    } else {
+        logger.additional("Send %1d bytes", _length);
     }
 }
 

@@ -17,7 +17,7 @@ class Serial {
 
  public:
     Serial();
-    bool tryConnectTo(const ComPort port);  // Trying connect to specified port, return true if sucsesful
+    bool tryConnectTo(const ComPort& port);  // Trying connect to specified port, return true if sucsesful
     void reset();
     const void* readData();
     void writeData(const char* data, int length);

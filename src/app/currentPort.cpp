@@ -9,18 +9,15 @@
 
 bool CurrentPort::openned = false;
 int CurrentPort::selected = 0;
-std::array<ComPort, 4> CurrentPort::ports {
-    {{3}, {4}, {5}, {6}}
-};
 
 CurrentPort::CurrentPort(const Window& _window, float _X, float _Y, float _W, float _H, float _thickness)
 : Template(_window),
 texts {
     {_window, _X-_W/2+arrow, _Y,    {"Not selected", "Не выбран"}, 1, Height::Main, WHITE, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {ports[0].getName()},          1, Height::Main, WHITE, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {ports[1].getName()},          1, Height::Main, WHITE, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {ports[2].getName()},          1, Height::Main, WHITE, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {ports[3].getName()},          1, Height::Main, WHITE, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[0].getName()},       1, Height::Main, WHITE, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[1].getName()},       1, Height::Main, WHITE, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[2].getName()},       1, Height::Main, WHITE, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[3].getName()},       1, Height::Main, WHITE, GUI::Aligment::Left},
 },
 height(_H) {
     background = {_window.getWidth()*(_X-_W/2), _window.getHeight()*(_Y-_H/2),
@@ -36,9 +33,9 @@ void CurrentPort::reset() {
     count = 0;
 
     // Placing all variants
-    for (int i=0; i < ports.size(); ++i) {
-        ports[i].updateState();
-        if (ports[i].isAvaliable()) {
+    for (int i=0; i < comPorts.size(); ++i) {
+        comPorts[i].updateState();
+        if (comPorts[i].isAvaliable()) {
             selected = i + 1;
             texts[i].move(0.0, height*count);
             count++;
@@ -48,12 +45,12 @@ void CurrentPort::reset() {
     if (selected) {
         // Moving it back to place
         for (int i=0; i < selected; ++i) {
-            if (ports[i].isAvaliable()) {
+            if (comPorts[i].isAvaliable()) {
                 texts[selected].move(0.0, -height);
             }
         }
         // Trying connected to it
-        device.connectTo(ports[selected-1]);
+        device.connectTo(comPorts[selected-1]);
     }
     // Counting first variant
     count++;
@@ -61,15 +58,15 @@ void CurrentPort::reset() {
 
 void CurrentPort::update() {
     // Checking on changing variants
-    for (int i=0; i < ports.size(); ++i) {
+    for (int i=0; i < comPorts.size(); ++i) {
         // Check, if changed
-        if (ports[i].updateState()) {
-            if (ports[i].isAvaliable()) {
+        if (comPorts[i].updateState()) {
+            if (comPorts[i].isAvaliable()) {
                 // If adding
                 count++;
                 // Moving text itself to it position
                 for (int j=0; j < i; ++j) {
-                    if (ports[j].isAvaliable()) {
+                    if (comPorts[j].isAvaliable()) {
                         texts[i+1].move(0.0, height);
                     }
                 }
@@ -78,15 +75,15 @@ void CurrentPort::update() {
                     background.h += height*window.getHeight();
                     foreground.h += height*window.getHeight();
                     // Moving all texts after it down
-                    for (int j=i+1; j < ports.size(); ++j) {
-                        if (ports[j].isAvaliable()) {
+                    for (int j=i+1; j < comPorts.size(); ++j) {
+                        if (comPorts[j].isAvaliable()) {
                             texts[j+1].move(0.0, height);
                         }
                     }
                 } else {
                     // Moving all texts after it down
-                    for (int j=i+1; j < ports.size(); ++j) {
-                        if (ports[j].isAvaliable() && j+1 != selected) {
+                    for (int j=i+1; j < comPorts.size(); ++j) {
+                        if (comPorts[j].isAvaliable() && j+1 != selected) {
                             texts[j+1].move(0.0, height);
                         }
                     }
@@ -100,14 +97,14 @@ void CurrentPort::update() {
                     foreground.h -= height*window.getHeight();
                     // Moving it back to start
                     for (int j=0; j < i; ++j) {
-                        if (ports[j].isAvaliable()) {
+                        if (comPorts[j].isAvaliable()) {
                             // Moving current text to original position
                             texts[i+1].move(0.0, -height);
                         }
                     }
                     // Moving all texts after up
-                    for (int j=i+1; j < ports.size(); ++j) {
-                        if (ports[j].isAvaliable()) {
+                    for (int j=i+1; j < comPorts.size(); ++j) {
+                        if (comPorts[j].isAvaliable()) {
                             texts[j+1].move(0.0, -height);
                         }
                     }
@@ -118,14 +115,14 @@ void CurrentPort::update() {
                     } else {
                         // Moving back to place
                         for (int j=0; j < i; ++j) {
-                            if (ports[j].isAvaliable()) {
+                            if (comPorts[j].isAvaliable()) {
                                 texts[i+1].move(0.0, -height);
                             }
                         }
                     }
                     // Moving all texts after up
-                    for (int j=i+1; j < ports.size(); ++j) {
-                        if (ports[j].isAvaliable() && j+1 != selected) {
+                    for (int j=i+1; j < comPorts.size(); ++j) {
+                        if (comPorts[j].isAvaliable() && j+1 != selected) {
                             texts[j+1].move(0.0, -height);
                         }
                     }
@@ -150,8 +147,8 @@ bool CurrentPort::click(const Mouse _mouse) {
             if (newSelect) {
                 // Finding position in list with this number
                 int counted = 0;
-                for (int i=0; i < ports.size(); ++i) {
-                    if (ports[i].isAvaliable()) {
+                for (int i=0; i < comPorts.size(); ++i) {
+                    if (comPorts[i].isAvaliable()) {
                         counted++;
                         if (newSelect == counted) {
                             selected = i + 1;
@@ -166,8 +163,8 @@ bool CurrentPort::click(const Mouse _mouse) {
             }
             // Resetting flags
             openned = false;
-            for (int i=0; i < ports.size(); ++i) {
-                if (ports[i].isAvaliable()) {
+            for (int i=0; i < comPorts.size(); ++i) {
+                if (comPorts[i].isAvaliable()) {
                     background.h -= height * window.getHeight();
                     foreground.h -= height * window.getHeight();
                 }
@@ -177,7 +174,7 @@ bool CurrentPort::click(const Mouse _mouse) {
             // Appling action
             if (selected) {
                 // Connecting to new selected
-                device.connectTo(ports[selected-1]);
+                device.connectTo(comPorts[selected-1]);
             } else {
                 // Disconnecting (if has connection)
                 device.disconnect();
@@ -189,13 +186,13 @@ bool CurrentPort::click(const Mouse _mouse) {
             // Swapping current text with first
             if (selected) {
                 for (int i=0; i < selected; ++i) {
-                    if (ports[i].isAvaliable()) {
+                    if (comPorts[i].isAvaliable()) {
                         texts[selected].move(0.0, height);
                     }
                 }
             }
             for (int i=0; i < selected; ++i) {
-                if (ports[i].isAvaliable()) {
+                if (comPorts[i].isAvaliable()) {
                     background.h += height * window.getHeight();
                     foreground.h += height * window.getHeight();
                 }
@@ -210,14 +207,14 @@ bool CurrentPort::click(const Mouse _mouse) {
             // Moving current variant to first pos
             if (selected) {
                 for (int i=0; i < selected; ++i) {
-                    if (ports[i].isAvaliable()) {
+                    if (comPorts[i].isAvaliable()) {
                         texts[selected].move(0.0, -height);
                     }
                 }
             }
             // Resetting flags and size
             for (int i=0; i < selected; ++i) {
-                if (ports[i].isAvaliable()) {
+                if (comPorts[i].isAvaliable()) {
                     background.h -= height * window.getHeight();
                     foreground.h -= height * window.getHeight();
                 }
@@ -243,13 +240,13 @@ void CurrentPort::blit() const {
         // Draw empty variant
         texts[0].blit();
         // Draw com variants
-        for (int i=0; i < ports.size(); ++i) {
-            if (ports[i].isAvaliable()) {
+        for (int i=0; i < comPorts.size(); ++i) {
+            if (comPorts[i].isAvaliable()) {
                 texts[i+1].blit();
             }
         }
     } else {
-        //
+        // Blit only selected text, placed at main part
         texts[selected].blit();
     }
 }

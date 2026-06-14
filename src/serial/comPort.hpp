@@ -5,11 +5,13 @@
 
 #pragma once
 
+#include <vector>
 #include "../data/app.hpp"
 
 #if (SDL_PLATFORM_WINDOWS)
 #include <windows.h>
 #endif
+
 
 // Structure for storing com-ports data and it state
 class ComPort {
@@ -23,3 +25,6 @@ class ComPort {
    bool isAvaliable() const;
    const char* getName() const;
 };
+
+// Array of avaliable com-ports
+extern std::array<ComPort, 4> comPorts;  // Ports: 3, 4, 5, 6
