@@ -37,6 +37,25 @@ void DeviceInterface::click(const Mouse _mouse) {
     }
 }
 
+void DeviceInterface::update() {
+    switch (device.state) {
+    case Device::Waiting:
+        device.update();
+        break;
+
+    case Device::IdleSpeed:
+        device.update();
+        break;
+
+    case Device::MainSpeed:
+        device.update();
+        break;
+    
+    default:
+        break;
+    }
+}
+
 void DeviceInterface::blit() const {
     stateBackplate.blit();
 

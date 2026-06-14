@@ -25,5 +25,6 @@ private:
 public:
     DeviceInterface(const Window& window, float X, float Y);
     void click(const Mouse mouse);
+    void update();
     void blit() const override;
 };

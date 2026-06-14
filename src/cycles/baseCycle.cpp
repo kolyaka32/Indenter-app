@@ -61,6 +61,7 @@ void BaseCycle::inputText(const char* _text) {
 void BaseCycle::update() {
     settings.update();
     serialPort.update();
+    deviceInterface.update();
     saver.update();
 }
 
