@@ -23,6 +23,16 @@ class CurrentPort : GUI::Template {
     int count;
     GUI::HighlightedStaticText texts[5];
 
+ protected:
+    void showPort(int index);
+    void hidePort(int index);
+    int getPosition(const Mouse mouse);
+    void connectToFirst();
+    void maximize();
+    void minimize();
+    void moveSelectedUp();    // Move selected text to main position (for closing)
+    void moveSelectedDown();  // Move selected text back to it postion (openning)
+
  public:
     CurrentPort(const Window& window, float X, float Y, float W, float H, float frameThickness);
     void reset();

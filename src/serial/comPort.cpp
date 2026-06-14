@@ -17,9 +17,12 @@ ComPort::ComPort(int _number)
 }
 
 bool ComPort::updateState() {
-    static char lpTargetPath[1000];
     bool previousAvaliable = avaliable;
+
+    #if (!CHECK_CORRECTION)
+    static char lpTargetPath[1000];
     avaliable = QueryDosDevice(name, lpTargetPath, 100);
+    #endif
 
     // Returning true, if changed
     return avaliable != previousAvaliable;

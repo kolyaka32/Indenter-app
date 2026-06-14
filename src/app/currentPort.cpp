@@ -36,102 +36,176 @@ void CurrentPort::reset() {
     for (int i=0; i < comPorts.size(); ++i) {
         comPorts[i].updateState();
         if (comPorts[i].isAvaliable()) {
-            selected = i + 1;
             texts[i].move(0.0, height*count);
             count++;
         }
     }
-    // Checking, if find avaliable variant
-    if (selected) {
-        // Moving it back to place
-        for (int i=0; i < selected; ++i) {
-            if (comPorts[i].isAvaliable()) {
-                texts[selected].move(0.0, -height);
-            }
-        }
-        // Trying connected to it
-        device.connectTo(comPorts[selected-1]);
-    }
+    connectToFirst();
+
     // Counting first variant
     count++;
+}
+
+void CurrentPort::showPort(int _index) {
+    // Moving text itself to it position
+    for (int j=0; j < _index; ++j) {
+        if (comPorts[j].isAvaliable()) {
+            texts[_index+1].move(0.0, height);
+        }
+    }
+    // If menu openned
+    if (openned) {
+        // Adding one height to each element
+        background.h += height*window.getHeight();
+        foreground.h += height*window.getHeight();
+        // Moving all texts after it down
+        for (int j=_index+1; j < comPorts.size(); ++j) {
+            if (comPorts[j].isAvaliable()) {
+                texts[j+1].move(0.0, height);
+            }
+        }
+    } else {
+        // Moving all texts after it down
+        for (int j=_index+1; j < comPorts.size(); ++j) {
+            if (comPorts[j].isAvaliable() && j+1 != selected) {
+                texts[j+1].move(0.0, height);
+            }
+        }
+    }
+}
+
+void CurrentPort::hidePort(int _index) {
+    // If showing in menu
+    if (openned) {
+        background.h -= height*window.getHeight();
+        foreground.h -= height*window.getHeight();
+        // Moving it back to start
+        for (int j=0; j < _index; ++j) {
+            if (comPorts[j].isAvaliable()) {
+                // Moving current text to original position
+                texts[_index+1].move(0.0, -height);
+            }
+        }
+        // Moving all texts after up
+        for (int j=_index+1; j < comPorts.size(); ++j) {
+            if (comPorts[j].isAvaliable()) {
+                texts[j+1].move(0.0, -height);
+            }
+        }
+        // Check, if remove current
+        if (selected == _index+1) {
+            // Resetting selected object
+            selected = 0;
+        }
+    } else {
+        if (selected == _index+1) {
+            // Moving back to place
+            texts[_index+1].move(0.0, height);
+            // Resetting selected object
+            selected = 0;
+        } else {
+            // Moving back to place
+            for (int j=0; j < _index; ++j) {
+                if (comPorts[j].isAvaliable()) {
+                    texts[_index+1].move(0.0, -height);
+                }
+            }
+        }
+        // Moving all texts after it up
+        for (int j=_index+1; j < comPorts.size(); ++j) {
+            if (comPorts[j].isAvaliable() && j+1 != selected) {
+                texts[j+1].move(0.0, -height);
+            }
+        }
+    }
+}
+
+int CurrentPort::getPosition(const Mouse _mouse) {
+    int newSelect = (_mouse.getY() - background.y) / (height*window.getHeight());
+    if (newSelect) {
+        for (int i=0; i < comPorts.size(); ++i) {
+            if (comPorts[i].isAvaliable()) {
+                newSelect--;
+                if (newSelect == 0) {
+                    // Returning current pos
+                    return i + 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+void CurrentPort::connectToFirst() {
+    // Finding first avaliable variant
+    for (int i=0; i < selected; ++i) {
+        if (comPorts[i].isAvaliable()) {
+            // Selecting it
+            selected = i+1;
+            // Placing it at main place
+            texts[selected].move(0.0, -height);
+            // Trying connected to it
+            device.connectTo(comPorts[i]);
+            return;
+        }
+    }
+}
+
+void CurrentPort::maximize() {
+    openned = true;
+    for (int i=0; i < comPorts.size(); ++i) {
+        if (comPorts[i].isAvaliable()) {
+            background.h += height * window.getHeight();
+            foreground.h += height * window.getHeight();
+        }
+    }
+    background.h += 0.2f * height * window.getHeight();
+    foreground.h += 0.2f * height * window.getHeight();
+}
+
+void CurrentPort::minimize() {
+    openned = false;
+    for (int i=0; i < comPorts.size(); ++i) {
+        if (comPorts[i].isAvaliable()) {
+            background.h -= height * window.getHeight();
+            foreground.h -= height * window.getHeight();
+        }
+    }
+    background.h -= 0.2f * height * window.getHeight();
+    foreground.h -= 0.2f * height * window.getHeight();
+}
+
+void CurrentPort::moveSelectedUp() {
+    for (int i=0; i < selected; ++i) {
+        if (comPorts[i].isAvaliable()) {
+            texts[selected].move(0.0, height);
+        }
+    }
+}
+
+void CurrentPort::moveSelectedDown() {
+    for (int i=0; i < selected; ++i) {
+        if (comPorts[i].isAvaliable()) {
+            texts[selected].move(0.0, -height);
+        }
+    }
 }
 
 void CurrentPort::update() {
     // Checking on changing variants
     for (int i=0; i < comPorts.size(); ++i) {
-        // Check, if changed
         if (comPorts[i].updateState()) {
+            // If port change state
             if (comPorts[i].isAvaliable()) {
-                // If adding
+                // If connect new
                 count++;
-                // Moving text itself to it position
-                for (int j=0; j < i; ++j) {
-                    if (comPorts[j].isAvaliable()) {
-                        texts[i+1].move(0.0, height);
-                    }
-                }
-                // If showing
-                if (openned) {
-                    background.h += height*window.getHeight();
-                    foreground.h += height*window.getHeight();
-                    // Moving all texts after it down
-                    for (int j=i+1; j < comPorts.size(); ++j) {
-                        if (comPorts[j].isAvaliable()) {
-                            texts[j+1].move(0.0, height);
-                        }
-                    }
-                } else {
-                    // Moving all texts after it down
-                    for (int j=i+1; j < comPorts.size(); ++j) {
-                        if (comPorts[j].isAvaliable() && j+1 != selected) {
-                            texts[j+1].move(0.0, height);
-                        }
-                    }
-                }
+                showPort(i);
             } else {
-                // If removing line
+                // If disconnecting
                 count--;
-                // If showing in menu
-                if (openned) {
-                    background.h -= height*window.getHeight();
-                    foreground.h -= height*window.getHeight();
-                    // Moving it back to start
-                    for (int j=0; j < i; ++j) {
-                        if (comPorts[j].isAvaliable()) {
-                            // Moving current text to original position
-                            texts[i+1].move(0.0, -height);
-                        }
-                    }
-                    // Moving all texts after up
-                    for (int j=i+1; j < comPorts.size(); ++j) {
-                        if (comPorts[j].isAvaliable()) {
-                            texts[j+1].move(0.0, -height);
-                        }
-                    }
-                } else {
-                    if (selected == i+1) {
-                        // Moving back to place
-                        texts[i+1].move(0.0, height);
-                    } else {
-                        // Moving back to place
-                        for (int j=0; j < i; ++j) {
-                            if (comPorts[j].isAvaliable()) {
-                                texts[i+1].move(0.0, -height);
-                            }
-                        }
-                    }
-                    // Moving all texts after up
-                    for (int j=i+1; j < comPorts.size(); ++j) {
-                        if (comPorts[j].isAvaliable() && j+1 != selected) {
-                            texts[j+1].move(0.0, -height);
-                        }
-                    }
-                }
-                // Checking, if remove current variant
+                hidePort(i);
+                // Checking, if remove current
                 if (selected == i+1) {
-                    // Resetting selected object
-                    selected = 0;
-                    // Resetting reading
                     device.disconnect();
                 }
             }
@@ -143,85 +217,29 @@ bool CurrentPort::click(const Mouse _mouse) {
     if (_mouse.in(background)) {
         if (openned) {
             // In openned menu - selecting variant and closing
-            int newSelect = (_mouse.getY() - background.y) / (height*window.getHeight());
-            if (newSelect) {
-                // Finding position in list with this number
-                int counted = 0;
-                for (int i=0; i < comPorts.size(); ++i) {
-                    if (comPorts[i].isAvaliable()) {
-                        counted++;
-                        if (newSelect == counted) {
-                            selected = i + 1;
-                            // Moving current variant to first pos
-                            texts[selected].move(0.0, -height*counted);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                selected = 0;
-            }
-            // Resetting flags
-            openned = false;
-            for (int i=0; i < comPorts.size(); ++i) {
-                if (comPorts[i].isAvaliable()) {
-                    background.h -= height * window.getHeight();
-                    foreground.h -= height * window.getHeight();
-                }
-            }
-            background.h -= 0.2f * height * window.getHeight();
-            foreground.h -= 0.2f * height * window.getHeight();
+            selected = getPosition(_mouse);
+            moveSelectedDown();
+            minimize();
             // Appling action
             if (selected) {
                 // Connecting to new selected
                 device.connectTo(comPorts[selected-1]);
             } else {
-                // Disconnecting (if has connection)
+                // Disconnecting (if first variant)
                 device.disconnect();
             }
             return true;
         } else {
             // Openning menu
-            openned = true;
-            // Swapping current text with first
-            if (selected) {
-                for (int i=0; i < selected; ++i) {
-                    if (comPorts[i].isAvaliable()) {
-                        texts[selected].move(0.0, height);
-                    }
-                }
-            }
-            for (int i=0; i < selected; ++i) {
-                if (comPorts[i].isAvaliable()) {
-                    background.h += height * window.getHeight();
-                    foreground.h += height * window.getHeight();
-                }
-            }
-            background.h += 0.2f * height * window.getHeight();
-            foreground.h += 0.2f * height * window.getHeight();
+            moveSelectedUp();
+            maximize();
             return true;
         }
     } else {
         if (openned) {
-            // If touch anywhere and openned - closing
-            // Moving current variant to first pos
-            if (selected) {
-                for (int i=0; i < selected; ++i) {
-                    if (comPorts[i].isAvaliable()) {
-                        texts[selected].move(0.0, -height);
-                    }
-                }
-            }
-            // Resetting flags and size
-            for (int i=0; i < selected; ++i) {
-                if (comPorts[i].isAvaliable()) {
-                    background.h -= height * window.getHeight();
-                    foreground.h -= height * window.getHeight();
-                }
-            }
-            background.h -= 0.2f * height * window.getHeight();
-            foreground.h -= 0.2f * height * window.getHeight();
-            openned = false;
+            // If touch anywhere - close
+            moveSelectedDown();
+            minimize();
             return true;
         }
     }
