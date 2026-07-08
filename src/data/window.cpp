@@ -8,10 +8,12 @@
 
 
 Window::Window(int _width, int _height, const LanguagedText _title)
-: width(_width),
+: displayID(getAvaliableID()),
+width(_width),
 height(_height),
-window(SDL_CreateWindow(titleText.getString().c_str(), width, height, 0)),
+window(SDL_CreateWindow(titleText.getString().c_str(), _width, _height, 0)),
 renderer(SDL_CreateRenderer(window, NULL)),
+scale(SDL_GetWindowDisplayScale(window)),
 #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 textures{renderer},
 #endif
@@ -55,14 +57,34 @@ int Window::getHeight() const {
     return height;
 }
 
-void Window::setWidth(int _width) {
+void Window::setSize(int _width, int _height) {
     width = _width;
+    height = _height;
     SDL_SetWindowSize(window, width, height);
 }
 
-void Window::setHeight(int _height) {
-    height = _height;
-    SDL_SetWindowSize(window, width, height);
+SDL_DisplayID Window::getAvaliableID() const {
+    // Get avaliable
+    int count = 0;
+    SDL_DisplayID* idList = SDL_GetDisplays(&count);
+    if (count == 0) {
+        logger.important("Can't find avaliable screen");
+        return 0;
+    }
+    // Select first variant
+    SDL_DisplayID selectedID = idList[0];
+    SDL_free(idList);
+
+    return selectedID;
+}
+
+void Window::setFullscreen() {
+    SDL_SetWindowFullscreen(window, true);
+
+    // Get new sizes
+    const SDL_DisplayMode* mode = SDL_GetDesktopDisplayMode(displayID);
+    width = mode->w;
+    height = mode->h;
 }
 
 

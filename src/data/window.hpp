@@ -17,10 +17,12 @@
 // Class of window, drawn functions, work with it
 class Window {
  private:
+    SDL_DisplayID displayID;
     int width, height;
     const LanguagedText titleText;
     SDL_Window* window;
     SDL_Renderer* renderer;
+    float scale;
     #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
     // Preloaded textures
     const TexturesData textures;
@@ -34,6 +36,7 @@ class Window {
     const FontsData fonts;
     #endif
 
+    SDL_DisplayID getAvaliableID() const;
     // Set new title
     void updateTitle(const char* name) const;
 
@@ -45,8 +48,10 @@ class Window {
     // Operate with sizes of window
     int getWidth() const;
     int getHeight() const;
-    void setWidth(int width);
-    void setHeight(int height);
+    void setSize(int width, int height);
+    void setFullscreen();
+
+    // Drawing
     // Set current draw color
     void setDrawColor(Color color = EMPTY) const;
     // Clear all stage with setted color

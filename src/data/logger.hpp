@@ -50,6 +50,8 @@ void Logger::important(const char* _text, const Args& ..._args) {
     logFile << buffer << '\n';
     // Clearing text
     SDL_free(buffer);
+    // Exiting program
+    exit(-1);
     #endif
 }
 
