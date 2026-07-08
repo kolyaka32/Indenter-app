@@ -67,9 +67,9 @@ const void* Serial::readData() {
     DWORD length = 20;
     static char buffer[100];
 
-    if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr)) {
+    if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr) && length) {
         static int i=0;  // Counter
-        logger.additional("%4d Read from serial", i);
+        logger.additional("%4d Read from serial: %d", i, length);
         i++;
         return buffer;
     }
