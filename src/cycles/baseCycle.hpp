@@ -10,6 +10,7 @@
 #include "../menu/settingsMenu.hpp"
 #include "../app/currentPort.hpp"
 #include "../app/collectedData.hpp"
+#include "../app/deviceInterface.hpp"
 #include "../app/saver.hpp"
 #include "../app/chart.cpp"
 
@@ -27,8 +28,7 @@ class BaseCycle : public CycleTemplate {
     GUI::RoundedBackplate mainBackplate;
     GUI::HighlightedStaticText panelText;
     GUI::HighlightedStaticText portSelectText;
-    GUI::TextButton startButton;
-    GUI::TextButton stopButton;
+    DeviceInterface deviceInterface;
     Saver saver;
     Chart<Force> forceChart;
     Chart<Temperature> tempertureChart;
@@ -37,14 +37,11 @@ class BaseCycle : public CycleTemplate {
     bool inputMouseDown() override;
     void update() override;
     void inputMouseUp() override;
-    void inputKeys(SDL_Keycode key) override;
-    void inputMouseWheel(float wheelY) override;
-    void inputText(const char* text) override;
+    bool inputKeys(SDL_Keycode key) override;
+    bool inputMouseWheel(float wheelY) override;
+    bool inputText(const char* text) override;
     void draw() const override;
 
  public:
     BaseCycle(Window& _window);
-
-    // Main data-storing system
-    static CollectedData collectedData;
 };

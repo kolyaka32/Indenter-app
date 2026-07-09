@@ -8,10 +8,12 @@
 
 
 Window::Window(int _width, int _height, const LanguagedText _title)
-: width(_width),
+: displayID(getAvaliableID()),
+width(_width),
 height(_height),
-window(SDL_CreateWindow(titleText.getString().c_str(), width, height, 0)),
+window(SDL_CreateWindow(titleText.getString().c_str(), _width, _height, 0)),
 renderer(SDL_CreateRenderer(window, NULL)),
+scale(SDL_GetWindowDisplayScale(window)),
 #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 textures{renderer},
 #endif
@@ -55,14 +57,34 @@ int Window::getHeight() const {
     return height;
 }
 
-void Window::setWidth(int _width) {
+void Window::setSize(int _width, int _height) {
     width = _width;
+    height = _height;
     SDL_SetWindowSize(window, width, height);
 }
 
-void Window::setHeight(int _height) {
-    height = _height;
-    SDL_SetWindowSize(window, width, height);
+SDL_DisplayID Window::getAvaliableID() const {
+    // Get avaliable
+    int count = 0;
+    SDL_DisplayID* idList = SDL_GetDisplays(&count);
+    if (count == 0) {
+        logger.important("Can't find avaliable screen");
+        return 0;
+    }
+    // Select first variant
+    SDL_DisplayID selectedID = idList[0];
+    SDL_free(idList);
+
+    return selectedID;
+}
+
+void Window::setFullscreen() {
+    SDL_SetWindowFullscreen(window, true);
+
+    // Get new sizes
+    const SDL_DisplayMode* mode = SDL_GetDesktopDisplayMode(displayID);
+    width = mode->w;
+    height = mode->h;
 }
 
 
@@ -92,8 +114,8 @@ void Window::drawLine(float x1, float y1, float x2, float y2) const {
     SDL_RenderLine(renderer, x1, y1, x2, y2);
 }
 
-void dra() {
-    
+void Window::drawGeometry(const SDL_Vertex* _vertices, int _numVer, SDL_Texture* _texture) const {
+    SDL_RenderGeometry(renderer, _texture, _vertices, _numVer, nullptr, 0);
 }
 
 
@@ -141,8 +163,13 @@ void Window::blit(SDL_Texture* _texture, const SDL_FRect* _dest, const SDL_FRect
 }
 
 void Window::blit(SDL_Texture* _texture, float _angle, const SDL_FRect& _dest,
-    const SDL_FRect* _src, SDL_FPoint _center) const {
-    SDL_RenderTextureRotated(renderer, _texture, _src, &_dest, _angle, &_center, SDL_FLIP_NONE);
+    const SDL_FRect* _src, SDL_FlipMode _flipMode) const {
+    SDL_RenderTextureRotated(renderer, _texture, _src, &_dest, _angle, nullptr, _flipMode);
+}
+
+void Window::blit(SDL_Texture* _texture, float _angle, const SDL_FRect& _rect, SDL_FPoint _center,
+    const SDL_FRect* _src, SDL_FlipMode _flipMode) const {
+    SDL_RenderTextureRotated(renderer, _texture, _src, &_rect, _angle, &_center, _flipMode);
 }
 
 void Window::setRenderTarget(SDL_Texture* _target) const {
@@ -233,6 +260,10 @@ void Window::startTextInput() const {
 
 void Window::stopTextInput() const {
     SDL_StopTextInput(window);
+}
+
+void Window::setTitle(const LanguagedText newTitles) const {
+    updateTitle(newTitles.getString().c_str());
 }
 
 void Window::updateTitle(const char* _name) const {

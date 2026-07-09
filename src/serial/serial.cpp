@@ -6,76 +6,14 @@
 #include "serial.hpp"
 
 
-ComPort::ComPort(int _number)
-: avaliable(false) {
-    // Changing number in name to correct
-    name[3] = '0' + _number;
-}
-
-bool ComPort::updateState() {
-    static char lpTargetPath[1000];
-    bool previousAvaliable = avaliable;
-    avaliable = QueryDosDevice(name, lpTargetPath, 100);
-
-    // Returning true, if changed
-    return avaliable != previousAvaliable;
-}
-
-bool ComPort::isAvaliable() const {
-    return avaliable;
-}
-
-const char* ComPort::getName() const {
-    return name;
-}
-
-
 Serial::Serial() {
     // Initialize the DCB structure.
     SecureZeroMemory(&dcb, sizeof(DCB));
     dcb.DCBlength = sizeof(DCB);
-
-    //  Fill in some DCB values and set the com state: 
-    //  57,600 bps, 8 data bits, no parity, and 1 stop bit.
-    /*dcb.BaudRate = 57600;     //  baud rate
-    dcb.ByteSize = 8;             //  data size, xmit and rcv
-    dcb.Parity   = NOPARITY;      //  parity bit
-    dcb.StopBits = ONESTOPBIT;    //  stop bit
-
-    if (!SetCommState(hCom, &dcb)) {
-        //  Handle the error.
-        logger.additional("SetCommState failed with error %d", GetLastError());
-        return;
-    }
-
-    //  Get the comm config again.
-    /*if (!GetCommState(hCom, &dcb)) {
-       //  Handle the error.
-       logger.additional("GetCommState failed with error %d.\n", GetLastError());
-       return;
-    }
-
-    printCommState(dcb);  //  Output to console*/
-    /*DWORD length = 20;
-    char buffer[20];
-
-    if (ReadFile(hCom, buffer, sizeof(buffer), &length, nullptr)) {
-        logger.additional("Read: %s", buffer);
-    }
-
-    /*logger.additional("Serial port %s successfully reconfigured", pcCommPort);*/
 }
 
-Serial::~Serial() {
-
-}
-
-bool Serial::tryConnectTo(const ComPort _port) {
-    // Resetting previous
-    // !
-    avaliable = false;
-
-    //  Open a handle to the specified com port.
+bool Serial::tryConnectTo(const ComPort& _port) {
+    // Open a handle to the specified com port.
     handle = CreateFile(_port.getName(),
         GENERIC_READ | GENERIC_WRITE,
         0,      //  must be opened with exclusive-access
@@ -90,14 +28,14 @@ bool Serial::tryConnectTo(const ComPort _port) {
         logger.important("Can't open port %d", GetLastError());
         return false;
     }
-    //  Fill in some DCB values and set the com state: 
-    //  57,600 bps, 8 data bits, no parity, and 1 stop bit.
-    dcb.BaudRate = 57600;     //  baud rate
-    dcb.ByteSize = 8;           //  data size, xmit and rcv
-    dcb.Parity   = NOPARITY;    //  parity bit
-    dcb.StopBits = ONESTOPBIT;  //  stop bit
+    // Fill in some DCB values and set the com state:
+    // 57,600 bps, 8 data bits, no parity, and 1 stop bit.
+    dcb.BaudRate = 57600;       // baud rate
+    dcb.ByteSize = 8;           // data size, xmit and rcv
+    dcb.Parity   = NOPARITY;    // parity bit
+    dcb.StopBits = ONESTOPBIT;  // stop bit
     if (!SetCommState(handle, &dcb)) {
-        //  Handle the error.
+        // Handle the error.
         logger.additional("Can't set state: %d", GetLastError());
         return false;
     }
@@ -114,51 +52,37 @@ bool Serial::tryConnectTo(const ComPort _port) {
     }
 
     logger.additional("Correctly oppened serial reader at %s", _port.getName());
-    avaliable = true;
-    printState();
+    logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
+        dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);
     return true;
-}
-
-void Serial::printState() {
-    //  Print some of the DCB structure values
-    if (avaliable) {
-        logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
-            dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);
-    } else {
-        logger.additional("Serial reader don't avaliable");
-    }
 }
 
 void Serial::reset() {
     CloseHandle(handle);
-    avaliable = false;
     logger.additional("Closed serial port");
 }
 
 const void* Serial::readData() {
-    // Check, if can read
-    if (avaliable) {
-        //
-        DWORD length = 20;
-        static char buffer[100];
+    //
+    DWORD length = 20;
+    static char buffer[100];
 
-        if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr)) {
-            static int i=0;
-            logger.additional("%4d Read from serial", i);
-            i++;
-            return buffer;
-        }
+    if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr) && length) {
+        static int i=0;  // Counter
+        logger.additional("%4d Read from serial: %d", i, length);
+        i++;
+        return buffer;
     }
     return nullptr;
 }
 
 void Serial::writeData(const char* _data, int _length) {
-    if (avaliable) {
-        DWORD length = 0;
-        if (WriteFile(handle, _data, _length, &length, nullptr)) {
-            logger.additional("Can't write data: %d", GetLastError());
-            return;
-        }
+    DWORD length = 0;
+    if (WriteFile(handle, _data, _length, &length, nullptr)) {
+        logger.additional("Can't send data: %d", GetLastError());
+        return;
+    } else {
+        logger.additional("Send %1d bytes", _length);
     }
 }
 

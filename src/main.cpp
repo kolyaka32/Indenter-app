@@ -10,6 +10,7 @@
 int main(int argv, char **args) {
     // Creating main window
     Window window{1200, 900, {"Indenter", "Индентер"}};
+    window.setFullscreen();
 
     // Running menu
     App::run(window);
