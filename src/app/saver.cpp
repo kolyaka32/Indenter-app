@@ -6,14 +6,12 @@
 #include "saver.hpp"
 #include "collectedData.hpp"
 
-bool Saver::active = false;
-
 
 Saver::Saver(const Window& _window, float _X, float _Y)
-: notSavedText(_window, _X, _Y-0.05, {"Not saved", "Не сохранено"}, 1),
+: SubWindow(_window, 0.5, 0.5, 0.25, 0.22),
+notSavedText(_window, _X, _Y-0.05, {"Not saved", "Не сохранено"}, 1),
 saveButton(_window, _X, _Y, {"Save", "Сохранить"}),
 savedInfo(_window, 0.5, 0.1, {"Saved", "Сохранено"}),
-backplate(_window, 0.5, 0.5, 0.25, 0.22, 10, 2),
 menuTitle(_window, 0.5, 0.42, {"Enter file name", "Введите имя файла"}, 1),
 fileNameTypeBox(_window, 0.5, 0.48, "Data"),
 menuSaveButton(_window, 0.5, 0.53, {"Save", "Сохранить"}),
@@ -21,17 +19,11 @@ menuCloseButton(_window, 0.5, 0.58, {"Close", "Закрыть"}),
 rewriteOptions(_window, 0.5, 0.5, 0.6, 0.4,
     {"Overwrite file?", "Перезаписать файл?"}, {"Yes", "Да"}, {"No", "Нет"}) {}
 
-void Saver::reset() {
-    active = false;
-}
-
 bool Saver::click(const Mouse _mouse) {
     if (active) {
-        // Check on entering text
-        fileNameTypeBox.click(_mouse);
         // Check, if openned submenu for 
-        if (int var = rewriteOptions.click(_mouse)) {
-            if (var == 2) {
+        if (GUI::Code code = rewriteOptions.click(_mouse)) {
+            if (code == GUI::Button1) {
                 // Writing anyway
                 collectedData.saveAnyway(fileNameTypeBox.getString());
                 // Closing submenu
@@ -40,23 +32,20 @@ bool Saver::click(const Mouse _mouse) {
                 savedInfo.reset();
                 // Closing this menu
                 active = false;
-            } else if (var == 3) {
+            } else if (code == GUI::Button2) {
                 // Closing submenu
                 rewriteOptions.reset();
             }
             return true;
         }
+        // Check, if entering text
+        fileNameTypeBox.checkOff(_mouse);
+        if (fileNameTypeBox.click(_mouse)) {
+            return true;
+        }
         // Check, if trying save
         if (menuSaveButton.in(_mouse)) {
-            // Trying save
-            if (collectedData.trySaveNew(fileNameTypeBox.getString())) {
-                rewriteOptions.activate();
-            } else {
-                // Showing, that saved
-                savedInfo.reset();
-                // Closing this menu
-                active = false;
-            }
+            trySave();
             return true;
         }
         // Check on closing
@@ -79,8 +68,15 @@ void Saver::unclick() {
 
 bool Saver::type(SDL_Keycode _code) {
     if (active) {
+        // Check typing
+        if (GUI::Code code = fileNameTypeBox.type(_code)) {
+            if (code == GUI::Activate) {
+                trySave();
+            }
+            return true;
+        }
         // Check, if close overwrite menu
-        if (rewriteOptions.isActive()) {
+        if (rewriteOptions.isOpen()) {
             if (_code == SDLK_ESCAPE) {
                 rewriteOptions.reset();
             }
@@ -89,10 +85,9 @@ bool Saver::type(SDL_Keycode _code) {
         // Check, if close menu
         if (_code == SDLK_ESCAPE) {
             fileNameTypeBox.unclick();
-            active = false;
+            close();
             return true;
         }
-        fileNameTypeBox.type(_code);
         return true;
     }
     return false;
@@ -122,7 +117,7 @@ void Saver::blit() const {
     savedInfo.blit();
 
     if (active) {
-        backplate.blit();
+        background.blit();
         menuTitle.blit();
         fileNameTypeBox.blit();
         menuSaveButton.blit();
@@ -131,3 +126,13 @@ void Saver::blit() const {
     }
 }
 
+void Saver::trySave() {
+    if (collectedData.trySaveNew(fileNameTypeBox.getString())) {
+        rewriteOptions.open();
+    } else {
+        // Showing, that saved
+        savedInfo.reset();
+        // Closing this menu
+        active = false;
+    }
+}

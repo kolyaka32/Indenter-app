@@ -47,7 +47,6 @@ void Logger::important(const char* _text, const Args& ..._args) {
     SDL_IOprintf(logFile, _text, _args...);
     SDL_IOprintf(logFile, "\n");
     SDL_FlushIO(logFile);
-    throw _text;
     #endif
 }
 

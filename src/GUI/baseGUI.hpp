@@ -20,6 +20,22 @@ namespace GUI {
     };
 
 
+    // Codes of actions, returning from functions
+    enum {
+        None,      // Noting happen
+        Some,      // Action with current object
+        Finished,  // Finished interacting with current object (ESCAPE button)
+        Activate,  // Finished interaction and activate next action (ENTER button)
+        Button1,   // Pressed 1 button
+        Button2,   // Pressed 2 button
+        Button3,   // Pressed 3 button
+        // Etc..
+    } Action;
+
+    // Type for returning code of action
+    typedef int Code;
+
+
     // Object, that will be drawn at screen
     class Template {
      protected:
@@ -72,6 +88,27 @@ namespace GUI {
     };
 
 
+    // Class for sub menu with flag of openning
+    class SubWindow : public Template {
+     protected:
+        // Flag of showing
+        bool active;
+        // Graphical part
+        GUI::RoundedBackplate background;
+
+     public:
+        SubWindow(const Window& window, float X, float Y, float W, float H);
+        SubWindow(SubWindow&& object) noexcept;
+        void open();
+        void close();
+        void toggle();
+        bool isOpen() const;
+        virtual void reset();
+        virtual bool escape();
+        void blit() const override;
+    };
+
+
     // Textures
     #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
     // Class of slider bar with point on it to control need parameter
@@ -87,7 +124,7 @@ namespace GUI {
         Slider(Slider&& object) noexcept;
         float setValue(float mouseX);  // Setting new state from mouse position
         float scroll(float wheelY);    // Checking mouse wheel action
-        void blit() const override;       // Drawing slider with need button position
+        void blit() const override;    // Drawing slider with need button position
     };
 
 
@@ -228,14 +265,16 @@ namespace GUI {
             Color textColor = BLACK, Color backColor = WHITE);
         TypeField(TypeField<bufferSize>&& object) noexcept;
         ~TypeField() noexcept;
-        void writeString(const char* str);   // Write string to buffer at caret position
-        void type(SDL_Keycode code);         // Processing special keycodes (like arrows, home, CTRL-C...)
-        void update(float mouseX);           // Highlated area of typing
-        bool click(const Mouse mouse);       // Set caret for typing at specified place
-        void unclick();                      // Reset pressing
         const char* getString();             // Return typed string
         void setString(const char* string);  // Replace text with new string
-        void blit() const override;          // Draw current text with selection at screen
+        // Main cycle
+        void writeString(const char* str);  // Write string to buffer at caret position
+        Code type(SDL_Keycode code);        // Processing special keycodes (like arrows, home, CTRL-C...)   
+        void update(float mouseX);          // Highlated area of typing
+        bool checkOff(const Mouse mouse);   // Check if click in other place, true if end entering
+        Code click(const Mouse mouse);      // Set caret for typing at specified place
+        void unclick();                     // Reset pressing
+        void blit() const override;         // Draw current text with selection at screen
     };
 
 
@@ -288,8 +327,7 @@ namespace GUI {
         // Getter/setter
         void set(unsigned value);
         unsigned getValue() const;
-
-        bool click(const Mouse mouse);  // return true, when entered new value
+        Code click(const Mouse mouse);
         void blit() const override;
     };
 
@@ -297,11 +335,11 @@ namespace GUI {
     // Class of appearing for time and hidden by time text
     class InfoBox : public HighlightedStaticText {
      private:
-        unsigned counter = 0;
-        static const unsigned maxCounter = 100;
+        timer endTime = 0;  // Time, when stop showing
+        const timer decayTime;  // Time of full decay
 
      public:
-        InfoBox(const Window& window, float X, float Y, const LanguagedText&& texts,
+        InfoBox(const Window& window, float X, float Y, const LanguagedText&& texts, unsigned decayTime = 500,
             float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
         InfoBox(InfoBox&& object) noexcept;
         void update();
@@ -310,13 +348,8 @@ namespace GUI {
 
 
     // Class for box with message and actions with it
-    class OneOptionBox : public Template {
+    class OneOptionBox : public SubWindow {
      private:
-        // Flag of showing
-        bool active = false;
-
-        // Graphical part
-        GUI::RoundedBackplate background;
         GUI::HighlightedStaticText title;
         GUI::TextButton button;
 
@@ -324,22 +357,14 @@ namespace GUI {
         OneOptionBox(const Window& window, float X, float Y, float W, float H,
             const LanguagedText&& titleText, const LanguagedText&& buttonText);
         OneOptionBox(OneOptionBox&& object) noexcept;
-        int click(const Mouse mouse);  // Return 1, if active; 2 if button pressed button
-        void activate();
-        void reset();
-        bool isActive() const;
+        Code click(const Mouse mouse);
         void blit() const override;
     };
 
 
     // Class for box with message and actions with it
-    class TwoOptionBox : public Template {
+    class TwoOptionBox : public SubWindow {
      private:
-        // Flag of showing
-        bool active = false;
-
-        // Graphic part
-        GUI::RoundedBackplate background;
         GUI::HighlightedStaticText title;
         GUI::TextButton button1, button2;
 
@@ -348,10 +373,7 @@ namespace GUI {
             const LanguagedText&& titleText,
             const LanguagedText&& button1Text, const LanguagedText&& button2Text);
         TwoOptionBox(TwoOptionBox&& object) noexcept;
-        int click(const Mouse mouse);  // Return 1, if active; 2 if 1 button pressed; 3 if 2 button pressed
-        void activate();
-        void reset();
-        bool isActive() const;
+        Code click(const Mouse mouse);
         void blit() const override;
     };
 
@@ -395,8 +417,7 @@ namespace GUI {
         ~ScrollBox() noexcept;
         void addItem(const SourceItem& field);
         void clear();
-        // Return index of selected+1 and 0, if don't
-        int click(const Mouse mouse);
+        Code click(const Mouse mouse);
         void unclick();
         void update(const Mouse mouse);
         bool scroll(const Mouse mouse, float wheelY);

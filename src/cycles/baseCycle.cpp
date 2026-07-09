@@ -42,11 +42,11 @@ void BaseCycle::inputMouseUp() {
 }
 
 bool BaseCycle::inputKeys(SDL_Keycode _key) {
-    if (_key == SDLK_ESCAPE) {
-        settings.activate();
+    if (saver.type(_key)) {
         return true;
     }
-    if (saver.type(_key)) {
+    if (_key == SDLK_ESCAPE) {
+        settings.toggle();
         return true;
     }
     return false;

@@ -9,22 +9,16 @@
 
 
 // Class of menu with game settings
-class SettingsMenu : GUI::Template {
+class SettingsMenu : public GUI::SubWindow {
  private:
-    static bool active;       // Flag of showing current menu
     timer nextSound = 0;      // Time to play next sound
     Uint8 holdingSlider = 0;  // Index of holded slider
 
     // Button for enter and quit settings menu
     const GUI::ImageButton settingButton;
-    // Background plate
-    const GUI::RoundedBackplate background;
-    // Title
+    // Main part
     GUI::HighlightedStaticText titleText;
-    // Flags for select language
-    #if (USE_SDL_IMAGE)
     const GUI::ImageButton flags[(unsigned)Language::Count];
-    #endif
     // Sliders for music (if need)
     #if (PRELOAD_MUSIC)
     GUI::HighlightedStaticText musicText;
@@ -35,17 +29,13 @@ class SettingsMenu : GUI::Template {
     GUI::HighlightedStaticText soundText;
     GUI::Slider soundSlider;
     #endif
-    // Quit button
     GUI::TextButton exitButton;
 
  public:
     explicit SettingsMenu(const Window& window);
-    void activate();
-
-    // Every cycle update
-    bool click(const Mouse mouse);
-    bool scroll(const Mouse mouse, float wheelY);
-    void unClick();
-    void update();
     void blit() const;
+    bool click(const Mouse mouse);
+    void unClick();
+    bool scroll(const Mouse mouse, float wheelY);
+    void update();
 };

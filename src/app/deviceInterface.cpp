@@ -9,7 +9,7 @@
 
 DeviceInterface::DeviceInterface(const Window& _window, float _X, float _Y)
 : Template(_window),
-stateBackplate(_window, _X, _Y, 0.2, 0.04, 2.0),
+stateBackplate(_window, _X, _Y, 0.16, 0.04, 2.0, WHITE),
 notConnectedText(_window, _X, _Y, {"Not connected", "Нет подключения"}, Height::Main, BLACK),
 waitingText(_window, _X, _Y, {"Wait start", "Ожидает начала"}, Height::Main, BLACK),
 preWorkingText(_window, _X, _Y, {"Idle running", "Холостой ход"}, Height::Main, BLACK),
