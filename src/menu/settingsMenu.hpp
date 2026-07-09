@@ -30,6 +30,7 @@ class SettingsMenu : public GUI::SubWindow {
     GUI::Slider soundSlider;
     #endif
     GUI::TextButton exitButton;
+    GUI::TextButton closeButton;
 
  public:
     explicit SettingsMenu(const Window& window);

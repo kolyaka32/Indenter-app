@@ -9,7 +9,7 @@
 
 SettingsMenu::SettingsMenu(const Window& _window)
 : SubWindow(_window, 0.5, 0.5, 0.42, 0.75),
-settingButton{window, 0.97, 0.05, 0.04, Textures::SettingsButton},
+settingButton{window, 0.97, 0.045, 0.04, Textures::SettingsButton},
 //titleText{window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, Height::Info},
 titleText{window, 0.5, 0.16, {"Pause", "Пауза"}, 2, Height::Title},
 flags {
@@ -27,7 +27,8 @@ soundText{window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1}
 soundSlider{window, 0.5, 0.76, 0.5, audio.sounds.getVolume()},
 #endif
 //exitButton{window, 0.5, 0.82, {"Close", "Закрыть", "Ausfahrt", "Выхад"}}
-exitButton{window, 0.5, 0.82, {"Close", "Закрыть"}}
+exitButton{window, 0.5, 0.78, {"Exit from app", "Выйти из приложения"}},
+closeButton{window, 0.5, 0.84, {"Close", "Закрыть"}}
 {}
 
 bool SettingsMenu::click(const Mouse _mouse) {
@@ -38,9 +39,16 @@ bool SettingsMenu::click(const Mouse _mouse) {
     }
     // Clicking in menu
     if (active) {
-        // Resetting holding object
-        holdingSlider = 0;
-
+        if (exitButton.in(_mouse)) {
+            App::setNextCycle(Cycle::None);
+            CycleTemplate::stop();
+            close();
+            return true;
+        }
+        if (closeButton.in(_mouse)) {
+            close();
+            return true;
+        }
         // Check on changing language
         for (unsigned i = 0; i < (unsigned)Language::Count; ++i) {
             if (flags[i].in(_mouse)) {
@@ -53,6 +61,8 @@ bool SettingsMenu::click(const Mouse _mouse) {
                 }
             }
         }
+        // Resetting holding object
+        holdingSlider = 0;
         #if (PRELOAD_MUSIC)
         if (musicSlider.in(_mouse)) {
             holdingSlider = 1;
@@ -65,10 +75,6 @@ bool SettingsMenu::click(const Mouse _mouse) {
             return true;
         }
         #endif
-        if (exitButton.in(_mouse)) {
-            close();
-            return true;
-        }
         return true;
     }
     return false;
@@ -161,5 +167,6 @@ void SettingsMenu::blit() const {
         #endif
         // Quit
         exitButton.blit();
+        closeButton.blit();
     }
 }

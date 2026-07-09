@@ -83,7 +83,7 @@ void BaseCycle::draw() const {
 
     // Above menus
     saver.blit();
-    
+
     settings.blit();
 
     // Render it

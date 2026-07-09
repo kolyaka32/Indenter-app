@@ -20,9 +20,9 @@ void App::run(Window& _window) {
         case Cycle::Main:
             runCycle<BaseCycle>(_window);
             break;
-        
+
         default:
-            break;
+            return;
         }
     }
 }
