@@ -23,6 +23,7 @@ protected:
     GUI::TextButton menuCloseButton;       // Button for close this menu
     GUI::TwoOptionBox rewriteOptions;      // Option box for check, if want to rewrite file
 
+    void writeAnyway();
     void trySave();
 
 public:

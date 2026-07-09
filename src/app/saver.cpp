@@ -24,17 +24,13 @@ bool Saver::click(const Mouse _mouse) {
         // Check, if openned submenu for 
         if (GUI::Code code = rewriteOptions.click(_mouse)) {
             if (code == GUI::Button1) {
-                // Writing anyway
-                collectedData.saveAnyway(fileNameTypeBox.getString());
+                writeAnyway();
+                return true;
+            }
+            if (code == GUI::Button2) {
                 // Closing submenu
                 rewriteOptions.reset();
-                // Showing, that saved
-                savedInfo.reset();
-                // Closing this menu
-                active = false;
-            } else if (code == GUI::Button2) {
-                // Closing submenu
-                rewriteOptions.reset();
+                return true;
             }
             return true;
         }
@@ -68,17 +64,22 @@ void Saver::unclick() {
 
 bool Saver::type(SDL_Keycode _code) {
     if (active) {
-        // Check typing
-        if (GUI::Code code = fileNameTypeBox.type(_code)) {
-            if (code == GUI::Activate) {
-                trySave();
-            }
-            return true;
-        }
         // Check, if close overwrite menu
         if (rewriteOptions.isOpen()) {
             if (_code == SDLK_ESCAPE) {
                 rewriteOptions.reset();
+                return true;
+            } 
+            if (_code == SDLK_RETURN) {
+                writeAnyway();
+                return true;
+            }
+            return true;
+        }
+        // Check typing
+        if (GUI::Code code = fileNameTypeBox.type(_code)) {
+            if (code == GUI::Activate) {
+                trySave();
             }
             return true;
         }
@@ -135,4 +136,15 @@ void Saver::trySave() {
         // Closing this menu
         active = false;
     }
+}
+
+void Saver::writeAnyway() {
+    // Writing anyway
+    collectedData.saveAnyway(fileNameTypeBox.getString());
+    // Closing submenu
+    rewriteOptions.close();
+    // Showing, that saved
+    savedInfo.reset();
+    // Closing this menu
+    close();
 }
