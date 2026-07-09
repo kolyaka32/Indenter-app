@@ -11,24 +11,24 @@ bool SettingsMenu::active = false;
 
 SettingsMenu::SettingsMenu(const Window& _window)
 : Template(_window),
-settingButton{window, 0.96, 0.05, 0.04, Textures::SettingsButton},
-background{window, 0.5, 0.5, 0.4, 0.6, 20, 4},
-titleText{window, 0.5, 0.24, {"Pause", "Пауза"}, 2, Height::Info},
+settingButton{window, 0.97, 0.05, 0.04, Textures::SettingsButton},
+background{window, 0.5, 0.5, 0.65, 0.85, 20, 4},
+titleText{window, 0.5, 0.13, {"Pause", "Пауза"}, 2, Height::Info},
 flags {
-    {window, 0.4, 0.4, 0.15, Textures::FlagUSA},
-    {window, 0.6, 0.4, 0.15, Textures::FlagRUS},
+    {window, 0.35, 0.27, 0.25, Textures::FlagUSA},
+    {window, 0.65, 0.27, 0.25, Textures::FlagRUS},
     //{window, 0.35, 0.45, 0.25, Textures::FlagGER},
     //{window, 0.65, 0.45, 0.25, Textures::FlagBEL},
 },
 #if (PRELOAD_MUSIC)
-musicText{window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1},
+musicText{window, 0.5, 0.58, {"Music", "Музыка"}, 1},
 musicSlider{window, 0.5, 0.64, 0.5, audio.music.getVolume()},
 #endif
 #if (PRELOAD_SOUNDS)
-soundText{window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1},
+soundText{window, 0.5, 0.7, {"Sounds", "Звуки"}, 1},
 soundSlider{window, 0.5, 0.76, 0.5, audio.sounds.getVolume()},
 #endif
-exitButton{window, 0.5, 0.75, {"Exit", "Выход"}} {}
+exitButton{window, 0.5, 0.85, {"Exit", "Выход"}} {}
 
 bool SettingsMenu::click(const Mouse _mouse) {
     // Check, if click on setting butoon
@@ -147,7 +147,7 @@ void SettingsMenu::blit() const {
         titleText.blit();
 
         // Blitting language buttons
-        for (unsigned i = 0; i < (unsigned)Language::Count; ++i) {
+        for (unsigned i = 0; i < 2; ++i) {
             flags[i].blit();
         }
         // Music slider

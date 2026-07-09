@@ -40,10 +40,12 @@ class SettingsMenu : GUI::Template {
 
  public:
     explicit SettingsMenu(const Window& window);
-    void blit() const;
-    bool click(const Mouse mouse);
-    void unClick();
-    bool scroll(const Mouse mouse, float wheelY);
-    void update();
     void activate();
+
+    // Every cycle update
+    bool click(const Mouse mouse);
+    bool scroll(const Mouse mouse, float wheelY);
+    void unClick();
+    void update();
+    void blit() const;
 };

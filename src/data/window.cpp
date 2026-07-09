@@ -114,8 +114,8 @@ void Window::drawLine(float x1, float y1, float x2, float y2) const {
     SDL_RenderLine(renderer, x1, y1, x2, y2);
 }
 
-void dra() {
-    
+void Window::drawGeometry(const SDL_Vertex* _vertices, int _numVer, SDL_Texture* _texture) const {
+    SDL_RenderGeometry(renderer, _texture, _vertices, _numVer, nullptr, 0);
 }
 
 
@@ -163,8 +163,13 @@ void Window::blit(SDL_Texture* _texture, const SDL_FRect* _dest, const SDL_FRect
 }
 
 void Window::blit(SDL_Texture* _texture, float _angle, const SDL_FRect& _dest,
-    const SDL_FRect* _src, SDL_FPoint _center) const {
-    SDL_RenderTextureRotated(renderer, _texture, _src, &_dest, _angle, &_center, SDL_FLIP_NONE);
+    const SDL_FRect* _src, SDL_FlipMode _flipMode) const {
+    SDL_RenderTextureRotated(renderer, _texture, _src, &_dest, _angle, nullptr, _flipMode);
+}
+
+void Window::blit(SDL_Texture* _texture, float _angle, const SDL_FRect& _rect, SDL_FPoint _center,
+    const SDL_FRect* _src, SDL_FlipMode _flipMode) const {
+    SDL_RenderTextureRotated(renderer, _texture, _src, &_rect, _angle, &_center, _flipMode);
 }
 
 void Window::setRenderTarget(SDL_Texture* _target) const {
@@ -255,6 +260,10 @@ void Window::startTextInput() const {
 
 void Window::stopTextInput() const {
     SDL_StopTextInput(window);
+}
+
+void Window::setTitle(const LanguagedText newTitles) const {
+    updateTitle(newTitles.getString().c_str());
 }
 
 void Window::updateTitle(const char* _name) const {

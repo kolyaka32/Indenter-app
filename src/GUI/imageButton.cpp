@@ -14,7 +14,6 @@ GUI::ImageButton::ImageButton(const Window& _window, float _X, float _Y, float _
     texture = window.getTexture(_index);
 
     // Setting destination
-    SDL_GetTextureSize(texture, &rect.w, &rect.h);
     rect.w = _width * window.getWidth();
     rect.h = texture->h * rect.w / texture->w;
 

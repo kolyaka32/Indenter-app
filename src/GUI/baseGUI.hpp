@@ -51,8 +51,8 @@ namespace GUI {
     class RoundedBackplate : public TextureTemplate {
      public:
         RoundedBackplate(const Window& window, float centerX, float centerY, float width, float height,
-            float radius, float border, Color frontColor = GREY, Color backColor = BLACK);
-        RoundedBackplate(const Window& window, const SDL_FRect& rect, float radius, float border,
+            int radius, int border, Color frontColor = GREY, Color backColor = BLACK);
+        RoundedBackplate(const Window& window, const SDL_FRect& rect, int radius, int border,
             Color frontColor = GREY, Color backColor = BLACK);
         RoundedBackplate(RoundedBackplate&& object) noexcept;
         ~RoundedBackplate() noexcept;
@@ -176,6 +176,9 @@ namespace GUI {
             char buffer[100];
             std::snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
 
+            // Clearing previous
+            window.destroy(texture);
+
             // Creating surface with text
             texture = window.createTexture(Fonts::Main, height, buffer, 0, color);
 
@@ -225,7 +228,6 @@ namespace GUI {
             Color textColor = BLACK, Color backColor = WHITE);
         TypeField(TypeField<bufferSize>&& object) noexcept;
         ~TypeField() noexcept;
-        void reset();                        // Reset current state to unselected
         void writeString(const char* str);   // Write string to buffer at caret position
         void type(SDL_Keycode code);         // Processing special keycodes (like arrows, home, CTRL-C...)
         void update(float mouseX);           // Highlated area of typing
@@ -265,6 +267,33 @@ namespace GUI {
     };
 
 
+    // Object for selecting variants from list
+    class SwitchBox : GUI::Template {
+     private:
+        unsigned selected = 0;
+        bool opened = false;
+        // Draw options
+        const float height;
+        SDL_FRect background;
+        const SDL_Color backColor;
+        std::vector<StaticText> drawnTexts;
+
+        // Static options
+        SDL_Texture* arrowTexture;
+        SDL_FRect arrowRect;
+
+     public:
+        SwitchBox(const Window& window, float X, float Y, float W, std::initializer_list<LanguagedText> texts,
+            unsigned startOption = 0, float size = Height::Main, Color backColor = WHITE, Color frontColor = BLACK);
+        // Getter/setter
+        void set(unsigned value);
+        unsigned getValue() const;
+
+        bool click(const Mouse mouse);  // return true, when entered new value
+        void blit() const override;
+    };
+
+
     // Class of appearing for time and hidden by time text
     class InfoBox : public HighlightedStaticText {
      private:
@@ -281,23 +310,21 @@ namespace GUI {
 
 
     // Class for box with message and actions with it
-    class TwoOptionBox : public Template {
+    class OneOptionBox : public Template {
      private:
         // Flag of showing
         bool active = false;
 
-        // Background plate for better visability
+        // Graphical part
         GUI::RoundedBackplate background;
-        // Main text - title
-        GUI::HighlightedStaticText mainText;
-        // Select variants
-        GUI::TextButton button1, button2;
+        GUI::HighlightedStaticText title;
+        GUI::TextButton button;
 
      public:
-        TwoOptionBox(const Window& window, const LanguagedText&& title,
-            const LanguagedText&& button1Text, const LanguagedText&& button2Text);
-        TwoOptionBox(TwoOptionBox&& object) noexcept;
-        int click(const Mouse mouse);  // Return 1, if active; 2 if 1 button pressed; 3 if 2 button pressed
+        OneOptionBox(const Window& window, float X, float Y, float W, float H,
+            const LanguagedText&& titleText, const LanguagedText&& buttonText);
+        OneOptionBox(OneOptionBox&& object) noexcept;
+        int click(const Mouse mouse);  // Return 1, if active; 2 if button pressed button
         void activate();
         void reset();
         bool isActive() const;
@@ -306,23 +333,22 @@ namespace GUI {
 
 
     // Class for box with message and actions with it
-    class OneOptionBox : public Template {
+    class TwoOptionBox : public Template {
      private:
         // Flag of showing
         bool active = false;
 
-        // Background plate for better visability
+        // Graphic part
         GUI::RoundedBackplate background;
-        // Main text - title
-        GUI::HighlightedStaticText mainText;
-        // Select variants
-        GUI::TextButton button;
+        GUI::HighlightedStaticText title;
+        GUI::TextButton button1, button2;
 
      public:
-        OneOptionBox(const Window& window, const LanguagedText&& title,
-            const LanguagedText&& buttonText);
-        OneOptionBox(OneOptionBox&& object) noexcept;
-        int click(const Mouse mouse);  // Return 1, if active; 2 if button pressed
+        TwoOptionBox(const Window& window, float X, float Y, float W, float H,
+            const LanguagedText&& titleText,
+            const LanguagedText&& button1Text, const LanguagedText&& button2Text);
+        TwoOptionBox(TwoOptionBox&& object) noexcept;
+        int click(const Mouse mouse);  // Return 1, if active; 2 if 1 button pressed; 3 if 2 button pressed
         void activate();
         void reset();
         bool isActive() const;
@@ -335,16 +361,19 @@ namespace GUI {
     template <class Item, class SourceItem>
     class ScrollBox : public Template {
      protected:
-        // Items, for draw
-        int startField = 0;
-        int endField = 0;
-        const int maxItems;
-        // Items in reverce order for easier appending
+        // Parameters of showed list
+        const int maxItems;  // Total number of elements, showing max at one screen
+        int startField = 0;  // Position, from which show
+        int endField = 0;    // Position, up to showing
+        const float blockPos;     // Start Y position of blocks (relative)
+        const float blockHeight;  // Height of one block (relative)
+        // Items itself in reverse order for easier appending
         std::vector<Item> items;
         // Adding text of absence of objects
         #if (USE_SDL_FONT) && (PRELOAD_FONTS)
         GUI::HighlightedStaticText emptySavesText;
         #endif
+
         // Slider for showing position
         SDL_FRect sliderRect;
         const SDL_FRect sliderBackRect;
@@ -353,6 +382,7 @@ namespace GUI {
 
         void moveUp();
         void moveDown();
+        void placeItem(int pos, const SourceItem& item);
 
      public:
         // Create menu for scrolling objects, placed at center with (posX, posY) and size.
@@ -369,7 +399,7 @@ namespace GUI {
         int click(const Mouse mouse);
         void unclick();
         void update(const Mouse mouse);
-        void scroll(const Mouse mouse, float wheelY);
+        bool scroll(const Mouse mouse, float wheelY);
         void blit() const override;
     };
 

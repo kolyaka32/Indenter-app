@@ -41,21 +41,23 @@ void BaseCycle::inputMouseUp() {
     saver.unclick();
 }
 
-void BaseCycle::inputKeys(SDL_Keycode _key) {
-    if (saver.type(_key)) {
-        return;
-    }
+bool BaseCycle::inputKeys(SDL_Keycode _key) {
     if (_key == SDLK_ESCAPE) {
         settings.activate();
+        return true;
     }
+    if (saver.type(_key)) {
+        return true;
+    }
+    return false;
 }
 
-void BaseCycle::inputMouseWheel(float _wheelY) {
-    settings.scroll(mouse, _wheelY);
+bool BaseCycle::inputMouseWheel(float _wheelY) {
+    return settings.scroll(mouse, _wheelY);
 }
 
-void BaseCycle::inputText(const char* _text) {
-    saver.inputText(_text);
+bool BaseCycle::inputText(const char* _text) {
+    return saver.inputText(_text);
 }
 
 void BaseCycle::update() {

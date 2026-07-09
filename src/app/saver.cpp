@@ -18,7 +18,8 @@ menuTitle(_window, 0.5, 0.42, {"Enter file name", "Введите имя фай�
 fileNameTypeBox(_window, 0.5, 0.48, "Data"),
 menuSaveButton(_window, 0.5, 0.53, {"Save", "Сохранить"}),
 menuCloseButton(_window, 0.5, 0.58, {"Close", "Закрыть"}),
-rewriteOptions(_window, {"Overwrite file?", "Перезаписать файл?"}, {"Yes", "Да"}, {"No", "Нет"}) {}
+rewriteOptions(_window, 0.5, 0.5, 0.6, 0.4,
+    {"Overwrite file?", "Перезаписать файл?"}, {"Yes", "Да"}, {"No", "Нет"}) {}
 
 void Saver::reset() {
     active = false;
@@ -97,8 +98,9 @@ bool Saver::type(SDL_Keycode _code) {
     return false;
 }
 
-void Saver::inputText(const char* _text) {
+bool Saver::inputText(const char* _text) {
     fileNameTypeBox.writeString(_text);
+    return true;
 }
 
 void Saver::update() {
