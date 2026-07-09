@@ -13,25 +13,25 @@
 #include "../app/deviceInterface.hpp"
 #include "../app/saver.hpp"
 #include "../app/chart.cpp"
+#include "../app/programmingMenu.hpp"
 
 
 // Base cycle for use in any game mode
 class BaseCycle : public CycleTemplate {
  protected:
-    // System for selecting port for getting data throw COM-port
-    CurrentPort serialPort;
-
-    // Graphical part
     SettingsMenu settings;  // Menu for change settings
-
-    // Main menu
+ 
+    // Submenu
     GUI::RoundedBackplate mainBackplate;
-    GUI::HighlightedStaticText panelText;
     GUI::HighlightedStaticText portSelectText;
+    CurrentPort serialPort;  // System for selecting port for getting data throw COM-port
+    GUI::HighlightedStaticText panelText;
     DeviceInterface deviceInterface;
     Saver saver;
+
     Chart<Force> forceChart;
     Chart<Temperature> tempertureChart;
+    ProgrammingMenu programmingMenu;
 
  protected:
     bool inputMouseDown() override;
