@@ -10,8 +10,6 @@
 
 // posible variants of nodes
 enum class NodeType {
-    None,
-
     // Commands
     SetSpeed,      // Set specified speed (as input, in both directions)
 
@@ -21,10 +19,14 @@ enum class NodeType {
     WaitForce,     // Wait until got force
 
     // Control commands
+    Start,         // First node, from which it started
     WhileStart,    // Infinite loop, store nothing
     WhileEnd,      // Store position of loop start
     LoopStart,     // Basic for-loop, store current position and end (as input parameter)
     LoopEnd,       // Store position of loop start
+
+    // Final count
+    Count,
 };
 
 // Simple individual block of command to execute in language with in visual
