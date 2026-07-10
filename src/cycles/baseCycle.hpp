@@ -13,7 +13,7 @@
 #include "../app/deviceInterface.hpp"
 #include "../app/saver.hpp"
 #include "../app/chart.cpp"
-#include "../app/programming/node.hpp"
+#include "../app/programming/programMenu.hpp"
 
 
 // Base cycle for use in any game mode
@@ -31,7 +31,7 @@ class BaseCycle : public CycleTemplate {
 
     Chart<Force> forceChart;
     Chart<Temperature> tempertureChart;
-    Node programmingMenu;
+    ProgramMenu programMenu;
 
  protected:
     bool inputMouseDown() override;

@@ -10,8 +10,11 @@
 
 // posible variants of nodes
 enum class NodeType {
+    None,
+
     // Commands
     SetSpeed,      // Set specified speed (as input, in both directions)
+    SetStop,       // Command to stop move
 
     // Sensors, waiting until condition
     WaitNone,      // Infinite wait
@@ -30,13 +33,13 @@ enum class NodeType {
 };
 
 // Simple individual block of command to execute in language with in visual
-class Node : GUI::Template {
+class Node : public GUI::TextureTemplate {
 private:
-    static const unsigned number = 12;
-    SDL_Vertex points[number];
+    
 
 public:
-    Node(const Window& window, float X, float Y, float H, SDL_FColor color);
+    // Place at specified
+    Node(const Window& window, float X, float Y, Textures texture);
     bool click(const Mouse mouse);
     void update();
     void blit() const override;

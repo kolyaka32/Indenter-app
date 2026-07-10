@@ -18,12 +18,23 @@ enum class Textures : unsigned {
     SliderLine,
     QuitButton,
     MenuButton,
-    SaveButton,
     SettingsButton,
-
+    SaveButton,
+    ReloadButton,
+    ResumePauseButton,
+    HaltButton,
     // Base flags in settings
     FlagUSA,
     FlagRUS,
+
+    // Programming part
+    StartBlock,
+    LoopStartBlock,
+    LoopMiddleBlock,
+    LoopEndBlock,
+    WhileEndBlock,
+    ActionBlock,
+    WaitBlock,
 
     // Global counter of all textures
     Count,

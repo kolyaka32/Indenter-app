@@ -22,6 +22,7 @@ private:
 
     GUI::RectBackplate background;
     // Control part
+    const SDL_FRect upperRect;
     GUI::ImageButton startPauseButton;
     GUI::ImageButton haltButton;
 
@@ -32,7 +33,7 @@ public:
     void reset();
 
     // Interaction
-    void click(const Mouse mouse);
+    bool click(const Mouse mouse);
     void update();
     void blit() const override;
 

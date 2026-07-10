@@ -17,7 +17,7 @@ deviceInterface(_window, 0.13, 0.4),
 saver(_window, 0.13, 0.9),
 forceChart(_window, 0.4, 0.1, 0.55, 0.35, collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
 tempertureChart(_window, 0.4, 0.6, 0.55, 0.35, collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}),
-programmingMenu(_window, 800, 200, 40.0, {1.0, 0.6, 0.1, 1.0}) {
+programMenu(_window, 0.5, 0.5, 0.5, 1.0) {
     if (!isRestarted()) {
         serialPort.reset();
         saver.reset();
@@ -34,7 +34,7 @@ bool BaseCycle::inputMouseDown() {
     if (serialPort.click(mouse)) {
         return true;
     }
-    if (programmingMenu.click(mouse)) {
+    if (programMenu.click(mouse)) {
         return true;
     }
     return false;
@@ -85,7 +85,7 @@ void BaseCycle::draw() const {
 
     forceChart.blit();
     tempertureChart.blit();
-    programmingMenu.blit();
+    programMenu.blit();
 
     // Above menus
     saver.blit();
