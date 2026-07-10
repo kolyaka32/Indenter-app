@@ -20,12 +20,12 @@ private:
     int holdingNode;       // Node, that is holding by mouse or -1 if don't
     SDL_FPoint lastPos;    // Position, where it was holded last time
 
-    GUI::RectBackplate background;
-    // Control part
-    const SDL_FRect upperRect;
+    // Graphic part
+    GUI::RoundedBackplate background;
+    GUI::HighlightedStaticText title;
+    SDL_FRect separateRect;
     GUI::ImageButton startPauseButton;
     GUI::ImageButton haltButton;
-
     NodeSelector selector;
 
 public:

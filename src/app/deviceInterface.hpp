@@ -6,11 +6,17 @@
 #pragma once
 
 #include "../GUI/interface.hpp"
+#include "currentPort.hpp"
 
 
 // Class for interact with device and it state
 class DeviceInterface : GUI::Template {
 private:
+    GUI::RoundedBackplate mainBackplate;
+    GUI::HighlightedStaticText title;
+    GUI::HighlightedStaticText portSelectText;
+    CurrentPort serialPort;
+
     // Texts, showing current state
     GUI::RectBackplate stateBackplate;
     GUI::StaticText notConnectedText;
@@ -23,8 +29,10 @@ private:
     GUI::TextButton stopButton;
 
 public:
-    DeviceInterface(const Window& window, float X, float Y);
-    void click(const Mouse mouse);
+    DeviceInterface(const Window& window, float X, float Y, float W, float H);
+    void reset();
+
+    bool click(const Mouse mouse);
     void update();
     void blit() const override;
 };

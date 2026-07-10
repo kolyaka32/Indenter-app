@@ -7,17 +7,25 @@
 #include "device.hpp"
 
 
-DeviceInterface::DeviceInterface(const Window& _window, float _X, float _Y)
+DeviceInterface::DeviceInterface(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
-stateBackplate(_window, _X, _Y, 0.16, 0.04, 2.0, WHITE),
-notConnectedText(_window, _X, _Y, {"Not connected", "Нет подключения"}, Height::Main, BLACK),
-waitingText(_window, _X, _Y, {"Wait start", "Ожидает начала"}, Height::Main, BLACK),
-preWorkingText(_window, _X, _Y, {"Idle running", "Холостой ход"}, Height::Main, BLACK),
-workingText(_window, _X, _Y+0.05, {"Working running", "Рабочий ход"}, Height::Main, BLACK),
-startButton(_window, _X, _Y+0.05, {"Start", "Старт"}),
-stopButton(_window, _X, _Y+0.05, {"Stop", "Стоп"}) {}
+mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, {140, 140, 140, 255}),
+title(_window, _X, _Y-_H*0.45, {"Manual control", "Ручное управление"}, 2, Height::Info),
+portSelectText(_window, _X, _Y-0.35*_H, {"COM-port:", "COM-порт:"}, 2),
+serialPort(_window, _X, _Y-0.3*_H, 0.15, 0.04, 2.0),
+stateBackplate(_window, _X, _Y-_H*0.1, 0.16, 0.04, 2.0, WHITE),
+notConnectedText(_window, _X, _Y-_H*0.1, {"Not connected", "Нет подключения"}, Height::Main, BLACK),
+waitingText(_window, _X, _Y-_H*0.1, {"Wait start", "Ожидает начала"}, Height::Main, BLACK),
+preWorkingText(_window, _X, _Y-_H*0.1, {"Idle running", "Холостой ход"}, Height::Main, BLACK),
+workingText(_window, _X, _Y-_H*0.05, {"Working running", "Рабочий ход"}, Height::Main, BLACK),
+startButton(_window, _X, _Y-_H*0.05, {"Start", "Старт"}),
+stopButton(_window, _X, _Y-_H*0.05, {"Stop", "Стоп"}) {}
 
-void DeviceInterface::click(const Mouse _mouse) {
+void DeviceInterface::reset() {
+    serialPort.reset();
+}
+
+bool DeviceInterface::click(const Mouse _mouse) {
     switch (device.state) {
     case Device::Waiting:
         if (startButton.in(_mouse)) {
@@ -35,6 +43,7 @@ void DeviceInterface::click(const Mouse _mouse) {
     default:
         break;
     }
+    return false;
 }
 
 void DeviceInterface::update() {
@@ -57,8 +66,14 @@ void DeviceInterface::update() {
 }
 
 void DeviceInterface::blit() const {
-    stateBackplate.blit();
+    mainBackplate.blit();
 
+    title.blit();
+    portSelectText.blit();
+    serialPort.blit();
+
+    // States
+    stateBackplate.blit();
     switch (device.state) {
     case Device::NotConnected:
         notConnectedText.blit();
