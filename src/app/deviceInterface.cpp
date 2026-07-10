@@ -11,6 +11,7 @@ DeviceInterface::DeviceInterface(const Window& _window, float _X, float _Y, floa
 : Template(_window),
 mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, {140, 140, 140, 255}),
 title(_window, _X, _Y-_H*0.45, {"Manual control", "Ручное управление"}, 2, Height::Info),
+separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
 portSelectText(_window, _X, _Y-0.35*_H, {"COM-port:", "COM-порт:"}, 2),
 serialPort(_window, _X, _Y-0.3*_H, 0.15, 0.04, 2.0),
 stateBackplate(_window, _X, _Y-_H*0.1, 0.16, 0.04, 2.0, WHITE),
@@ -69,6 +70,8 @@ void DeviceInterface::blit() const {
     mainBackplate.blit();
 
     title.blit();
+    window.setDrawColor(BLACK);
+    window.drawRect(separateRect);
     portSelectText.blit();
     serialPort.blit();
 

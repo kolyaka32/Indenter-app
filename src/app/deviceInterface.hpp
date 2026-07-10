@@ -14,6 +14,7 @@ class DeviceInterface : GUI::Template {
 private:
     GUI::RoundedBackplate mainBackplate;
     GUI::HighlightedStaticText title;
+    SDL_FRect separateRect;
     GUI::HighlightedStaticText portSelectText;
     CurrentPort serialPort;
 

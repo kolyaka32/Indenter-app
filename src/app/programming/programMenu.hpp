@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <array>
+#include <mutex>
 #include "node.hpp"
 #include "nodeSelector.hpp"
 
@@ -15,17 +16,23 @@
 class ProgramMenu : GUI::Template {
 private:
     // Current executing programm
-    std::vector<Node*> nodes;
+    static std::vector<Node*> nodes;
     unsigned currentNode;  // Current executing node to check
     int holdingNode;       // Node, that is holding by mouse or -1 if don't
     SDL_FPoint lastPos;    // Position, where it was holded last time
+    LanguagedText filterText;  // Text for filter hint
+    const SDL_DialogFileFilter filter;  // Filter for selection program file
+    char saveLocation[100];    // Location with directory for save/load programs
+    static std::mutex saveMutex;
 
     // Graphic part
     GUI::RoundedBackplate background;
     GUI::HighlightedStaticText title;
     SDL_FRect separateRect;
-    GUI::ImageButton startPauseButton;
+    GUI::ImageButton startButton;
     GUI::ImageButton haltButton;
+    GUI::ImageButton saveButton;
+    GUI::ImageButton loadButton;
     NodeSelector selector;
 
 public:
@@ -37,7 +44,7 @@ public:
     void update();
     void blit() const override;
 
-    //
-    void save();
-    void load();
+    // Callback functions for save from dialog window
+    static void SDLCALL save(void* userdata, const char* const* filelist, int filter);
+    static void SDLCALL load(void* userdata, const char* const* filelist, int filter);
 };
