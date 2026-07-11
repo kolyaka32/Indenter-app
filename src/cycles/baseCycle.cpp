@@ -9,14 +9,13 @@
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
 settings(_window),
-deviceInterface(_window, 0.125, 0.55, 0.25, 0.9),
-programMenu(_window, 0.5, 0.55, 0.5, 0.9),
-forceChart(_window, 0.4, 0.1, 0.55, 0.35, collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
-tempertureChart(_window, 0.4, 0.6, 0.55, 0.35, collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}),
-saver(_window, 0.13, 0.9) {
+deviceInterface(_window, 0.12, 0.55, 0.24, 0.9),
+programMenu(_window, 0.46, 0.55, 0.44, 0.9),
+outputMenu(_window, 0.84, 0.55, 0.32, 0.9) {
     if (!isRestarted()) {
         deviceInterface.reset();
-        saver.reset();
+        programMenu.reset();
+        outputMenu.reset();
     }
 }
 
@@ -30,7 +29,7 @@ bool BaseCycle::inputMouseDown() {
     if (programMenu.click(mouse)) {
         return true;
     }
-    if (saver.click(mouse)) {
+    if (outputMenu.click(mouse)) {
         return true;
     }
     return false;
@@ -38,13 +37,9 @@ bool BaseCycle::inputMouseDown() {
 
 void BaseCycle::inputMouseUp() {
     settings.unClick();
-    saver.unclick();
 }
 
 bool BaseCycle::inputKeys(SDL_Keycode _key) {
-    if (saver.type(_key)) {
-        return true;
-    }
     if (_key == SDLK_ESCAPE) {
         settings.toggle();
         return true;
@@ -57,14 +52,14 @@ bool BaseCycle::inputMouseWheel(float _wheelY) {
 }
 
 bool BaseCycle::inputText(const char* _text) {
-    return saver.inputText(_text);
+    return false;
 }
 
 void BaseCycle::update() {
     settings.update();
     deviceInterface.update();
     programMenu.update();
-    saver.update();
+    outputMenu.update();
 }
 
 void BaseCycle::draw() const {
@@ -73,14 +68,8 @@ void BaseCycle::draw() const {
     window.clear();
 
     deviceInterface.blit();
-
-    forceChart.blit();
-    tempertureChart.blit();
     programMenu.blit();
-
-    // Above menus
-    saver.blit();
-
+    outputMenu.blit();
     settings.blit();
 
     // Render it

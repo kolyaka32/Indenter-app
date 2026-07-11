@@ -9,9 +9,7 @@
 #include "../menu/settingsMenu.hpp"
 #include "../app/deviceInterface.hpp"
 #include "../app/programming/programMenu.hpp"
-#include "../app/collectedData.hpp"
-#include "../app/chart.cpp"
-#include "../app/saver.hpp"
+#include "../app/output/outputMenu.hpp"
 
 
 // Base cycle for use in any game mode
@@ -20,12 +18,8 @@ class BaseCycle : public CycleTemplate {
     SettingsMenu settings;
 
     DeviceInterface deviceInterface;
-
     ProgramMenu programMenu;
-
-    Chart<Force> forceChart;
-    Chart<Temperature> tempertureChart;
-    Saver saver;
+    OutputMenu outputMenu;
 
  protected:
     bool inputMouseDown() override;

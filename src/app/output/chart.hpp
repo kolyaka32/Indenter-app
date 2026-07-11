@@ -4,7 +4,7 @@
  */
 
 #include <vector>
-#include "../GUI/interface.hpp"
+#include "../../GUI/interface.hpp"
 
 
 // Class for draw graphic single parameter

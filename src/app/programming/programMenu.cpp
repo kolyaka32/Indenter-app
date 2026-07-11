@@ -12,7 +12,7 @@ std::mutex ProgramMenu::saveMutex{};
 
 ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
-background(_window, _X, _Y, _W, _H, 20.0, 2.0),
+background(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, _X, _Y-_H*0.45, {"Programming", "Программирование"}, 2, Height::Info),
 selector(_window, _X-_W/3, _Y+_H*0.05, _W/3, _H*0.9),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
