@@ -17,21 +17,43 @@ class Device {
 
     // Posible states of device
     enum States {
-        NotConnected,  // Device not connected (or selected)
-        Waiting,       // Waiting for command
-        IdleSpeed,     // Going to sample at full speed
-        MainSpeed,     // Measuring sample at low speed
+        NotConnected,   // Device not connected (or selected)
+        NotResponding,  // Device connected, but don't send anything
+        Waiting,        // Waiting for command
+        Working,       // Going to sample at full speed
+    };
+
+    // Codes of messages, recieving from controller
+    enum class Get {
+        None,    // Nothing, for apply connection
+        Packet,  // One frame with new sensors values
+        ReachPos,  // Signal, that reach setted position
+        ReachForce,  // Signal, that reach setted force
+    };
+
+    // Codes of messages, sending to controller
+    enum class Send {
+        None,
+        Stop,
+        SetSpeed,  // Set speed (-2/-1/0/+1/+2)
+        ReachPos,
+        ReachForce,  // Set
     };
 
     void disconnect();
     void connectTo(const ComPort port);
-    void start();
-    void stop();
 
     // Cycle interact
-    void update();
+    void checkRecieve();
+    void sendStop();
+    void sendSetSpeed(Sint8 speed);
+    void sendReachPos(int pos);
+    void sendReachForce();
 
     States state = NotConnected;
+    timer lastRecieve = 0;
+    // How long could don't messages until set to not responding
+    const timer exceedWait = 1000;
 };
 
 // Object store state of device and interact with him

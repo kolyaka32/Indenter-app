@@ -21,11 +21,12 @@ private:
     // Texts, showing current state
     GUI::RectBackplate stateBackplate;
     GUI::StaticText notConnectedText;
+    GUI::StaticText notRespondingText;
     GUI::StaticText waitingText;
-    GUI::StaticText preWorkingText;
     GUI::StaticText workingText;
 
     // Buttons for start/stop device
+    GUI::InfoBox activatableBox;
     GUI::TextButton startButton;
     GUI::TextButton stopButton;
 

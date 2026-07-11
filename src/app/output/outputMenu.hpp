@@ -24,7 +24,6 @@ private:
     Chart<Temperature> tempertureChart;
     // Save function
     GUI::HighlightedStaticText notSavedText;
-    GUI::TextButton resetButton;
     GUI::TextButton saveButton;
 
 public:

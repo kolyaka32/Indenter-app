@@ -29,7 +29,7 @@ class CollectedData {
     CollectedData();
     ~CollectedData();
     void reset();
-    void addFrame(const char* data);
+    void addFrame(const Uint8* data);
 
     const std::vector<Force>& getForces();
     const std::vector<Temperature>& getTemperatures();

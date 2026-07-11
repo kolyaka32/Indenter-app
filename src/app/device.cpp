@@ -32,23 +32,64 @@ void Device::connectTo(const ComPort _port) {
     }
 }
 
-void Device::start() {
-    if (state) {
-        state = IdleSpeed;
+void Device::checkRecieve() {
+    if (state != States::NotConnected) {
+        // Get new messages
+        if (const Uint8* data = (Uint8*)serial.readData()) {
+            switch (Get(data[0])) {
+                case Get::None:
+                // Nothing
+                break;
+                
+                case Get::Packet:
+                collectedData.addFrame(data+1);
+                break;
+                
+                case Get::ReachPos:
+                // !
+                break;
+                
+                case Get::ReachForce:
+                // !
+                break;
+                
+                default:
+                return;
+            }
+            // Update timer
+            lastRecieve = getTime() + exceedWait;
+        } else {
+            // Check, if hasn't got packet too long
+            if (getTime() > lastRecieve) {
+                state = States::NotResponding;
+            }
+        }        
     }
 }
 
-void Device::stop() {
-    if (state) {
-        state = Waiting;
-    }
+void Device::sendStop() {
+    char data[1];
+    data[0] = char(Send::Stop);
+    serial.writeData(data, sizeof(data));
 }
 
-void Device::update() {
-    // Check, if changed state
-    // Get new messages
-    // !
-    if (const void* data = serial.readData()) {
-        collectedData.addFrame((char*)data);
-    }
+void Device::sendSetSpeed(Sint8 _speed) {
+    char data[2];
+    data[0] = char(Send::SetSpeed);
+    data[1] = _speed;
+    serial.writeData(data, sizeof(data));
 }
+
+void Device::sendReachPos(int _pos) {
+    char data[5];
+    data[0] = char(Send::SetSpeed);
+    memcpy(data+1, &_pos, sizeof(_pos));
+    serial.writeData(data, sizeof(data));
+}
+
+void Device::sendReachForce() {
+    char data[1];
+    data[0] = char(Send::ReachForce);
+    serial.writeData(data, sizeof(data));
+}
+

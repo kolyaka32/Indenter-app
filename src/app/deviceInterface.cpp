@@ -16,9 +16,10 @@ portSelectText(_window, _X, _Y-0.35*_H, {"COM-port:", "COM-порт:"}, 2),
 serialPort(_window, _X, _Y-0.3*_H, 0.15, 0.04, 2.0),
 stateBackplate(_window, _X, _Y-_H*0.1, 0.16, 0.04, 2.0, WHITE),
 notConnectedText(_window, _X, _Y-_H*0.1, {"Not connected", "Нет подключения"}, Height::Main, BLACK),
-waitingText(_window, _X, _Y-_H*0.1, {"Wait start", "Ожидает начала"}, Height::Main, BLACK),
-preWorkingText(_window, _X, _Y-_H*0.1, {"Idle running", "Холостой ход"}, Height::Main, BLACK),
-workingText(_window, _X, _Y-_H*0.05, {"Working running", "Рабочий ход"}, Height::Main, BLACK),
+notRespondingText(_window, _X, _Y-_H*0.1, {"Not responding", "Нет отвечает"}, Height::Main, BLACK),
+waitingText(_window, _X, _Y-_H*0.1, {"Wait", "Ожидает"}, Height::Main, BLACK),
+workingText(_window, _X, _Y-_H*0.05, {"Running", "Работает"}, Height::Main, BLACK),
+activatableBox(_window, _X, _Y-_H*0.12, {"Not connected", "Не подключён"}, 400),
 startButton(_window, _X, _Y-_H*0.05, {"Start", "Старт"}),
 stopButton(_window, _X, _Y-_H*0.05, {"Stop", "Стоп"}) {}
 
@@ -27,43 +28,13 @@ void DeviceInterface::reset() {
 }
 
 bool DeviceInterface::click(const Mouse _mouse) {
-    switch (device.state) {
-    case Device::Waiting:
-        if (startButton.in(_mouse)) {
-            device.start();
-        }
-        break;
-
-    case Device::IdleSpeed:
-    case Device::MainSpeed:
-        if (startButton.in(_mouse)) {
-            device.stop();
-        }
-        break;
+    //if (activatableBox)
     
-    default:
-        break;
-    }
     return false;
 }
 
 void DeviceInterface::update() {
-    switch (device.state) {
-    case Device::Waiting:
-        device.update();
-        break;
-
-    case Device::IdleSpeed:
-        device.update();
-        break;
-
-    case Device::MainSpeed:
-        device.update();
-        break;
-    
-    default:
-        break;
-    }
+    device.checkRecieve();
 }
 
 void DeviceInterface::blit() const {
@@ -82,22 +53,20 @@ void DeviceInterface::blit() const {
         notConnectedText.blit();
         break;
 
+    case Device::NotResponding:
+        notRespondingText.blit();
+        break;
+
     case Device::Waiting:
         waitingText.blit();
-        startButton.blit();
         break;
 
-    case Device::IdleSpeed:
-        preWorkingText.blit();
-        stopButton.blit();
-        break;
-
-    case Device::MainSpeed:
+    case Device::Working:
         workingText.blit();
-        stopButton.blit();
         break;
     
     default:
         break;
     }
+    activatableBox.blit();
 }

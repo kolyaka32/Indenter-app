@@ -17,7 +17,6 @@ forceChart(_window, _X+0.015, _Y-0.2*_H, _W*0.85, _H*0.25,
 tempertureChart(_window, _X+0.015, _Y+0.15*_H, _W*0.85, _H*0.25,
     collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}),
 notSavedText(_window, _X, _Y+_H*0.4, {"Not saved", "Не сохранено"}, 1),
-resetButton(_window, _X, _Y+_H*0.35, {"Reset", "Сбросить"}),
 saveButton(_window, _X, _Y+_H*0.45, {"Save", "Сохранить"}),
 filterText{"Table", "Таблица"},
 filter{filterText.getString().c_str(), "csv"} {
@@ -34,10 +33,6 @@ void OutputMenu::reset() {
 }
 
 bool OutputMenu::click(const Mouse _mouse) {
-    if (resetButton.in(_mouse)){
-        collectedData.reset();
-        return true;
-    }
     if (saveButton.in(_mouse)) {
         window.showSaveFileDialog(save, &filter, 1, saveLocation);
         return true;
@@ -57,7 +52,6 @@ void OutputMenu::blit() const {
     forceChart.blit();
     tempertureChart.blit();
 
-    resetButton.blit();
     if (collectedData.isUpdated()) {
         notSavedText.blit();
     }

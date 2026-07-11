@@ -29,6 +29,7 @@ class SettingsMenu : public GUI::SubWindow {
     GUI::HighlightedStaticText soundText;
     GUI::Slider soundSlider;
     #endif
+    GUI::TextButton resetButton;
     GUI::TextButton exitButton;
     GUI::TextButton closeButton;
 

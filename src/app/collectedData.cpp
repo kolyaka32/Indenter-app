@@ -49,7 +49,7 @@ CollectedData::~CollectedData() {
     }
 }
 
-void CollectedData::addFrame(const char* _data) {
+void CollectedData::addFrame(const Uint8* _data) {
     // Getted new frame
     for (int i=0; i < PACKET_FORCE_LENGTH; ++i) {
         forces.emplace_back(*(Force*)_data);
