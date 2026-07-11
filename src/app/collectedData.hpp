@@ -24,7 +24,6 @@ class CollectedData {
 
  protected:
     bool saved;  // Flag, is updated since last save
-    void save(const char* name);
 
  public:
     CollectedData();
@@ -36,8 +35,7 @@ class CollectedData {
 
     // Interacting with files
     bool isUpdated() const;  // Return true, if updated since last save
-    bool trySaveNew(const char* name);  // Function for save at runtime to new file, return true, if file already exist
-    void saveAnyway(const char* name);  // Function for save with replacement
+    void save(SDL_IOStream* stream);  // Save data to selected stream
 };
 
 // Main data-storing object

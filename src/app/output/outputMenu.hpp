@@ -7,18 +7,24 @@
 
 #include "../../app/collectedData.hpp"
 #include "chart.cpp"
-#include "saver.hpp"
 
 
 // Object for interact with collected data (show and save)
 class OutputMenu : GUI::Template {
 private:
+    LanguagedText filterText;  // Text for filter hint
+    const SDL_DialogFileFilter filter;  // Filter for selection data file
+    char saveLocation[100];    // Location with directory for save/load datas
+
     GUI::RoundedBackplate mainBackplate;
     GUI::HighlightedStaticText title;
     SDL_FRect separateRect;
+    // Getted graphs
     Chart<Force> forceChart;
     Chart<Temperature> tempertureChart;
-    Saver saver;
+    // Save function
+    GUI::HighlightedStaticText notSavedText;
+    GUI::TextButton saveButton;
 
 public:
     OutputMenu(const Window& window, float X, float Y, float W, float H);
@@ -27,4 +33,6 @@ public:
     bool click(const Mouse mouse);
     void update();
     void blit() const override;
+
+    static SDLCALL void save(void* userdata, const char* const* filelist, int filter);
 };

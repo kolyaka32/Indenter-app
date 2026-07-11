@@ -7,7 +7,6 @@
 
 #include <vector>
 #include <array>
-#include <mutex>
 #include "node.hpp"
 #include "nodeSelector.hpp"
 
@@ -23,7 +22,6 @@ private:
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection program file
     char saveLocation[100];    // Location with directory for save/load programs
-    static std::mutex saveMutex;
 
     // Graphic part
     GUI::RoundedBackplate background;

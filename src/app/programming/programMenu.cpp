@@ -3,12 +3,11 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include <fstream>
+#include <mutex>
 #include "programMenu.hpp"
 
 
 std::vector<Node*> ProgramMenu::nodes{};
-std::mutex ProgramMenu::saveMutex{};
 
 ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
@@ -70,6 +69,9 @@ void ProgramMenu::blit() const {
     saveButton.blit();
     loadButton.blit();
 }
+
+
+static std::mutex saveMutex;
 
 void ProgramMenu::save(void* _userdata, const char* const* _filelist, int _filter) {
     // Check, if all avaliable
