@@ -11,8 +11,14 @@
 // Main data-storing object
 CollectedData collectedData{};
 
+void CollectedData::reset() {
+    saved = false;
+    forces.clear();
+    temperatures.clear();
+}
+
 CollectedData::CollectedData()
-: saved(true) {
+: saved(false) {
     // Reserving partly space for frames
     forces.reserve(200);
     temperatures.reserve(200);

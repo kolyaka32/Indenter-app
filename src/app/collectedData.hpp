@@ -28,6 +28,7 @@ class CollectedData {
  public:
     CollectedData();
     ~CollectedData();
+    void reset();
     void addFrame(const char* data);
 
     const std::vector<Force>& getForces();

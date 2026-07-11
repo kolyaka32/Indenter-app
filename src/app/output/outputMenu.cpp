@@ -5,7 +5,6 @@
 
 #include <mutex>
 #include "outputMenu.hpp"
-#include "../collectedData.hpp"
 
 
 OutputMenu::OutputMenu(const Window& _window, float _X, float _Y, float _W, float _H)
@@ -15,9 +14,10 @@ title(_window, _X, _Y-_H*0.45, {"Getted data", "Полученные данны�
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
 forceChart(_window, _X+0.015, _Y-0.2*_H, _W*0.85, _H*0.25,
     collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
-tempertureChart(_window, _X+0.015, _Y+0.1*_H, _W*0.85, _H*0.25,
+tempertureChart(_window, _X+0.015, _Y+0.15*_H, _W*0.85, _H*0.25,
     collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}),
 notSavedText(_window, _X, _Y+_H*0.4, {"Not saved", "Не сохранено"}, 1),
+resetButton(_window, _X, _Y+_H*0.35, {"Reset", "Сбросить"}),
 saveButton(_window, _X, _Y+_H*0.45, {"Save", "Сохранить"}),
 filterText{"Table", "Таблица"},
 filter{filterText.getString().c_str(), "csv"} {
@@ -25,6 +25,7 @@ filter{filterText.getString().c_str(), "csv"} {
     char* directory = SDL_GetCurrentDirectory();
     snprintf(saveLocation, sizeof(saveLocation), "%sdatas\\data.dat", directory);
     SDL_free(directory);
+
     reset();
 }
 
@@ -33,6 +34,10 @@ void OutputMenu::reset() {
 }
 
 bool OutputMenu::click(const Mouse _mouse) {
+    if (resetButton.in(_mouse)){
+        collectedData.reset();
+        return true;
+    }
     if (saveButton.in(_mouse)) {
         window.showSaveFileDialog(save, &filter, 1, saveLocation);
         return true;
@@ -52,10 +57,11 @@ void OutputMenu::blit() const {
     forceChart.blit();
     tempertureChart.blit();
 
-    saveButton.blit();
+    resetButton.blit();
     if (collectedData.isUpdated()) {
         notSavedText.blit();
     }
+    saveButton.blit();
 }
 
 void OutputMenu::save(void* _userdata, const char* const* _filelist, int _filter) {
