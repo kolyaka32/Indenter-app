@@ -54,7 +54,6 @@ bool DeviceInterface::click(const Mouse _mouse) {
             activatableBox.reset();
         }
     }
-    
     return false;
 }
 

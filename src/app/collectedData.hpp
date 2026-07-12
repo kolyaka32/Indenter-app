@@ -36,6 +36,7 @@ class CollectedData {
 
     // Interacting with files
     bool isUpdated() const;  // Return true, if updated since last save
+    unsigned getLineCount() const;  // Return current number of lines
     void save(SDL_IOStream* stream);  // Save data to selected stream
 };
 

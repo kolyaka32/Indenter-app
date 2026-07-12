@@ -63,6 +63,10 @@ bool CollectedData::isUpdated() const {
     return saved;
 }
 
+unsigned CollectedData::getLineCount() const {
+    return forces.size();
+}
+
 const std::vector<Force>& CollectedData::getForces() {
     return forces;
 }

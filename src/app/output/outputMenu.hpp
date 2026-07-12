@@ -23,6 +23,7 @@ private:
     Chart<Force> forceChart;
     Chart<Temperature> tempertureChart;
     // Save function
+    GUI::DynamicText counterText;
     GUI::HighlightedStaticText notSavedText;
     GUI::TextButton saveButton;
 

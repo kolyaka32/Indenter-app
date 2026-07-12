@@ -16,6 +16,7 @@ forceChart(_window, _X+0.015, _Y-0.2*_H, _W*0.85, _H*0.25,
     collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
 tempertureChart(_window, _X+0.015, _Y+0.15*_H, _W*0.85, _H*0.25,
     collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}),
+counterText(_window, _X, _Y+_H*0.35, {"Packets getted: %d", "Пакетов получено: %d"}),
 notSavedText(_window, _X, _Y+_H*0.4, {"Not saved", "Не сохранено"}, 1),
 saveButton(_window, _X, _Y+_H*0.45, {"Save", "Сохранить"}),
 filterText{"Table", "Таблица"},
@@ -29,7 +30,7 @@ filter{filterText.getString().c_str(), "csv"} {
 }
 
 void OutputMenu::reset() {
-    
+    counterText.setValues(0);
 }
 
 bool OutputMenu::click(const Mouse _mouse) {
@@ -41,7 +42,7 @@ bool OutputMenu::click(const Mouse _mouse) {
 }
 
 void OutputMenu::update() {
-
+    counterText.setValues(collectedData.getLineCount());
 }
 
 void OutputMenu::blit() const {
@@ -52,6 +53,7 @@ void OutputMenu::blit() const {
     forceChart.blit();
     tempertureChart.blit();
 
+    counterText.blit();
     if (collectedData.isUpdated()) {
         notSavedText.blit();
     }

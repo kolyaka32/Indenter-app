@@ -254,7 +254,7 @@ bool CurrentPort::press(SDL_Keycode _key) {
         }
         return true;
     }
-    return true;
+    return false;
 }
 
 void CurrentPort::blit() const {
