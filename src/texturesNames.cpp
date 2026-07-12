@@ -22,6 +22,8 @@ const char* texturesFilesNames[unsigned(Textures::Count)] = {
     "img/GUI/restart_button.png",
     "img/GUI/resume_pause_button.png",
     "img/GUI/halt_button.png",
+    "img/GUI/up_button.png",
+    "img/GUI/down_button.png",
 
     // Flags
     "img/GUI/Flag_USA.png",

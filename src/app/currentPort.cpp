@@ -246,6 +246,17 @@ bool CurrentPort::click(const Mouse _mouse) {
     return false;
 }
 
+bool CurrentPort::press(SDL_Keycode _key) {
+    if (openned) {
+        if (_key == SDLK_ESCAPE) {
+            moveSelectedDown();
+            minimize();
+        }
+        return true;
+    }
+    return true;
+}
+
 void CurrentPort::blit() const {
     window.setDrawColor(BLACK);
     window.drawRect(background);

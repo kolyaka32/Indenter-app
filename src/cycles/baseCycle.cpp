@@ -40,6 +40,9 @@ void BaseCycle::inputMouseUp() {
 }
 
 bool BaseCycle::inputKeys(SDL_Keycode _key) {
+    if (deviceInterface.press(_key)) {
+        return true;
+    }
     if (_key == SDLK_ESCAPE) {
         settings.toggle();
         return true;

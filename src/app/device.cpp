@@ -71,6 +71,8 @@ void Device::sendStop() {
     char data[1];
     data[0] = char(Send::Stop);
     serial.writeData(data, sizeof(data));
+    // Setting state to working
+    state = States::Waiting;
 }
 
 void Device::sendSetSpeed(Sint8 _speed) {
@@ -78,6 +80,8 @@ void Device::sendSetSpeed(Sint8 _speed) {
     data[0] = char(Send::SetSpeed);
     data[1] = _speed;
     serial.writeData(data, sizeof(data));
+    // Setting state to working
+    state = States::Working;
 }
 
 void Device::sendReachPos(int _pos) {
@@ -93,3 +97,6 @@ void Device::sendReachForce() {
     serial.writeData(data, sizeof(data));
 }
 
+bool Device::isConnected() const {
+    return state != States::NotConnected;
+}

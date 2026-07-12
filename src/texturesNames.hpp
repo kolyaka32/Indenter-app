@@ -24,6 +24,8 @@ enum class Textures : unsigned {
     ReloadButton,
     ResumePauseButton,
     HaltButton,
+    UpButton,
+    DownButton,
     // Base flags in settings
     FlagUSA,
     FlagRUS,

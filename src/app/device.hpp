@@ -49,6 +49,7 @@ class Device {
     void sendSetSpeed(Sint8 speed);
     void sendReachPos(int pos);
     void sendReachForce();
+    bool isConnected() const;
 
     States state = NotConnected;
     timer lastRecieve = 0;

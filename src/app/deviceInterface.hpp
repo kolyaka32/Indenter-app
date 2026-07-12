@@ -19,6 +19,7 @@ private:
     CurrentPort serialPort;
 
     // Texts, showing current state
+    GUI::HighlightedStaticText stateText;
     GUI::RectBackplate stateBackplate;
     GUI::StaticText notConnectedText;
     GUI::StaticText notRespondingText;
@@ -27,14 +28,16 @@ private:
 
     // Buttons for start/stop device
     GUI::InfoBox activatableBox;
-    GUI::TextButton startButton;
-    GUI::TextButton stopButton;
+    GUI::ImageButton upButton;
+    GUI::ImageButton haltButton;
+    GUI::ImageButton downButton;
 
 public:
     DeviceInterface(const Window& window, float X, float Y, float W, float H);
     void reset();
 
     bool click(const Mouse mouse);
+    bool press(SDL_Keycode key);
     void update();
     void blit() const override;
 };
