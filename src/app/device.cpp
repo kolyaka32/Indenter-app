@@ -14,16 +14,19 @@ Device::Device() {}
 
 Device::~Device() {
     if (state) {
+        // Send to stop
+        sendStop();
+
         // Disconnecting device
         serial.reset();
     }
 }
 
 void Device::disconnect() {
-    state = NotConnected;
     if (state != NotConnected) {
         serial.reset();
     }
+    state = NotConnected;
 }
 
 void Device::connectTo(const ComPort _port) {
@@ -37,19 +40,19 @@ void Device::checkRecieve() {
         // Get new messages
         if (const Uint8* data = (Uint8*)serial.readData()) {
             switch (Get(data[0])) {
-                case Get::None:
+            case Get::None:
                 // Nothing
                 break;
-                
-                case Get::Packet:
+
+            case Get::Packet:
                 collectedData.addFrame(data+1);
                 break;
-                
-                case Get::ReachPos:
+
+            case Get::ReachPos:
                 // !
                 break;
                 
-                case Get::ReachForce:
+            case Get::ReachForce:
                 // !
                 break;
                 

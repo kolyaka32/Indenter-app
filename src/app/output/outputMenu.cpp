@@ -12,10 +12,10 @@ OutputMenu::OutputMenu(const Window& _window, float _X, float _Y, float _W, floa
 mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, _X, _Y-_H*0.45, {"Getted data", "Полученные данные"}, 2, Height::Info),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
-forceChart(_window, _X+0.015, _Y-0.2*_H, _W*0.85, _H*0.25,
+/*forceChart(_window, _X+0.015, _Y-0.2*_H, _W*0.85, _H*0.25,
     collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
 tempertureChart(_window, _X+0.015, _Y+0.15*_H, _W*0.85, _H*0.25,
-    collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}),
+    collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}),*/
 counterText(_window, _X, _Y+_H*0.35, {"Packets getted: %d", "Пакетов получено: %d"}),
 notSavedText(_window, _X, _Y+_H*0.4, {"Not saved", "Не сохранено"}, 1),
 saveButton(_window, _X, _Y+_H*0.45, {"Save", "Сохранить"}),
@@ -50,8 +50,8 @@ void OutputMenu::blit() const {
     title.blit();
     window.setDrawColor(BLACK);
     window.drawRect(separateRect);
-    forceChart.blit();
-    tempertureChart.blit();
+    //forceChart.blit();
+    //tempertureChart.blit();
 
     counterText.blit();
     if (collectedData.isUpdated()) {

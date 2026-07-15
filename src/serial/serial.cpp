@@ -79,10 +79,9 @@ const void* Serial::readData() {
 void Serial::writeData(const char* _data, int _length) {
     DWORD length = 0;
     if (WriteFile(handle, _data, _length, &length, nullptr)) {
-        logger.additional("Can't send data: %d", GetLastError());
-        return;
+        logger.additional("Send %1d bytes", length);
     } else {
-        logger.additional("Send %1d bytes", _length);
+        logger.additional("Can't send data: %d", GetLastError());
     }
 }
 

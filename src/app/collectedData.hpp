@@ -12,15 +12,21 @@
 #define PACKET_FORCE_LENGTH 5
 
 // Data type
-typedef float Force;
-typedef float Temperature;
+struct Measure {
+   typedef float Force;
+   typedef float Temperature;
+   // Values
+   int position;
+   Force force;
+   Temperature temp;
+};
+
 
 
 // Class for storing collected data and show it
 class CollectedData {
  private:
-    std::vector<Force> forces;
-    std::vector<Temperature> temperatures;
+    std::vector<Measure> measures;
 
  protected:
     bool saved;  // Flag, is updated since last save
@@ -31,8 +37,8 @@ class CollectedData {
     void reset();
     void addFrame(const Uint8* data);
 
-    const std::vector<Force>& getForces();
-    const std::vector<Temperature>& getTemperatures();
+    //const std::vector<Force>& getForces();
+    //const std::vector<Temperature>& getTemperatures();
 
     // Interacting with files
     bool isUpdated() const;  // Return true, if updated since last save

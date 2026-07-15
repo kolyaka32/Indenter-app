@@ -20,8 +20,8 @@ private:
     GUI::HighlightedStaticText title;
     SDL_FRect separateRect;
     // Getted graphs
-    Chart<Force> forceChart;
-    Chart<Temperature> tempertureChart;
+    //Chart<Force> forceChart;
+    //Chart<Temperature> tempertureChart;
     // Save function
     GUI::DynamicText counterText;
     GUI::HighlightedStaticText notSavedText;
