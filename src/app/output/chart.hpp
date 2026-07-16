@@ -5,22 +5,27 @@
 
 #include <vector>
 #include "../../GUI/interface.hpp"
+#include "../boundedArray.hpp"
 
 
 // Class for draw graphic single parameter
-template <typename T>
+template <typename xAxis, typename yAxis>
 class Chart : GUI::Template {
 private:
-    const float maxValue, minValue;
+    // Drawing value
+    const BoundedArray<xAxis>& pos;
+    const BoundedArray<yAxis>& value;
+
+    // Graphic part
     const SDL_FRect drawRect;
     const SDL_Color color;
-    const std::vector<T>& param;
     GUI::HighlightedStaticText title;
-    GUI::StaticText marks[5];
+    GUI::DynamicText marks[5];
 
 public:
-    Chart(const Window& window, float X, float Y, float W, float H, const std::vector<T>& param,
-        float minValue, float maxValue, const LanguagedText&& title, SDL_Color color = BLACK);
+    Chart(const Window& window, float X, float Y, float W, float H, const BoundedArray<xAxis>& pos,
+        const BoundedArray<yAxis>& value, const LanguagedText&& title, SDL_Color color = BLACK);
 
+    void update();
     void blit() const;
 };

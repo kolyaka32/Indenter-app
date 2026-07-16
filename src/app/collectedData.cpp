@@ -12,14 +12,16 @@
 CollectedData collectedData{};
 
 CollectedData::CollectedData()
-: saved(false) {
-    // Reserving partly space for frames
-    measures.reserve(200);
-}
+: saved(false),
+positions(10.0, 0.0),
+forces(20.0, 0.0),
+temperatures(25.0, 15.0) {}
 
 void CollectedData::reset() {
     saved = false;
-    measures.clear();
+    positions.reset();
+    forces.reset();
+    temperatures.reset();
 }
 
 CollectedData::~CollectedData() {
@@ -47,9 +49,13 @@ CollectedData::~CollectedData() {
     }
 }
 
-void CollectedData::addFrame(const Uint8* _data) {
-    // Getted new frame
-    measures.emplace_back(*(Measure*)_data);
+void CollectedData::addFrame(const void* _data) {
+    // Add new values
+    const Measure* object = (Measure*)_data;
+    positions.add(object->position);
+    forces.add(object->force);
+    temperatures.add(object->temperature);
+    // Set that changed
     saved = true;
 }
 
@@ -58,22 +64,26 @@ bool CollectedData::isUpdated() const {
 }
 
 unsigned CollectedData::getLineCount() const {
-    return measures.size();
+    return positions.size();
 }
 
-/*const std::vector<Force>& CollectedData::getForces() {
+const BoundedArray<Position>& CollectedData::getPositions() const {
+    return positions;
+}
+
+const BoundedArray<Force>& CollectedData::getForces() const {
     return forces;
 }
 
-const std::vector<Temperature>& CollectedData::getTemperatures() {
+const BoundedArray<Temperature>& CollectedData::getTemperatures() const {
     return temperatures;
-}*/
+}
 
 void CollectedData::save(SDL_IOStream* _stream) {
     // Writing data
-    for (int i=0; i < measures.size(); ++i) {
+    for (int i=0; i < positions.size(); ++i) {
         // Writing data
-        SDL_IOprintf(_stream, "%d; %f; %d\n", measures[i].position, measures[i].force, measures[i].temp);
+        SDL_IOprintf(_stream, "%d; %f; %d\n", positions[i], forces[i], temperatures[i]);
     }
     // Updating flag
     saved = false;

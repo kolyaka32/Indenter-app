@@ -5,28 +5,29 @@
 
 #pragma once
 
-#include <vector>
-#include "../data/app.hpp"
+#include "boundedArray.cpp"
 
-// Constatnts
-#define PACKET_FORCE_LENGTH 5
 
 // Data type
-struct Measure {
-   typedef float Force;
-   typedef float Temperature;
-   // Values
-   int position;
-   Force force;
-   Temperature temp;
-};
-
-
+typedef float Position;
+typedef float Force;
+typedef float Temperature;
 
 // Class for storing collected data and show it
 class CollectedData {
+ public:
+    // One packet of data
+    struct Measure {
+        // Values
+        Position position;
+        Force force;
+        Temperature temperature;
+    };
+
  private:
-    std::vector<Measure> measures;
+    BoundedArray<Position> positions;
+    BoundedArray<Force> forces;
+    BoundedArray<Temperature> temperatures;
 
  protected:
     bool saved;  // Flag, is updated since last save
@@ -35,10 +36,11 @@ class CollectedData {
     CollectedData();
     ~CollectedData();
     void reset();
-    void addFrame(const Uint8* data);
+    void addFrame(const void* data);
 
-    //const std::vector<Force>& getForces();
-    //const std::vector<Temperature>& getTemperatures();
+    const BoundedArray<Position>& getPositions() const;
+    const BoundedArray<Force>& getForces() const;
+    const BoundedArray<Temperature>& getTemperatures() const;
 
     // Interacting with files
     bool isUpdated() const;  // Return true, if updated since last save
