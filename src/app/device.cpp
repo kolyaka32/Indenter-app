@@ -81,44 +81,62 @@ void Device::checkRecieve() {
 void Device::sendStop() {
     char data = char(Send::Stop);
     serial.writeData(&data, sizeof(data));
-    state = States::Working;
 }
 
 void Device::sendMoveUp() {
-    char data = char(Send::SetMoveUp);
+    char data = char(Send::SetWorkUp);
     serial.writeData(&data, sizeof(data));
-    state = States::Working;
 }
 
 void Device::sendMoveDown() {
-    char data = char(Send::SetMoveDown);
+    char data = char(Send::SetWorkDown);
     serial.writeData(&data, sizeof(data));
-    state = States::Working;
 }
 
-void Device::sendRunUp() {
-    char data = char(Send::SetRunUp);
+void Device::sendIdleUp() {
+    char data = char(Send::SetIdleUp);
     serial.writeData(&data, sizeof(data));
-    state = States::Working;
 }
 
-void Device::sendRunDown() {
-    char data = char(Send::SetRunDown);
+void Device::sendIdleDown() {
+    char data = char(Send::SetIdleDown);
     serial.writeData(&data, sizeof(data));
-    state = States::Working;
 }
 
-void Device::sendReachPos(int _pos) {
+void Device::sendStepUp(int _steps) {
     char data[5];
-    data[0] = char(Send::ReachPos);
+    data[0] = char(Send::SetStepUp);
+    memcpy(data+1, &_steps, sizeof(_steps));
+    serial.writeData(data, sizeof(data));
+}
+
+void Device::sendStepDown(int _steps) {
+    char data[5];
+    data[0] = char(Send::SetStepDown);
+    memcpy(data+1, &_steps, sizeof(_steps));
+    serial.writeData(data, sizeof(data));
+}
+
+void Device::sendMoveToPos(int _pos) {
+    char data[5];
+    data[0] = char(Send::SetMoveTo);
     memcpy(data+1, &_pos, sizeof(_pos));
     serial.writeData(data, sizeof(data));
 }
 
 void Device::sendReachForce() {
-    char data[1];
-    data[0] = char(Send::ReachForce);
-    serial.writeData(data, sizeof(data));
+    char data = char(Send::ReachForce);
+    serial.writeData(&data, sizeof(data));
+}
+
+void Device::sendLoseForce() {
+    char data = char(Send::LostForce);
+    serial.writeData(&data, sizeof(data));
+}
+
+void Device::sendGetPos() {
+    char data = char(Send::GetPos);
+    serial.writeData(&data, sizeof(data));
 }
 
 bool Device::isConnected() const {

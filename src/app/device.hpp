@@ -23,46 +23,68 @@ class Device {
         Working,        // Going to sample at full speed
     };
 
+    // Main device state
+    States state = NotConnected;
+
     // Codes of messages, recieving from controller
     enum class Get {
         None,        // Nothing, for apply connection
+        // Current state
+        Waiting,     // Currently waiting for command
+        Working,     // Currently moving
+        // 
+        Packet,      // One frame with new sensors values
+        // Complete task
+        Position,    // Signal with current position
         ReachPos,    // Signal, that reach setted position
         ReachForce,  // Signal, that reach setted force
-        Packet,      // One frame with new sensors values
-        // Current state
-        Working,     // Currently moving
-        Waiting,     // Currently waiting for command
     };
 
     // Codes of messages, sending to controller
     enum class Send {
         None,
-        Stop,
-        SetMoveUp,
-        SetMoveDown,
-        SetRunUp,
-        SetRunDown,
-        ReachPos,    // ! Required realisation
+        GetPos,  // !
         ReachForce,  // ! Required realisation
+        LostForce,
+        SetWorkUp,
+        SetWorkDown,
+        SetIdleUp,
+        SetIdleDown,
+        SetStepUp,
+        SetStepDown, // ! Required realisation 
+        SetMoveTo,   // !
+        Stop,
     };
 
     void disconnect();
     void connectTo(const ComPort port);
 
-    // Cycle interact
-    void checkRecieve();
+    // Posible sendings
+    // Immidiate stop
     void sendStop();
+    // Working speed infinite movement
     void sendMoveUp();
     void sendMoveDown();
-    void sendRunUp();
-    void sendRunDown();
-    void sendReachPos(int pos);
+    // Idle speed infinite movement
+    void sendIdleUp();
+    void sendIdleDown();
+    // Relative movement by step count
+    void sendStepUp(int steps);
+    void sendStepDown(int steps);
+    // Absolute movement to pos (should by get only from get position)
+    void sendMoveToPos(int pos);
+    // Sensors
     void sendReachForce();
+    void sendLoseForce();
+    void sendGetPos();
+
+    // Cycle update
+    void checkRecieve();
     bool isConnected() const;
 
-    States state = NotConnected;
-    timer lastRecieve = 0;
+ private:
     // How long could don't messages until set to not responding
+    timer lastRecieve = 0;
     const timer exceedWait = 1000;
 };
 

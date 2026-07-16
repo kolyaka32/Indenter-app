@@ -37,7 +37,7 @@ bool DeviceInterface::click(const Mouse _mouse) {
     }
     if (fastUpButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendRunUp();
+            device.sendIdleUp();
         } else {
             activatableBox.reset();
         }
@@ -65,7 +65,7 @@ bool DeviceInterface::click(const Mouse _mouse) {
     }
     if (fastDownButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendRunDown();
+            device.sendIdleDown();
         } else {
             activatableBox.reset();
         }
