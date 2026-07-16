@@ -21,9 +21,11 @@ notRespondingText(_window, _X, _Y-_H*0.1, {"Not responding", "Нет отвеч�
 waitingText(_window, _X, _Y-_H*0.1, {"Wait", "Ожидает"}, Height::Main, BLACK),
 workingText(_window, _X, _Y-_H*0.05, {"Running", "Работает"}, Height::Main, BLACK),
 activatableBox(_window, _X, _Y-_H*0.03, {"Not connected", "Не подключён"}, 800),
-upButton(_window, _X, _Y+_H*0.05, 0.03, Textures::UpButton),
-haltButton(_window, _X, _Y+_H*0.12, 0.03, Textures::HaltButton),
-downButton(_window, _X, _Y+_H*0.19, 0.03, Textures::DownButton) {}
+fastUpButton(_window, _X, _Y+_H*0.05, 0.03, Textures::FastUpButton),
+workUpButton(_window, _X, _Y+_H*0.12, 0.03, Textures::UpButton),
+haltButton(_window, _X, _Y+_H*0.19, 0.03, Textures::HaltButton),
+workDownButton(_window, _X, _Y+_H*0.26, 0.03, Textures::DownButton),
+fastDownButton(_window, _X, _Y+_H*0.33, 0.03, Textures::FastDownButton) {}
 
 void DeviceInterface::reset() {
     serialPort.reset();
@@ -33,9 +35,16 @@ bool DeviceInterface::click(const Mouse _mouse) {
     if (serialPort.click(_mouse)) {
         return true;
     }
-    if (upButton.in(_mouse)) {
+    if (fastUpButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendSetSpeed(2);
+            device.sendRunUp();
+        } else {
+            activatableBox.reset();
+        }
+    }
+    if (workUpButton.in(_mouse)) {
+        if (device.isConnected()) {
+            device.sendMoveUp();
         } else {
             activatableBox.reset();
         }
@@ -47,9 +56,16 @@ bool DeviceInterface::click(const Mouse _mouse) {
             activatableBox.reset();
         }
     }
-    if (downButton.in(_mouse)) {
+    if (workDownButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendSetSpeed(-2);
+            device.sendMoveDown();
+        } else {
+            activatableBox.reset();
+        }
+    }
+    if (fastDownButton.in(_mouse)) {
+        if (device.isConnected()) {
+            device.sendRunDown();
         } else {
             activatableBox.reset();
         }
@@ -103,7 +119,9 @@ void DeviceInterface::blit() const {
         break;
     }
     activatableBox.blit();
-    upButton.blit();
+    fastUpButton.blit();
+    workUpButton.blit();
     haltButton.blit();
-    downButton.blit();
+    workDownButton.blit();
+    fastDownButton.blit();
 }

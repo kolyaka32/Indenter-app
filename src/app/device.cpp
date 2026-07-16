@@ -71,25 +71,38 @@ void Device::checkRecieve() {
 }
 
 void Device::sendStop() {
-    char data[1];
-    data[0] = char(Send::Stop);
-    serial.writeData(data, sizeof(data));
-    // Setting state to working
-    state = States::Waiting;
+    char data = char(Send::Stop);
+    serial.writeData(&data, sizeof(data));
+    state = States::Working;
 }
 
-void Device::sendSetSpeed(Sint8 _speed) {
-    char data[2];
-    data[0] = char(Send::SetSpeed);
-    data[1] = _speed;
-    serial.writeData(data, sizeof(data));
-    // Setting state to working
+void Device::sendMoveUp() {
+    char data = char(Send::SetMoveUp);
+    serial.writeData(&data, sizeof(data));
+    state = States::Working;
+}
+
+void Device::sendMoveDown() {
+    char data = char(Send::SetMoveDown);
+    serial.writeData(&data, sizeof(data));
+    state = States::Working;
+}
+
+void Device::sendRunUp() {
+    char data = char(Send::SetRunUp);
+    serial.writeData(&data, sizeof(data));
+    state = States::Working;
+}
+
+void Device::sendRunDown() {
+    char data = char(Send::SetRunDown);
+    serial.writeData(&data, sizeof(data));
     state = States::Working;
 }
 
 void Device::sendReachPos(int _pos) {
     char data[5];
-    data[0] = char(Send::SetSpeed);
+    data[0] = char(Send::ReachPos);
     memcpy(data+1, &_pos, sizeof(_pos));
     serial.writeData(data, sizeof(data));
 }

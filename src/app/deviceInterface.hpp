@@ -28,9 +28,11 @@ private:
 
     // Buttons for start/stop device
     GUI::InfoBox activatableBox;
-    GUI::ImageButton upButton;
+    GUI::ImageButton fastUpButton;
+    GUI::ImageButton workUpButton;
     GUI::ImageButton haltButton;
-    GUI::ImageButton downButton;
+    GUI::ImageButton workDownButton;
+    GUI::ImageButton fastDownButton;
 
 public:
     DeviceInterface(const Window& window, float X, float Y, float W, float H);

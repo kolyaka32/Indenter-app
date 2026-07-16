@@ -35,9 +35,12 @@ class Device {
     enum class Send {
         None,
         Stop,
-        SetSpeed,  // Set speed (-2/-1/0/+1/+2)
+        SetMoveUp,
+        SetMoveDown,
+        SetRunUp,
+        SetRunDown,
         ReachPos,
-        ReachForce,  // Set
+        ReachForce,
     };
 
     void disconnect();
@@ -46,7 +49,10 @@ class Device {
     // Cycle interact
     void checkRecieve();
     void sendStop();
-    void sendSetSpeed(Sint8 speed);
+    void sendMoveUp();
+    void sendMoveDown();
+    void sendRunUp();
+    void sendRunDown();
     void sendReachPos(int pos);
     void sendReachForce();
     bool isConnected() const;
