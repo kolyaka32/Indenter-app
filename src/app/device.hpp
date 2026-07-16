@@ -17,49 +17,40 @@ class Device {
 
     // Posible states of device
     enum States {
+        // Pre work
         NotConnected,   // Device not connected (or selected)
+        // Unknown
         NotResponding,  // Device connected, but don't send anything
+        // Normal work
         Waiting,        // Waiting for command
         Working,        // Going to sample at full speed
     };
-
     // Main device state
     States state = NotConnected;
-
-    // Codes of messages, recieving from controller
-    enum class Get {
-        None,        // Nothing, for apply connection
-        // Current state
-        Waiting,     // Currently waiting for command
-        Working,     // Currently moving
-        // 
-        Packet,      // One frame with new sensors values
-        // Complete task
-        Position,    // Signal with current position
-        ReachPos,    // Signal, that reach setted position
-        ReachForce,  // Signal, that reach setted force
-    };
-
-    // Codes of messages, sending to controller
-    enum class Send {
-        None,
-        GetPos,  // !
-        ReachForce,  // ! Required realisation
-        LostForce,
-        SetWorkUp,
-        SetWorkDown,
-        SetIdleUp,
-        SetIdleDown,
-        SetStepUp,
-        SetStepDown, // ! Required realisation 
-        SetMoveTo,   // !
-        Stop,
-    };
 
     void disconnect();
     bool connectTo(const ComPort port);
 
     // Posible sendings
+    // Codes of messages, sending to controller (sorted by importance)
+    enum class Send {
+        None,
+        // Getters
+        GetPos,       // Ask current position
+        // Set sensors
+        ReachForce,   // Send signal, when exceed setted force
+        LowerForce,   // Send signal, when get lower setted force
+        // Movement
+        SetWorkUp,    // Start moving up with working (slow) speed
+        SetWorkDown,  // Start moving down with working (slow) speed
+        SetIdleUp,    // Start moving up with idle (fast) speed
+        SetIdleDown,  // Start moving down with idle (fast) speed
+        SetStepUp,    // Move up by specified number of steps
+        SetStepDown,  // Move down by specified number of steps
+        SetMoveTo,    // Move to setted position
+        // Stop
+        Stop,         // Stop all movement
+    };
     // Immidiate stop
     void sendStop();
     // Working speed infinite movement
@@ -78,7 +69,20 @@ class Device {
     void sendLoseForce();
     void sendGetPos();
 
-    // Cycle update
+    // Receiving
+    // Codes of messages, recieving from controller (sorted by importance)
+    enum class Get {
+        None,        // Nothing, for apply connection
+        // Current state
+        Waiting,     // Currently waiting for command
+        Working,     // Currently moving
+        // New measures
+        Packet,      // One frame with new sensors values
+        // Complete task
+        Position,    // Signal with current position
+        ReachPos,    // Signal, that reach setted position
+        ReachForce,  // Signal, that reach setted force
+    };
     void checkRecieve();
     bool isConnected() const;
 

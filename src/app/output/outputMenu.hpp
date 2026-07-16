@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../../app/collectedData.hpp"
+#include "../collectedData.hpp"
 #include "chart.cpp"
 
 
