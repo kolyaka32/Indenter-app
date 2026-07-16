@@ -4,7 +4,7 @@
  */
 
 #include "currentPort.hpp"
-#include "device.hpp"
+#include "../device.hpp"
 
 
 bool CurrentPort::openned = false;

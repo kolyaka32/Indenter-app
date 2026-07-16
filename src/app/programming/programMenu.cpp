@@ -23,7 +23,8 @@ filterText{"Program file", "Файл программы"},
 filter{filterText.getString().c_str(), "prg"} {
     // Getting location
     char* directory = SDL_GetCurrentDirectory();
-    snprintf(saveLocation, sizeof(saveLocation), "%sprograms\\script.prg", directory);
+    SDL_CreateDirectory("scripts");
+    snprintf(saveLocation, sizeof(saveLocation), "%sscripts\\script.prg", directory);
     SDL_free(directory);
     reset();
 }

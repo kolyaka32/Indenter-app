@@ -5,7 +5,7 @@
 
 #include "settingsMenu.hpp"
 #include "../data/cycleTemplate.hpp"
-#include "../app/collectedData.hpp"
+#include "../app/output/collectedData.hpp"
 
 
 SettingsMenu::SettingsMenu(const Window& _window)

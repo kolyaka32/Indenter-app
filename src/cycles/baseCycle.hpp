@@ -7,7 +7,7 @@
 
 #include "../data/cycleTemplate.hpp"
 #include "../menu/settingsMenu.hpp"
-#include "../app/deviceInterface.hpp"
+#include "../app/direct/directControl.hpp"
 #include "../app/programming/programMenu.hpp"
 #include "../app/output/outputMenu.hpp"
 
@@ -17,7 +17,7 @@ class BaseCycle : public CycleTemplate {
  protected:
     SettingsMenu settings;
 
-    DeviceInterface deviceInterface;
+    DirectControl directControl;
     ProgramMenu programMenu;
     OutputMenu outputMenu;
 

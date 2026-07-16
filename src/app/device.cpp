@@ -4,7 +4,7 @@
  */
 
 #include "device.hpp"
-#include "collectedData.hpp"
+#include "output/collectedData.hpp"
 
 
 Device device;
@@ -132,7 +132,7 @@ void Device::sendReachForce() {
 }
 
 void Device::sendLoseForce() {
-    char data = char(Send::LostForce);
+    char data = char(Send::LowerForce);
     serial.writeData(&data, sizeof(data));
 }
 

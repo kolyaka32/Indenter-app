@@ -5,7 +5,7 @@
 
 #include <vector>
 #include "../../GUI/interface.hpp"
-#include "../boundedArray.hpp"
+#include "boundedArray.hpp"
 
 
 // Class for draw graphic single parameter

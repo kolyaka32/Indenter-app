@@ -5,7 +5,6 @@
 
 #include <fstream>
 #include "collectedData.hpp"
-#include "../data/macroses.hpp"
 
 
 // Main data-storing object
@@ -34,7 +33,7 @@ CollectedData::~CollectedData() {
         // Finding allowable file name
         do {
             // Create new name
-            SDL_snprintf(buffer, sizeof(buffer), "datas\\data-%d.csv", number);
+            SDL_snprintf(buffer, sizeof(buffer), "records\\data-%d.csv", number);
             // Increasing number
             number++;
 

@@ -23,7 +23,8 @@ filterText{"Table", "Таблица"},
 filter{filterText.getString().c_str(), "csv"} {
     // Getting location
     char* directory = SDL_GetCurrentDirectory();
-    snprintf(saveLocation, sizeof(saveLocation), "%sdatas\\data.dat", directory);
+    SDL_CreateDirectory("records");
+    snprintf(saveLocation, sizeof(saveLocation), "%srecords\\data.csv", directory);
     SDL_free(directory);
 
     reset();

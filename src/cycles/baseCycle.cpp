@@ -9,11 +9,11 @@
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
 settings(_window),
-deviceInterface(_window, 0.12, 0.55, 0.24, 0.9),
+directControl(_window, 0.12, 0.55, 0.24, 0.9),
 programMenu(_window, 0.46, 0.55, 0.44, 0.9),
 outputMenu(_window, 0.84, 0.55, 0.32, 0.9) {
     if (!isRestarted()) {
-        deviceInterface.reset();
+        directControl.reset();
         programMenu.reset();
         outputMenu.reset();
     }
@@ -23,7 +23,7 @@ bool BaseCycle::inputMouseDown() {
     if (settings.click(mouse)) {
         return true;
     }
-    if (deviceInterface.click(mouse)) {
+    if (directControl.click(mouse)) {
         return true;
     }
     if (programMenu.click(mouse)) {
@@ -40,7 +40,7 @@ void BaseCycle::inputMouseUp() {
 }
 
 bool BaseCycle::inputKeys(SDL_Keycode _key) {
-    if (deviceInterface.press(_key)) {
+    if (directControl.press(_key)) {
         return true;
     }
     if (_key == SDLK_ESCAPE) {
@@ -60,7 +60,7 @@ bool BaseCycle::inputText(const char* _text) {
 
 void BaseCycle::update() {
     settings.update();
-    deviceInterface.update();
+    directControl.update();
     programMenu.update();
     outputMenu.update();
 }
@@ -70,7 +70,7 @@ void BaseCycle::draw() const {
     window.setDrawColor(GREY);
     window.clear();
 
-    deviceInterface.blit();
+    directControl.blit();
     programMenu.blit();
     outputMenu.blit();
     settings.blit();

@@ -5,12 +5,11 @@
 
 #pragma once
 
-#include "../GUI/interface.hpp"
 #include "currentPort.hpp"
 
 
 // Class for interact with device and it state
-class DeviceInterface : GUI::Template {
+class DirectControl : GUI::Template {
 private:
     GUI::RoundedBackplate mainBackplate;
     GUI::HighlightedStaticText title;
@@ -35,7 +34,7 @@ private:
     GUI::ImageButton fastDownButton;
 
 public:
-    DeviceInterface(const Window& window, float X, float Y, float W, float H);
+    DirectControl(const Window& window, float X, float Y, float W, float H);
     void reset();
 
     bool click(const Mouse mouse);

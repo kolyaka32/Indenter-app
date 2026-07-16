@@ -3,11 +3,11 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include "deviceInterface.hpp"
-#include "device.hpp"
+#include "directControl.hpp"
+#include "../device.hpp"
 
 
-DeviceInterface::DeviceInterface(const Window& _window, float _X, float _Y, float _W, float _H)
+DirectControl::DirectControl(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
 mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, _X, _Y-_H*0.45, {"Manual control", "Ручное управление"}, 2, Height::Info),
@@ -16,10 +16,10 @@ portSelectText(_window, _X, _Y-0.35*_H, {"COM-port:", "COM-порт:"}, 2),
 serialPort(_window, _X, _Y-0.3*_H, 0.15, 0.04, 2.0),
 stateText(_window, _X, _Y-_H*0.14, {"Current state:", "Текущее состояние:"}, 2),
 stateBackplate(_window, _X, _Y-_H*0.1, 0.16, 0.04, 2.0, WHITE),
-notConnectedText( _window, _X, _Y-_H*0.1, {"Not connected", "Нет подключения"}, Height::Main, BLACK),
+notConnectedText(_window, _X, _Y-_H*0.1, {"Not connected", "Нет подключения"}, Height::Main, BLACK),
 notRespondingText(_window, _X, _Y-_H*0.1, {"Not responding", "Нет отвечает"}, Height::Main, BLACK),
-waitingText(      _window, _X, _Y-_H*0.1, {"Wait", "Ожидает"}, Height::Main, BLACK),
-workingText(      _window, _X, _Y-_H*0.1, {"Running", "Работает"}, Height::Main, BLACK),
+waitingText(_window, _X, _Y-_H*0.1, {"Wait", "Ожидает"}, Height::Main, BLACK),
+workingText(_window, _X, _Y-_H*0.1, {"Running", "Работает"}, Height::Main, BLACK),
 activatableBox(_window, _X, _Y-_H*0.03, {"Not connected", "Не подключён"}, 800),
 fastUpButton(_window, _X, _Y+_H*0.05, 0.03, Textures::FastUpButton),
 workUpButton(_window, _X, _Y+_H*0.12, 0.03, Textures::UpButton),
@@ -27,11 +27,11 @@ haltButton(_window, _X, _Y+_H*0.19, 0.03, Textures::HaltButton),
 workDownButton(_window, _X, _Y+_H*0.26, 0.03, Textures::DownButton),
 fastDownButton(_window, _X, _Y+_H*0.33, 0.03, Textures::FastDownButton) {}
 
-void DeviceInterface::reset() {
+void DirectControl::reset() {
     serialPort.reset();
 }
 
-bool DeviceInterface::click(const Mouse _mouse) {
+bool DirectControl::click(const Mouse _mouse) {
     if (serialPort.click(_mouse)) {
         return true;
     }
@@ -73,20 +73,20 @@ bool DeviceInterface::click(const Mouse _mouse) {
     return false;
 }
 
-bool DeviceInterface::press(SDL_Keycode _key) {
+bool DirectControl::press(SDL_Keycode _key) {
     if (serialPort.press(_key)) {
         return true;
     }
     return false;
 }
 
-void DeviceInterface::update() {
+void DirectControl::update() {
     device.checkRecieve();
     serialPort.update();
     activatableBox.update();
 }
 
-void DeviceInterface::blit() const {
+void DirectControl::blit() const {
     mainBackplate.blit();
 
     title.blit();
