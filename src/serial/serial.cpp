@@ -35,8 +35,8 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     dcb.Parity   = NOPARITY;    // parity bit
     dcb.StopBits = ONESTOPBIT;  // stop bit
     if (!SetCommState(handle, &dcb)) {
-        // Handle the error.
-        logger.additional("Can't set state: %d", GetLastError());
+        // Handle the error
+        logger.important("Can't set state: %d", GetLastError());
         return false;
     }
     // Setting timeouts

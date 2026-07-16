@@ -57,7 +57,7 @@ class Device {
     };
 
     void disconnect();
-    void connectTo(const ComPort port);
+    bool connectTo(const ComPort port);
 
     // Posible sendings
     // Immidiate stop

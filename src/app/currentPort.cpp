@@ -140,12 +140,15 @@ void CurrentPort::connectToFirst() {
     // Finding first avaliable variant
     for (int i=0; i < selected; ++i) {
         if (comPorts[i].isAvaliable()) {
+            // Trying connected to it
+            if (device.connectTo(comPorts[i])) {
+                // Can't connect - return
+                return;
+            }
             // Selecting it
             selected = i+1;
             // Placing it at main place
             texts[selected].move(0.0, -height);
-            // Trying connected to it
-            device.connectTo(comPorts[i]);
             return;
         }
     }
@@ -218,16 +221,19 @@ bool CurrentPort::click(const Mouse _mouse) {
         if (openned) {
             // In openned menu - selecting variant and closing
             selected = getPosition(_mouse);
-            moveSelectedDown();
-            minimize();
             // Appling action
             if (selected) {
                 // Connecting to new selected
-                device.connectTo(comPorts[selected-1]);
+                if (device.connectTo(comPorts[selected-1])) {
+                    // Couldn't connect
+                    selected = 0;
+                }
             } else {
                 // Disconnecting (if first variant)
                 device.disconnect();
             }
+            moveSelectedDown();
+            minimize();
             return true;
         } else {
             // Openning menu

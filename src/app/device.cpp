@@ -29,10 +29,12 @@ void Device::disconnect() {
     state = NotConnected;
 }
 
-void Device::connectTo(const ComPort _port) {
+bool Device::connectTo(const ComPort _port) {
     if (serial.tryConnectTo(_port)) {
         state = Waiting;
+        return false;
     }
+    return true;
 }
 
 void Device::checkRecieve() {
