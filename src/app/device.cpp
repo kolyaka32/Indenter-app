@@ -55,8 +55,16 @@ void Device::checkRecieve() {
             case Get::ReachForce:
                 // !
                 break;
-                
-                default:
+
+            case Get::Working:
+                state = Working;
+                break;
+
+            case Get::Waiting:
+                state = Waiting;
+                break;
+
+            default:
                 return;
             }
             // Update timer

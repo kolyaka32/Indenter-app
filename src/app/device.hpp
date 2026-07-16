@@ -20,15 +20,18 @@ class Device {
         NotConnected,   // Device not connected (or selected)
         NotResponding,  // Device connected, but don't send anything
         Waiting,        // Waiting for command
-        Working,       // Going to sample at full speed
+        Working,        // Going to sample at full speed
     };
 
     // Codes of messages, recieving from controller
     enum class Get {
-        None,    // Nothing, for apply connection
-        Packet,  // One frame with new sensors values
-        ReachPos,  // Signal, that reach setted position
+        None,        // Nothing, for apply connection
+        ReachPos,    // Signal, that reach setted position
         ReachForce,  // Signal, that reach setted force
+        Packet,      // One frame with new sensors values
+        // Current state
+        Working,     // Currently moving
+        Waiting,     // Currently waiting for command
     };
 
     // Codes of messages, sending to controller
@@ -39,8 +42,8 @@ class Device {
         SetMoveDown,
         SetRunUp,
         SetRunDown,
-        ReachPos,
-        ReachForce,
+        ReachPos,    // ! Required realisation
+        ReachForce,  // ! Required realisation
     };
 
     void disconnect();
