@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "../GUI/interface.hpp"
-#include "../serial/comPort.hpp"
+#include "../../GUI/interface.hpp"
+#include "../../serial/comPort.hpp"
 
 
 // Class for configuring com port to connect
@@ -36,7 +36,9 @@ class CurrentPort : GUI::Template {
  public:
     CurrentPort(const Window& window, float X, float Y, float W, float H, float frameThickness);
     void reset();
+
     void update();
-    bool click(const Mouse mouse);  // Return number, if select any
+    bool click(const Mouse mouse);
+    bool press(SDL_Keycode key);
     void blit() const override;
 };

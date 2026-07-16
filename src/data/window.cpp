@@ -273,3 +273,13 @@ void Window::updateTitle(const char* _name) const {
 void Window::updateTitle() const {
     updateTitle(titleText.getString().c_str());
 }
+
+void Window::showSaveFileDialog(SDL_DialogFileCallback _callback,
+    const SDL_DialogFileFilter *_filters, int _nfilters, const char* _default_location) const {
+    SDL_ShowSaveFileDialog(_callback, nullptr, window, _filters, _nfilters, _default_location);
+}
+
+void Window::showOpenFileDialog(SDL_DialogFileCallback _callback,
+    const SDL_DialogFileFilter *_filters, int _nfilters, const char* _default_location, bool _allowMany) const {
+    SDL_ShowOpenFileDialog(_callback, nullptr, window, _filters, _nfilters, _default_location, _allowMany);
+}

@@ -5,6 +5,7 @@
 
 #include "settingsMenu.hpp"
 #include "../data/cycleTemplate.hpp"
+#include "../app/output/collectedData.hpp"
 
 
 SettingsMenu::SettingsMenu(const Window& _window)
@@ -27,6 +28,7 @@ soundText{window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1}
 soundSlider{window, 0.5, 0.76, 0.5, audio.sounds.getVolume()},
 #endif
 //exitButton{window, 0.5, 0.82, {"Close", "Закрыть", "Ausfahrt", "Выхад"}}
+resetButton(_window, 0.5, 0.72, {"Reset", "Сбросить"}),
 exitButton{window, 0.5, 0.78, {"Exit from app", "Выйти из приложения"}},
 closeButton{window, 0.5, 0.84, {"Close", "Закрыть"}}
 {}
@@ -47,6 +49,10 @@ bool SettingsMenu::click(const Mouse _mouse) {
         }
         if (closeButton.in(_mouse)) {
             close();
+            return true;
+        }
+        if (resetButton.in(_mouse)) {
+            collectedData.reset();
             return true;
         }
         // Check on changing language
@@ -165,7 +171,8 @@ void SettingsMenu::blit() const {
         soundSlider.blit();
         soundText.blit();
         #endif
-        // Quit
+        // Additional buttons
+        resetButton.blit();
         exitButton.blit();
         closeButton.blit();
     }

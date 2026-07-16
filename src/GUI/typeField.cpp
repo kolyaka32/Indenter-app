@@ -394,7 +394,7 @@ GUI::Code GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
         // Stoping entering any letters
         window.stopTextInput();
         // Return action
-        return Action;
+        return Activate;
 
     default:
         return None;

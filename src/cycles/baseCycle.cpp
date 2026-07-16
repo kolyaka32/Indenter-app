@@ -9,17 +9,13 @@
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
 settings(_window),
-mainBackplate(_window, 0.13, 0.5, 0.24, 0.9, 20.0, 2.0, {140, 140, 140, 255}),
-panelText(_window, 0.13, 0.08, {"Control", "Управление"}, 2, Height::Info),
-portSelectText(_window, 0.13, 0.15, {"COM-port:", "COM-порт:"}, 2),
-serialPort(_window, 0.13, 0.2, 0.15, 0.04, 2.0),
-deviceInterface(_window, 0.13, 0.4),
-saver(_window, 0.13, 0.9),
-forceChart(_window, 0.4, 0.1, 0.55, 0.35, collectedData.getForces(), 0.0, 10.0, {"Force", "Сила"}),
-tempertureChart(_window, 0.4, 0.6, 0.55, 0.35, collectedData.getTemperatures(), -40.0, 20.0, {"Temperature", "Температура"}) {
+directControl(_window, 0.12, 0.55, 0.24, 0.9),
+programMenu(_window, 0.46, 0.55, 0.44, 0.9),
+outputMenu(_window, 0.84, 0.55, 0.32, 0.9) {
     if (!isRestarted()) {
-        serialPort.reset();
-        saver.reset();
+        directControl.reset();
+        programMenu.reset();
+        outputMenu.reset();
     }
 }
 
@@ -27,10 +23,13 @@ bool BaseCycle::inputMouseDown() {
     if (settings.click(mouse)) {
         return true;
     }
-    if (saver.click(mouse)) {
+    if (directControl.click(mouse)) {
         return true;
     }
-    if (serialPort.click(mouse)) {
+    if (programMenu.click(mouse)) {
+        return true;
+    }
+    if (outputMenu.click(mouse)) {
         return true;
     }
     return false;
@@ -38,11 +37,10 @@ bool BaseCycle::inputMouseDown() {
 
 void BaseCycle::inputMouseUp() {
     settings.unClick();
-    saver.unclick();
 }
 
 bool BaseCycle::inputKeys(SDL_Keycode _key) {
-    if (saver.type(_key)) {
+    if (directControl.press(_key)) {
         return true;
     }
     if (_key == SDLK_ESCAPE) {
@@ -57,33 +55,24 @@ bool BaseCycle::inputMouseWheel(float _wheelY) {
 }
 
 bool BaseCycle::inputText(const char* _text) {
-    return saver.inputText(_text);
+    return false;
 }
 
 void BaseCycle::update() {
     settings.update();
-    serialPort.update();
-    deviceInterface.update();
-    saver.update();
+    directControl.update();
+    programMenu.update();
+    outputMenu.update();
 }
 
 void BaseCycle::draw() const {
     // Background
     window.setDrawColor(GREY);
     window.clear();
-    
-    // Main part
-    mainBackplate.blit();
-    panelText.blit();
-    portSelectText.blit();
-    serialPort.blit();
-    deviceInterface.blit();
-    forceChart.blit();
-    tempertureChart.blit();
 
-    // Above menus
-    saver.blit();
-
+    directControl.blit();
+    programMenu.blit();
+    outputMenu.blit();
     settings.blit();
 
     // Render it

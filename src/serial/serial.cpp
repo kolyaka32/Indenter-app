@@ -35,8 +35,8 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     dcb.Parity   = NOPARITY;    // parity bit
     dcb.StopBits = ONESTOPBIT;  // stop bit
     if (!SetCommState(handle, &dcb)) {
-        // Handle the error.
-        logger.additional("Can't set state: %d", GetLastError());
+        // Handle the error
+        logger.important("Can't set state: %d", GetLastError());
         return false;
     }
     // Setting timeouts
@@ -79,10 +79,9 @@ const void* Serial::readData() {
 void Serial::writeData(const char* _data, int _length) {
     DWORD length = 0;
     if (WriteFile(handle, _data, _length, &length, nullptr)) {
-        logger.additional("Can't send data: %d", GetLastError());
-        return;
+        logger.additional("Send %1d bytes", length);
     } else {
-        logger.additional("Send %1d bytes", _length);
+        logger.additional("Can't send data: %d", GetLastError());
     }
 }
 

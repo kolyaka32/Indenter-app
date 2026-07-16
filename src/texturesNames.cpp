@@ -16,12 +16,28 @@ const char* texturesFilesNames[unsigned(Textures::Count)] = {
 
     "img/GUI/quit_button.png",
     "img/GUI/menu_button.png",
-    "img/GUI/save_button.png",
     "img/GUI/settings_button.png",
+    "img/GUI/save_button.png",
+    "img/GUI/load_button.png",
+    "img/GUI/restart_button.png",
+    "img/GUI/resume_pause_button.png",
+    "img/GUI/halt_button.png",
+    "img/GUI/up_button.png",
+    "img/GUI/fast_up_button.png",
+    "img/GUI/down_button.png",
+    "img/GUI/fast_down_button.png",
 
     // Flags
     "img/GUI/Flag_USA.png",
     "img/GUI/Flag_RUS.png",
+
+    "img/program/Start.png",
+    "img/program/LoopStart.png",
+    "img/program/LoopMiddle.png",
+    "img/program/LoopEnd.png",
+    "img/program/WhileEnd.png",
+    "img/program/Action.png",
+    "img/program/Wait.png",
 };
 
 Textures operator+(const Textures _color, int _offset) {
