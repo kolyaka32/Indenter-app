@@ -12,15 +12,17 @@
 class NodeSelector : GUI::Template {
 private:
     // Array with selectable variants
-    std::array<Node*, unsigned(NodeType::Count)-3> nodes;
+    std::array<Node*, 7> nodes;  // ! For now without loops
 
+    // Graphical part
     GUI::RectBackplate background;
+
+    template <typename Obj>
+    void addNode(float X, float Y, float H);
 
 public:
     NodeSelector(const Window& window, float X, float Y, float W, float H);
     ~NodeSelector();
-    template <typename Obj>
-    void addNode(const Window& window, float X, float Y, float H);
 
     // Interaction
     Node* click(const Mouse mouse);  // return new node or nullptr, if don't
@@ -31,9 +33,9 @@ public:
 
 
 template <typename Obj>
-void NodeSelector::addNode(const Window& _window, float _X, float _Y, float _H) {
-    static unsigned count = 0;
-    unsigned pos = count - nodes.size()/2;
-    nodes[count] = new Obj{_window, _X, _Y+_H*pos, Textures::MenuButton};
+void NodeSelector::addNode(float _X, float _Y, float _H) {
+    static int count = 0;
+    float pos = _H * (count - (int)nodes.size()/2) / nodes.size();
+    nodes[count] = new Obj{window, _X * window.getWidth(), (_Y + pos) * window.getHeight(), Textures::BlockStart};
     count++;
 }

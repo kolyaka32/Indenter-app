@@ -5,6 +5,7 @@
 
 #include "device.hpp"
 #include "output/collectedData.hpp"
+#include "programming/programMenu.hpp"
 
 
 Device device;
@@ -46,24 +47,28 @@ void Device::checkRecieve() {
                 // Nothing
                 break;
 
-            case Get::Packet:
-                collectedData.addFrame(data+1);
-                break;
-
-            case Get::ReachPos:
-                // !
-                break;
-                
-            case Get::ReachForce:
-                // !
+            case Get::Waiting:
+                state = Waiting;
                 break;
 
             case Get::Working:
                 state = Working;
                 break;
 
-            case Get::Waiting:
-                state = Waiting;
+            case Get::Packet:
+                collectedData.addFrame(data+1);
+                break;
+
+            case Get::Position:
+                ProgramMenu::handlePos();
+                break;
+
+            case Get::ReachPos:
+                ProgramMenu::handleReachPos();
+                break;
+                
+            case Get::ReachForce:
+                ProgramMenu::handleReachForce();
                 break;
 
             default:
@@ -105,17 +110,17 @@ void Device::sendIdleDown() {
     serial.writeData(&data, sizeof(data));
 }
 
-void Device::sendStepUp(int _steps) {
+void Device::sendStepUp(float _distance) {
     char data[5];
     data[0] = char(Send::SetStepUp);
-    memcpy(data+1, &_steps, sizeof(_steps));
+    memcpy(data+1, &_distance, sizeof(_distance));
     serial.writeData(data, sizeof(data));
 }
 
-void Device::sendStepDown(int _steps) {
+void Device::sendStepDown(float _distance) {
     char data[5];
     data[0] = char(Send::SetStepDown);
-    memcpy(data+1, &_steps, sizeof(_steps));
+    memcpy(data+1, &_distance, sizeof(_distance));
     serial.writeData(data, sizeof(data));
 }
 

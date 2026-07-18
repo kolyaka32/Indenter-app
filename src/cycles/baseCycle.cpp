@@ -17,6 +17,7 @@ outputMenu(_window, 0.84, 0.55, 0.32, 0.9) {
         programMenu.reset();
         outputMenu.reset();
     }
+    logger.additional("Start base cycle");
 }
 
 bool BaseCycle::inputMouseDown() {

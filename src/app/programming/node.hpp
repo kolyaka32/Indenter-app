@@ -10,19 +10,22 @@
 
 // posible variants of nodes
 enum class NodeType {
+    // System nodes (can't create)
     None,
-
-    // Commands
-    SetSpeed,      // Set specified speed (as input, in both directions)
-    SetStop,       // Command to stop move
-
-    // Sensors, waiting until condition
-    WaitNone,      // Infinite wait
-    WaitPosition,  // Wait until passed specified steps number
-    WaitForce,     // Wait until got force
+    Start,  // First node, from which program started
 
     // Control commands
-    Start,         // First node, from which it started
+    SetStop,       // Command to stop move
+    SetMove,       // Set infinite movement in [selected] direction with [selected] speed
+    SetSteps,      // Set realtive movement in [mm], work speed
+    SetTarget,     // Set absolute [target], move to
+
+    // Sensors, waiting until condition
+    SavePos,         // Command to get and save current position
+    WaitReachForce,  // Wait until exceed force
+    WaitLoseForce,   // Wait until get less force
+
+    // Control commands
     WhileStart,    // Infinite loop, store nothing
     WhileEnd,      // Store position of loop start
     LoopStart,     // Basic for-loop, store current position and end (as input parameter)
@@ -42,5 +45,16 @@ public:
     Node(const Window& window, float X, float Y, Textures texture);
     bool click(const Mouse mouse);
     void update();
+
+    // Activate current node
+    // Return nullptr, for stop; next node, if correct (including itself)
+    virtual Node* use();
+
+    // Proceed actions from get new packets
+    // Return nullptr, for stop; next node, if correct (including itself)
+    virtual Node* handleGetPos();
+    virtual Node* handlReachPos() const;
+    virtual Node* handleReachForce() const;
+
     void blit() const override;
 };

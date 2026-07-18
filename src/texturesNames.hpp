@@ -33,13 +33,13 @@ enum class Textures : unsigned {
     FlagRUS,
 
     // Programming part
-    StartBlock,
-    LoopStartBlock,
-    LoopMiddleBlock,
-    LoopEndBlock,
-    WhileEndBlock,
-    ActionBlock,
-    WaitBlock,
+    BlockStart,
+    BlockLoopStart,
+    BlockLoopMiddle,
+    BlockLoopEnd,
+    BlockWhileEnd,
+    BlockAction,
+    BlockWait,
 
     // Global counter of all textures
     Count,

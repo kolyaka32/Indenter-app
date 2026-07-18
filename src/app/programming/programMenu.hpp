@@ -16,8 +16,10 @@ class ProgramMenu : GUI::Template {
 private:
     // Current executing programm
     static std::vector<Node*> nodes;
-    unsigned currentNode;  // Current executing node to check
-    int holdingNode;       // Node, that is holding by mouse or -1 if don't
+    static Node* currentNode;  // Current executing node to check
+    // Runtime part
+    bool wasWorking;
+    Node* holdingNode;     // Node, that is holding by mouse or -1 if don't
     SDL_FPoint lastPos;    // Position, where it was holded last time
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection program file
@@ -27,11 +29,12 @@ private:
     GUI::RoundedBackplate background;
     GUI::HighlightedStaticText title;
     SDL_FRect separateRect;
+    NodeSelector selector;
     GUI::ImageButton startButton;
     GUI::ImageButton haltButton;
     GUI::ImageButton saveButton;
     GUI::ImageButton loadButton;
-    NodeSelector selector;
+    GUI::InfoBox stoppedInfo;
 
 public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);
@@ -40,7 +43,15 @@ public:
     // Interaction
     bool click(const Mouse mouse);
     void update();
+    void checkStopped();
     void blit() const override;
+
+    // Proceed action from get messages, start executing next command
+    static void handlePos();
+    static void handleReachPos();
+    static void handleReachForce();
+    // Return, if currently run any programs
+    static bool isExecuting();
 
     // Callback functions for save from dialog window
     static void SDLCALL save(void* userdata, const char* const* filelist, int filter);

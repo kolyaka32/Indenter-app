@@ -60,8 +60,8 @@ class Device {
     void sendIdleUp();
     void sendIdleDown();
     // Relative movement by step count
-    void sendStepUp(int steps);
-    void sendStepDown(int steps);
+    void sendStepUp(float distance);
+    void sendStepDown(float distance);
     // Absolute movement to pos (should by get only from get position)
     void sendMoveToPos(int pos);
     // Sensors

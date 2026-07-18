@@ -8,17 +8,19 @@
 
 
 std::vector<Node*> ProgramMenu::nodes{};
+Node* ProgramMenu::currentNode{};
 
 ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
 background(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, _X, _Y-_H*0.45, {"Programming", "Программирование"}, 2, Height::Info),
-selector(_window, _X-_W/3, _Y+_H*0.05, _W/3, _H*0.9),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
 startButton(_window, _X+_W*0.37, _Y-_H*0.45, 0.03, Textures::ResumePauseButton),
 haltButton(_window,  _X+_W*0.45, _Y-_H*0.45, 0.03, Textures::HaltButton),
 saveButton(_window,  _X-_W*0.45, _Y-_H*0.45, 0.03, Textures::SaveButton),
 loadButton(_window,  _X-_W*0.37, _Y-_H*0.45, 0.03, Textures::LoadButton),
+stoppedInfo(_window, _X+_W*0.16, _Y-_H*0.30, {"Program stopped", "Программа остановлена"}, 1000),
+selector(_window, _X-_W/3, _Y+_H*0.05, _W/3, _H*0.9),
 filterText{"Program file", "Файл программы"},
 filter{filterText.getString().c_str(), "prg"} {
     // Getting location
@@ -30,8 +32,8 @@ filter{filterText.getString().c_str(), "prg"} {
 }
 
 void ProgramMenu::reset() {
-    currentNode = -1;
-    holdingNode = -1;
+    currentNode = nullptr;
+    holdingNode = nullptr;
 }
 
 bool ProgramMenu::click(const Mouse _mouse) {
@@ -56,19 +58,42 @@ bool ProgramMenu::click(const Mouse _mouse) {
 }
 
 void ProgramMenu::update() {
+    // !
 
+    // Check, if stopped working
+    if (currentNode == nullptr && wasWorking) {
+        // Show message
+    }
+    wasWorking = isExecuting();
+}
+
+void ProgramMenu::handlePos() {
+    currentNode = currentNode->handleGetPos();
+}
+
+void ProgramMenu::handleReachPos() {
+    currentNode = currentNode->handlReachPos();
+}
+
+void ProgramMenu::handleReachForce() {
+    currentNode = currentNode->handleReachForce();
+}
+
+bool ProgramMenu::isExecuting() {
+    return currentNode != nullptr;
 }
 
 void ProgramMenu::blit() const {
     background.blit();
     title.blit();
-    selector.blit();
     window.setDrawColor(BLACK);
     window.drawRect(separateRect);
+    selector.blit();
     startButton.blit();
     haltButton.blit();
     saveButton.blit();
     loadButton.blit();
+    stoppedInfo.blit();
 }
 
 
