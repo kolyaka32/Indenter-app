@@ -38,11 +38,11 @@ void ProgramMenu::reset() {
 
 bool ProgramMenu::click(const Mouse _mouse) {
     if (startButton.in(_mouse)) {
-        //
+        // !
         return true;
     }
     if (haltButton.in(_mouse)) {
-        //
+        // !
         return true;
     }
     if (saveButton.in(_mouse)) {
@@ -53,17 +53,42 @@ bool ProgramMenu::click(const Mouse _mouse) {
         window.showOpenFileDialog(load, &filter, 1, saveLocation, false);
         return true;
     }
-    // Check, if
+    // ! Check, if start movement of node
+
+    // Check, if create new node
+    if (holdingNode = selector.click(_mouse)) {
+        // !
+        lastPos = _mouse.getPos();
+    }
     return false;
 }
 
-void ProgramMenu::update() {
+void ProgramMenu::unclick() {
+    // Check, if delete node
     // !
+    // Update all nodes to check on connected
+
+    // Check, if connect node
+    // !
+}
+
+void ProgramMenu::update(const Mouse _mouse) {
+    // Check for movement of node
+    if (holdingNode) {
+        // Get relative movement
+        float x = (_mouse.getX() - lastPos.x) / window.getWidth();
+        float y = (_mouse.getY() - lastPos.y) / window.getHeight();
+        holdingNode->moveNode(x, y);
+        // Update position
+        lastPos = _mouse.getPos();
+    }
 
     // Check, if stopped working
     if (currentNode == nullptr && wasWorking) {
         // Show message
+        stoppedInfo.reset();
     }
+    // Update previous state
     wasWorking = isExecuting();
 }
 

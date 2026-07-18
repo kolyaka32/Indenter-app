@@ -5,7 +5,15 @@
 
 #pragma once
 
-#include "node.hpp"
+#include "nodes/start.hpp"
+#include "nodes/setStop.hpp"
+#include "nodes/setMove.hpp"
+#include "nodes/setStep.hpp"
+#include "nodes/setTarget.hpp"
+#include "nodes/getPos.hpp"
+#include "nodes/waitReach.hpp"
+#include "nodes/waitLose.hpp"
+// ! more
 
 
 // Object to select new component
@@ -36,6 +44,6 @@ template <typename Obj>
 void NodeSelector::addNode(float _X, float _Y, float _H) {
     static int count = 0;
     float pos = _H * (count - (int)nodes.size()/2) / nodes.size();
-    nodes[count] = new Obj{window, _X * window.getWidth(), (_Y + pos) * window.getHeight(), Textures::BlockStart};
+    nodes[count] = new Obj{window, _X, _Y + pos, Textures::BlockStart};
     count++;
 }

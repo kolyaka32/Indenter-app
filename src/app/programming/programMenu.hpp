@@ -6,8 +6,6 @@
 #pragma once
 
 #include <vector>
-#include <array>
-#include "node.hpp"
 #include "nodeSelector.hpp"
 
 
@@ -42,8 +40,8 @@ public:
 
     // Interaction
     bool click(const Mouse mouse);
-    void update();
-    void checkStopped();
+    void unclick();
+    void update(const Mouse mouse);
     void blit() const override;
 
     // Proceed action from get messages, start executing next command

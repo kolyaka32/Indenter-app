@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../../GUI/interface.hpp"
+#include "../../../GUI/interface.hpp"
 
 
 // posible variants of nodes
@@ -38,7 +38,9 @@ enum class NodeType {
 // Simple individual block of command to execute in language with in visual
 class Node : public GUI::TextureTemplate {
 private:
-    
+    // Create double-linked list
+    Node* previousNode;
+    Node* nextNode;
 
 public:
     // Place at specified
@@ -49,6 +51,10 @@ public:
     // Activate current node
     // Return nullptr, for stop; next node, if correct (including itself)
     virtual Node* use();
+    // Create useful copy of current node
+    virtual Node* copy() const;
+    // Move current node with all it content
+    void moveNode(float X, float Y);
 
     // Proceed actions from get new packets
     // Return nullptr, for stop; next node, if correct (including itself)

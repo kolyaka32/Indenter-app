@@ -38,6 +38,7 @@ bool BaseCycle::inputMouseDown() {
 
 void BaseCycle::inputMouseUp() {
     settings.unClick();
+    programMenu.unclick();
 }
 
 bool BaseCycle::inputKeys(SDL_Keycode _key) {
@@ -60,9 +61,10 @@ bool BaseCycle::inputText(const char* _text) {
 }
 
 void BaseCycle::update() {
+    mouse.updatePos();
     settings.update();
     directControl.update();
-    programMenu.update();
+    programMenu.update(mouse);
     outputMenu.update();
 }
 
