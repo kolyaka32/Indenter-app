@@ -15,5 +15,4 @@ private:
 
 public:
     SetStepNode(const Window& window, float X, float Y);
-    ~SetStepNode();
 };

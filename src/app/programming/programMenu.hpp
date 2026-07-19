@@ -34,13 +34,17 @@ private:
     GUI::ImageButton loadButton;
     GUI::InfoBox stoppedInfo;
 
+protected:
+    // Delete node with all connected
+    void deleteNode(Node* node);
+
 public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);
     void reset();
 
     // Interaction
     bool click(const Mouse mouse);
-    void unclick();
+    void unclick(const Mouse mouse);
     void update(const Mouse mouse);
     void blit() const override;
 

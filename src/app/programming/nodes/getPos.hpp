@@ -15,5 +15,4 @@ private:
 
 public:
     GetPosNode(const Window& window, float X, float Y);
-    ~GetPosNode();
 };

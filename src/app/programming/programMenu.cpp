@@ -32,17 +32,35 @@ filter{filterText.getString().c_str(), "prg"} {
 }
 
 void ProgramMenu::reset() {
+    nodes.clear();
     currentNode = nullptr;
     holdingNode = nullptr;
+    // Add first node
+    nodes.emplace_back(new StartNode{window, 0.5, 0.5});
+}
+
+void ProgramMenu::deleteNode(Node* _node) {
+    // Check all connected nodes
+    while (_node) {
+        if (_node->isDeletable()) {
+            // Update all nodes to check on connected
+            for (int i=0; i < nodes.size(); ++i) {
+                nodes[i]->disconnect(_node);
+            }
+            delete _node;
+        }
+        // Move to next node
+        _node = _node->getNext();
+    }
 }
 
 bool ProgramMenu::click(const Mouse _mouse) {
     if (startButton.in(_mouse)) {
-        // !
+        currentNode = nodes[0];
         return true;
     }
     if (haltButton.in(_mouse)) {
-        // !
+        currentNode = nullptr;
         return true;
     }
     if (saveButton.in(_mouse)) {
@@ -53,23 +71,43 @@ bool ProgramMenu::click(const Mouse _mouse) {
         window.showOpenFileDialog(load, &filter, 1, saveLocation, false);
         return true;
     }
-    // ! Check, if start movement of node
+    // Check, if start movement of node
+    for (unsigned i=0; i < nodes.size(); ++i) {
+        if (holdingNode = nodes[i]->take(_mouse)) {
+            // Save current pos
+            lastPos = _mouse.getPos();
+            return true;
+        }
+    }
 
     // Check, if create new node
     if (holdingNode = selector.click(_mouse)) {
-        // !
         lastPos = _mouse.getPos();
+        return true;
     }
     return false;
 }
 
-void ProgramMenu::unclick() {
-    // Check, if delete node
-    // !
-    // Update all nodes to check on connected
+void ProgramMenu::unclick(const Mouse _mouse) {
+    if (holdingNode) {
+        // Check, if delete node
+        if (selector.unclick(_mouse)) {
+            deleteNode(holdingNode);
+            holdingNode = nullptr;
+            return;
+        }
 
-    // Check, if connect node
-    // !
+        // Check, if connect node
+        for (int i=0; i < nodes.size(); ++i) {
+            // Try crete link to previous node
+            if (nodes[i]->connectTo(holdingNode)) {
+                return;
+            }
+        }
+
+        // Standart stop moving
+        holdingNode = nullptr; 
+    }
 }
 
 void ProgramMenu::update(const Mouse _mouse) {
@@ -119,6 +157,15 @@ void ProgramMenu::blit() const {
     saveButton.blit();
     loadButton.blit();
     stoppedInfo.blit();
+
+    // Draw program in reverse order
+    for (unsigned i = nodes.size(); i > 0; --i) {
+        nodes[i-1]->blit();
+    }
+    // Draw current node highlight
+    if (currentNode) {
+        currentNode->blitCurrent();
+    }
 }
 
 

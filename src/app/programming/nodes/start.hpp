@@ -9,11 +9,10 @@
 
 
 // Node, from what program start execution
-class SavePos : public Node {
+class StartNode : public Node {
 private:
     /* data */
 
 public:
-    SavePos(const Window& window, float X, float Y);
-    ~SavePos();
+    StartNode(const Window& window, float X, float Y);
 };

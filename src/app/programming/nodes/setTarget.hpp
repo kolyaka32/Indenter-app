@@ -16,5 +16,4 @@ private:
 
 public:
     SetTargetNode(const Window& window, float X, float Y);
-    ~SetTargetNode();
 };

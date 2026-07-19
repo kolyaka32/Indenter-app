@@ -15,5 +15,4 @@ private:
 
 public:
     WaitLoseNode(const Window& window, float X, float Y);
-    ~WaitLoseNode();
 };

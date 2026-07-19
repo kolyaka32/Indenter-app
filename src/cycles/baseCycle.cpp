@@ -38,7 +38,7 @@ bool BaseCycle::inputMouseDown() {
 
 void BaseCycle::inputMouseUp() {
     settings.unClick();
-    programMenu.unclick();
+    programMenu.unclick(mouse);
 }
 
 bool BaseCycle::inputKeys(SDL_Keycode _key) {

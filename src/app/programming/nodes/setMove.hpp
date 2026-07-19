@@ -15,5 +15,4 @@ private:
 
 public:
     SetMoveNode(const Window& window, float X, float Y);
-    ~SetMoveNode();
 };

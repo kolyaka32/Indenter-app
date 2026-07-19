@@ -40,10 +40,11 @@ public:
 };
 
 
+static int count = 0;
+
 template <typename Obj>
 void NodeSelector::addNode(float _X, float _Y, float _H) {
-    static int count = 0;
     float pos = _H * (count - (int)nodes.size()/2) / nodes.size();
-    nodes[count] = new Obj{window, _X, _Y + pos, Textures::BlockStart};
+    nodes[count] = new Obj{window, _X, _Y + pos};
     count++;
 }

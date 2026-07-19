@@ -29,11 +29,18 @@ NodeSelector::~NodeSelector() {
 }
 
 Node* NodeSelector::click(const Mouse _mouse) {
+    // Check for all nodes
+    for (int i=0; i < nodes.size(); ++i) {
+        if (nodes[i]->in(_mouse)) {
+            // Create new node for interaction
+            return nodes[i]->copy();
+        }
+    }
     return nullptr;
 }
 
 bool NodeSelector::unclick(const Mouse _mouse) {
-    return false;
+    return background.in(_mouse);
 }
 
 void NodeSelector::update() {

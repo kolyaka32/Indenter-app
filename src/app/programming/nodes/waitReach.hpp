@@ -15,5 +15,4 @@ private:
 
 public:
     WaitReachNode(const Window& window, float X, float Y);
-    ~WaitReachNode();
 };

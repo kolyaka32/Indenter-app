@@ -15,5 +15,4 @@ private:
 
 public:
     StopNode(const Window& window, float X, float Y);
-    ~StopNode();
 };
