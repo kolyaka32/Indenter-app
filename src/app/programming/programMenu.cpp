@@ -120,11 +120,24 @@ void ProgramMenu::unclick(const Mouse _mouse) {
             return;
         }
 
-        // Check, if connect node
+        // Try link holding node (first) to previous node
         for (int i=0; i < nodes.size(); ++i) {
-            // Try crete link to previous node
-            if (nodes[i] != holdingNode && nodes[i]->connectTo(holdingNode)) {
-                logger.additional("Connect node to %d", i);
+            if (holdingNode->connectUpTo(nodes[i])) {
+                logger.additional("Connect node up to %d", i);
+                holdingNode = nullptr;
+                return;
+            }
+        }
+        // Find last holding node
+        Node* lastNode = holdingNode;
+        while (lastNode->getNext()) {
+            lastNode = lastNode->getNext();
+        }
+        // Try link last node to node
+        for (int i=0; i < nodes.size(); ++i) {
+            if (lastNode->connectBottomTo(nodes[i])) {
+                holdingNode = nullptr;
+                logger.additional("Connect node bottom to %d", i);
                 return;
             }
         }
@@ -139,9 +152,14 @@ void ProgramMenu::update(const Mouse _mouse) {
     // Check for movement of node
     if (holdingNode) {
         // Get relative movement
-        float x = (_mouse.getX() - lastPos.x) / window.getWidth();
-        float y = (_mouse.getY() - lastPos.y) / window.getHeight();
-        holdingNode->moveNode(x, y);
+        float dx = (_mouse.getX() - lastPos.x) / window.getWidth();
+        float dy = (_mouse.getY() - lastPos.y) / window.getHeight();
+        // Move this and connected nodes in reverse order
+        Node* moveNode = holdingNode;
+        while (moveNode) {
+            moveNode->move(dx, dy);
+            moveNode = moveNode->getNext();
+        }
         // Update position
         lastPos = _mouse.getPos();
     }

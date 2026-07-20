@@ -41,6 +41,7 @@ private:
     // Graphical part
     SDL_FRect arrowRect;
     SDL_Texture* arrowTexture;
+    const float connectDistance = 100.0;
 
 protected:
     // Create double-linked list
@@ -54,8 +55,10 @@ public:
     void update();
     // Get next connected node
     Node* getNext() const;
-    // Connect node to current
-    bool connectTo(Node* node);
+    // Try connect upper pin of current node to target
+    bool connectUpTo(Node* target);
+    // Try connect bottom pin of current node to target
+    bool connectBottomTo(Node* target);
     // Check on taking current node by cursor
     Node* take(const Mouse mouse);
     // Draw part
@@ -67,10 +70,11 @@ public:
     virtual Node* use();
     // Create useful copy of current node
     virtual Node* copy() const;
-    // Return bottom connection pin
+    // Return connection pins
     virtual SDL_FPoint getBottomPin() const;
+    virtual SDL_FPoint getUpperPin() const;
     // Move current node with all it content
-    virtual void moveNode(float X, float Y);
+    virtual void move(float X, float Y);
     // Check if use this node (for it deletion)
     virtual void disconnect(const Node* node);
     // Check, if can delete current node

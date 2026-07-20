@@ -23,7 +23,7 @@ public:
     Node* copy() const override;
     //void disconnect(const Node* node) override;
     //bool isDeletable() const override;
-    void moveNode(float X, float Y) override;
+    void move(float X, float Y) override;
     void blit() const override;
 
     // Handles

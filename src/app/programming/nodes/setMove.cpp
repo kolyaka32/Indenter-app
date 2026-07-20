@@ -38,8 +38,8 @@ Node* SetMoveNode::copy() const {
         (rect.y+rect.h/2)/window.getHeight()};
 }
 
-void SetMoveNode::moveNode(float _X, float _Y) {
-    Node::moveNode(_X, _Y);
+void SetMoveNode::move(float _X, float _Y) {
+    Node::move(_X, _Y);
     text.move(_X, _Y);
 }
 
