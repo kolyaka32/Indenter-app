@@ -25,3 +25,7 @@ void StartNode::blit() const {
     Node::blit();
     text.blit();
 }
+
+void StartNode::save(SDL_IOStream* _fout) const {
+    SDL_IOprintf(_fout, "s\n");
+}

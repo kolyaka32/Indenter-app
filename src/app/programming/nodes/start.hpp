@@ -19,4 +19,5 @@ public:
     void move(float _X, float _Y) override;
     void disconnect(const Node* node) override;
     void blit() const override;
+    void save(SDL_IOStream* ofstream) const override;
 };

@@ -49,6 +49,9 @@ public:
     void update(const Mouse mouse);
     void blit() const override;
 
+    void save(SDL_IOStream* fout) const;
+    void load(SDL_IOStream* fin);
+
     // Proceed action from get messages, start executing next command
     static void handlePos();
     static void handleReachPos();
@@ -56,7 +59,7 @@ public:
     // Return, if currently run any programs
     static bool isExecuting();
     static void stop();
-
+    
     // Callback functions for save from dialog window
     static void SDLCALL save(void* userdata, const char* const* filelist, int filter);
     static void SDLCALL load(void* userdata, const char* const* filelist, int filter);

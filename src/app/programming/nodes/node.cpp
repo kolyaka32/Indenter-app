@@ -66,27 +66,28 @@ bool Node::connectUpTo(Node* _target) {
     if (!connectableUp || !_target->connectableDown) {
         return false;
     }
-    // Try connect with upper pin
-    if (_target->nextNode == nullptr) {
-        // Check, if near
-        SDL_FPoint current = getUpperPin();
-        SDL_FPoint targetPin = _target->getBottomPin();
-        float delta = sqr(current.x - targetPin.x) + sqr(current.y - targetPin.y);
-        if (delta < connectDistance) {
-            // Exchanging pointers
-            previousNode = _target;
-            _target->nextNode = this;
-            // Move this and connected nodes
-            float dx = (targetPin.x - current.x) / window.getWidth();
-            float dy = (targetPin.y - current.y) / window.getHeight();
-            // Move all connected nodes
-            Node* moveNode = this;
-            while (moveNode) {
-                moveNode->move(dx, dy);
-                moveNode = moveNode->nextNode;
-            }
-            return true;
+    // Check, if already has connection
+    if (_target->nextNode) {
+        return false;
+    }
+    // Check, if near
+    SDL_FPoint current = getUpperPin();
+    SDL_FPoint targetPin = _target->getBottomPin();
+    float delta = sqr(current.x - targetPin.x) + sqr(current.y - targetPin.y);
+    if (delta < connectDistance) {
+        // Exchanging pointers
+        previousNode = _target;
+        _target->nextNode = this;
+        // Move this and connected nodes
+        float dx = (targetPin.x - current.x) / window.getWidth();
+        float dy = (targetPin.y - current.y) / window.getHeight();
+        // Move all connected nodes
+        Node* moveNode = this;
+        while (moveNode) {
+            moveNode->move(dx, dy);
+            moveNode = moveNode->nextNode;
         }
+        return true;
     }
     return false;
 }
@@ -100,27 +101,28 @@ bool Node::connectBottomTo(Node* _target) {
     if (!connectableDown || !_target->connectableUp) {
         return false;
     }
-    // Try connect with down pin
-    if (_target->previousNode == nullptr) {
-        // Check, if near
-        SDL_FPoint current = getBottomPin();
-        SDL_FPoint targetPin = _target->getUpperPin();
-        float delta = sqr(current.x - targetPin.x) + sqr(current.y - targetPin.y);
-        if (delta < connectDistance) {
-            // Exchanging pointers
-            nextNode = _target;
-            _target->previousNode = this;
-            // Move this and connected nodes
-            float dx = (targetPin.x - current.x) / window.getWidth();
-            float dy = (targetPin.y - current.y) / window.getHeight();
-            // Move this and connected nodes in reverse order
-            Node* moveNode = this;
-            while (moveNode) {
-                moveNode->move(dx, dy);
-                moveNode = moveNode->previousNode;
-            }
-            return true;
+    // Check, if already has connection
+    if (_target->previousNode) {
+        return false;
+    }
+    // Check, if near
+    SDL_FPoint current = getBottomPin();
+    SDL_FPoint targetPin = _target->getUpperPin();
+    float delta = sqr(current.x - targetPin.x) + sqr(current.y - targetPin.y);
+    if (delta < connectDistance) {
+        // Exchanging pointers
+        nextNode = _target;
+        _target->previousNode = this;
+        // Move this and connected nodes
+        float dx = (targetPin.x - current.x) / window.getWidth();
+        float dy = (targetPin.y - current.y) / window.getHeight();
+        // Move this and connected nodes in reverse order
+        Node* moveNode = this;
+        while (moveNode) {
+            moveNode->move(dx, dy);
+            moveNode = moveNode->previousNode;
         }
+        return true;
     }
     return false;
 }
@@ -139,6 +141,10 @@ void Node::update() {
 
 Node* Node::use() {
     return nullptr;
+}
+
+void Node::save(SDL_IOStream* _fout) const {
+    SDL_IOprintf(_fout, "n\n");
 }
 
 Node* Node::copy() const {

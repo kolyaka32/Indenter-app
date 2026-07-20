@@ -88,11 +88,11 @@ bool ProgramMenu::click(const Mouse _mouse) {
         return true;
     }
     if (saveButton.in(_mouse)) {
-        window.showSaveFileDialog(save, &filter, 1, saveLocation);
+        window.showSaveFileDialog(save, &filter, 1, saveLocation, this);
         return true;
     }
     if (loadButton.in(_mouse)) {
-        window.showOpenFileDialog(load, &filter, 1, saveLocation, false);
+        window.showOpenFileDialog(load, &filter, 1, saveLocation, false, this);
         return true;
     }
     // Check, if start movement of node
@@ -228,6 +228,47 @@ void ProgramMenu::blit() const {
     }
 }
 
+void ProgramMenu::save(SDL_IOStream* fout) const {
+    // Writing main nodes linked-list to it
+    Node* node = nodes[0];
+    while (node) {
+        // Save node
+        node->save(fout);
+        // Get next
+        node = node->getNext();
+    }
+}
+
+void ProgramMenu::load(SDL_IOStream* fin) {
+    // Clearing previous
+    reset();
+
+    // Loading nodes from it
+    char buffer[2000];
+    SDL_ReadIO(fin, buffer, sizeof(buffer));
+    Node* previousNode = nodes[0];
+    // Read all getted data
+    for (char *c = buffer; *c; ++c) {
+        // Create node by text description
+        switch (*c) {
+        case 'i':
+            // Start node
+            // Ignore
+            break;
+
+        case 'm':
+            // !
+            //nodes.emplace_back(new SetMoveNode{window, previousNode, });
+            break;
+
+        // ! Finish loading all
+        
+        default:
+            break;
+        }
+    }
+}
+
 
 static std::mutex saveMutex;
 
@@ -244,13 +285,8 @@ void ProgramMenu::save(void* _userdata, const char* const* _filelist, int _filte
     // Locking, while saving
     saveMutex.lock();
 
-    // Writing nodes to it
-    /*unsigned pos = 0;
-    Node* node = nodes[pos];
-    while (node) {
-        //
-        // Get next node
-    }*/
+    ProgramMenu* menu = (ProgramMenu*)_userdata;
+    menu->save(fout);
 
     saveMutex.unlock();
     SDL_CloseIO(fout);
@@ -270,13 +306,8 @@ void ProgramMenu::load(void* _userdata, const char* const* _filelist, int _filte
     // Locking, while saving
     saveMutex.lock();
 
-    // Loading nodes from it
-    /*unsigned pos = 0;
-    Node* node = nodes[pos];
-    while (node) {
-        //
-        // Get next node
-    }*/
+    ProgramMenu* menu = (ProgramMenu*)_userdata;
+    menu->load(fin);
 
     saveMutex.unlock();
     SDL_CloseIO(fin);

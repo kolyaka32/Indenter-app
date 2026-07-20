@@ -119,10 +119,10 @@ class Window {
     void updateTitle() const;
 
     // Work with dialog
-    void showSaveFileDialog(SDL_DialogFileCallback callback,
-        const SDL_DialogFileFilter *filters, int nfilters, const char *default_location) const;
-    void showOpenFileDialog(SDL_DialogFileCallback callback,
-        const SDL_DialogFileFilter *filters, int nfilters, const char *default_location, bool allowMany) const;
+    void showSaveFileDialog(SDL_DialogFileCallback callback, const SDL_DialogFileFilter *filters,
+        int nfilters, const char *default_location, void* argument = nullptr) const;
+    void showOpenFileDialog(SDL_DialogFileCallback callback, const SDL_DialogFileFilter *filters,
+        int nfilters, const char *default_location, bool allowMany, void* argument = nullptr) const;
 };
 
 

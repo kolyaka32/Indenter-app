@@ -11,25 +11,25 @@
 // posible variants of nodes
 enum class NodeType {
     // System nodes (can't create)
-    None,
-    Start,  // First node, from which program started
+    None,   // 'n'
+    Start,  // First node, from which program started, 'i'
 
     // Control commands
-    SetStop,       // Command to stop move
-    SetMove,       // Set infinite movement in [selected] direction with [selected] speed
-    SetSteps,      // Set realtive movement in [mm], work speed
-    SetTarget,     // Set absolute [target], move to
+    SetStop,    // Command to stop move, 's'
+    SetMov,     // Set infinite movement in [selected] direction with [selected] speed, 'm'
+    SetSteps,   // Set realtive movement in [mm], work speed, 'e'
+    SetTarget,  // Set absolute [target], move to, 't'
 
     // Sensors, waiting until condition
-    SavePos,         // Command to get and save current position
-    WaitReachForce,  // Wait until exceed force
-    WaitLoseForce,   // Wait until get less force
+    SavePos,         // Command to get and save current position, 'p'
+    WaitReachForce,  // Wait until exceed force, 'r'
+    WaitLoseForce,   // Wait until get less force, 'd'
 
     // Control commands
-    WhileStart,    // Infinite loop, store nothing
-    WhileEnd,      // Store position of loop start
-    LoopStart,     // Basic for-loop, store current position and end (as input parameter)
-    LoopEnd,       // Store position of loop start
+    WhileStart,  // Infinite loop, store nothing, 'w'
+    WhileEnd,    // Store position of loop start, 'W'
+    LoopStart,   // Basic for-loop, store current position and end (as input parameter) 'l'
+    LoopEnd,     // Store position of loop start, 'L'
 
     // Final count
     Count,
@@ -87,6 +87,8 @@ public:
 
     // Activate current node, return nullptr, for stop or next node
     virtual Node* use();
+    // Save node with it properties
+    virtual void save(SDL_IOStream* ofstream) const;
 
     // Proceed actions from get new packets
     // Return nullptr, for stop; next node, if correct (including itself)

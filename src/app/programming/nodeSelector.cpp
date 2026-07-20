@@ -32,10 +32,13 @@ NodeSelector::~NodeSelector() {
 Node* NodeSelector::click(const Mouse _mouse) {
     // Check for all nodes
     for (int i=0; i < nodes.size(); ++i) {
-        if (nodes[i]->in(_mouse)) {
-            // Create new node for interaction
-            logger.additional("Create new node at %d", i);
-            return nodes[i]->copy();
+        if (GUI::Code code = nodes[i]->click(_mouse)) {
+            // Check on action in this block
+            if (code == GUI::Some) {
+                // Create new node for interaction
+                logger.additional("Create new node at %d", i);
+                return nodes[i]->copy();
+            }
         }
     }
     return nullptr;

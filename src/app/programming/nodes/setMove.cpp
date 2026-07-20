@@ -7,11 +7,11 @@
 #include "../../device.hpp"
 
 
-SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y)
+SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, bool _moveUp, bool _moveIdle)
 : Node(_window, _X, _Y, Textures::BlockAction),
-text(_window, _X-0.04, _Y, {"Move", "Двигаться"}, Height::Main, WHITE, GUI::Aligment::Left) {
-    moveUp = false;
-    moveIdle = false;
+text(_window, _X-0.04, _Y, {"Move", "Двигаться"}, Height::Main, WHITE, GUI::Aligment::Left),
+moveUp(_moveUp),
+moveIdle(_moveIdle) {
     directionRect = {(_X+0.018f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
     speedRect = {(_X+0.033f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
 }
@@ -53,7 +53,7 @@ Node* SetMoveNode::use() {
 
 Node* SetMoveNode::copy() const {
     return new SetMoveNode{window, (rect.x+rect.w/2)/window.getWidth(),
-        (rect.y+rect.h/2)/window.getHeight()};
+        (rect.y+rect.h/2)/window.getHeight(), moveUp, moveIdle};
 }
 
 void SetMoveNode::move(float _X, float _Y) {
@@ -78,4 +78,8 @@ void SetMoveNode::blit() const {
     } else {
         window.blit(window.getTexture(Textures::FastUpButton), 90.0, speedRect);
     }
+}
+
+void SetMoveNode::save(SDL_IOStream* _fout) const {
+    SDL_IOprintf(_fout, "m%c%c\n", moveUp+'c', moveIdle+'c');
 }
