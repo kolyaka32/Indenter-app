@@ -54,6 +54,7 @@ public:
     static void handleReachForce();
     // Return, if currently run any programs
     static bool isExecuting();
+    static void stop();
 
     // Callback functions for save from dialog window
     static void SDLCALL save(void* userdata, const char* const* filelist, int filter);

@@ -38,20 +38,20 @@ enum class NodeType {
 // Simple individual block of command to execute in language with in visual
 class Node : public GUI::TextureTemplate {
 private:
-    // Create double-linked list
-    Node* previousNode;
-    Node* nextNode;
     // Graphical part
     SDL_FRect arrowRect;
     SDL_Texture* arrowTexture;
+
+protected:
+    // Create double-linked list
+    Node* previousNode;
+    Node* nextNode;
 
 public:
     // Place at specified
     Node(const Window& window, float X, float Y, Textures texture);
     bool click(const Mouse mouse);
     void update();
-    // Move current node with all it content
-    void moveNode(float X, float Y);
     // Get next connected node
     Node* getNext() const;
     // Connect node to current
@@ -67,6 +67,10 @@ public:
     virtual Node* use();
     // Create useful copy of current node
     virtual Node* copy() const;
+    // Return bottom connection pin
+    virtual SDL_FPoint getBottomPin() const;
+    // Move current node with all it content
+    virtual void moveNode(float X, float Y);
     // Check if use this node (for it deletion)
     virtual void disconnect(const Node* node);
     // Check, if can delete current node

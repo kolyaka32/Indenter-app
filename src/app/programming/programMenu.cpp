@@ -5,6 +5,7 @@
 
 #include <mutex>
 #include "programMenu.hpp"
+#include "../device.hpp"
 
 
 std::vector<Node*> ProgramMenu::nodes{};
@@ -44,23 +45,41 @@ void ProgramMenu::deleteNode(Node* _node) {
     while (_node) {
         if (_node->isDeletable()) {
             // Update all nodes to check on connected
+            int node = 0;
             for (int i=0; i < nodes.size(); ++i) {
-                nodes[i]->disconnect(_node);
+                if (nodes[i] == _node) {
+                    node = i;
+                } else {
+                    nodes[i]->disconnect(_node);
+                }
             }
-            delete _node;
+            // Move to next node
+            _node = _node->getNext();
+            // Remove from array
+            delete nodes[node];
+            nodes.erase(nodes.begin() + node);
+            logger.additional("Deleted node %d", node);
+        } else {
+            // Move to next node
+            _node = _node->getNext();
         }
-        // Move to next node
-        _node = _node->getNext();
     }
 }
 
 bool ProgramMenu::click(const Mouse _mouse) {
     if (startButton.in(_mouse)) {
-        currentNode = nodes[0];
+        if (device.isConnected()) {
+            // Always start from first node (start, can't be changed)
+            currentNode = nodes[0];
+            logger.additional("Start program execution");
+        } else {
+            // !
+        }
         return true;
     }
     if (haltButton.in(_mouse)) {
         currentNode = nullptr;
+        logger.additional("Stop program execution");
         return true;
     }
     if (saveButton.in(_mouse)) {
@@ -76,12 +95,16 @@ bool ProgramMenu::click(const Mouse _mouse) {
         if (holdingNode = nodes[i]->take(_mouse)) {
             // Save current pos
             lastPos = _mouse.getPos();
+            logger.additional("Start holding %d", i);
             return true;
         }
     }
 
     // Check, if create new node
     if (holdingNode = selector.click(_mouse)) {
+        // Add to global list
+        nodes.emplace_back(holdingNode);
+        // Save position to move
         lastPos = _mouse.getPos();
         return true;
     }
@@ -100,13 +123,15 @@ void ProgramMenu::unclick(const Mouse _mouse) {
         // Check, if connect node
         for (int i=0; i < nodes.size(); ++i) {
             // Try crete link to previous node
-            if (nodes[i]->connectTo(holdingNode)) {
+            if (nodes[i] != holdingNode && nodes[i]->connectTo(holdingNode)) {
+                logger.additional("Connect node to %d", i);
                 return;
             }
         }
 
         // Standart stop moving
         holdingNode = nullptr; 
+        logger.additional("Stop movement");
     }
 }
 
@@ -144,6 +169,10 @@ void ProgramMenu::handleReachForce() {
 
 bool ProgramMenu::isExecuting() {
     return currentNode != nullptr;
+}
+
+void ProgramMenu::stop() {
+    currentNode = nullptr;
 }
 
 void ProgramMenu::blit() const {

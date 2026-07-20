@@ -33,6 +33,7 @@ Node* NodeSelector::click(const Mouse _mouse) {
     for (int i=0; i < nodes.size(); ++i) {
         if (nodes[i]->in(_mouse)) {
             // Create new node for interaction
+            logger.additional("Create new node at %d", i);
             return nodes[i]->copy();
         }
     }

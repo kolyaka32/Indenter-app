@@ -44,17 +44,32 @@ Node* Node::getNext() const {
 }
 
 bool Node::connectTo(Node* _node) {
-    // Check, if near
-    float delta = sqr(rect.x - _node->rect.x) + sqr(rect.y + rect.h - _node->rect.y);
-    if (delta < 20.0) {
-        // Add link to both node
-        nextNode = _node;
-        _node->previousNode = this;
-        // Correcting placement of next node
-        _node->rect.x = rect.x;
-        _node->rect.y = rect.y + rect.h;
-        return true;
+    // Check, if try connect with upper pin
+
+    // !
+    /*if (previousNode) {
+        // Check, if near
+        SDL_FPoint upperPoint = 
+        float delta = sqr(rect.x - _node->rect.x) + sqr(rect.y + rect.h - _node->rect.y);
+        if (delta < 20.0) {
+            return true;
+        }
+        
     }
+    // Check, if try connect with down pin
+    if (nextNode == nullptr) {
+        // Check, if near
+        float delta = sqr(rect.x - _node->rect.x) + sqr(rect.y + rect.h - _node->rect.y);
+        if (delta < 20.0) {
+            // Add link to both node
+            nextNode = _node;
+            _node->previousNode = this;
+            // Correcting placement of next node
+            _node->rect.x = rect.x;
+            _node->rect.y = rect.y + rect.h;
+            return true;
+        }
+    }*/
     return false;
 }
 
@@ -75,19 +90,24 @@ void Node::update() {
 }
 
 Node* Node::use() {
-    return this;
+    return nullptr;
 }
 
 Node* Node::copy() const {
-    return new Node{window, rect.x, rect.y, Textures::BlockStart};
+    return new Node{window, rect.x/window.getWidth(), rect.y/window.getHeight(), Textures::BlockLoopStart};
 }
+
+SDL_FPoint Node::getBottomPin() const {
+    return SDL_FPoint{rect.x, rect.y + rect.h};
+}
+
 
 void Node::disconnect(const Node* _node) {
     // Don't do anything with it
 }
 
 bool Node::isDeletable() const {
-    return false;
+    return true;
 }
 
 Node* Node::handleGetPos() {

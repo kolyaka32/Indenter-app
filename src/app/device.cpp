@@ -24,8 +24,11 @@ Device::~Device() {
 }
 
 void Device::disconnect() {
-    if (state != NotConnected) {
+    if (isConnected()) {
+        // Apply connection itself
         serial.reset();
+        // Stop any executing program
+        ProgramMenu::stop();
     }
     state = NotConnected;
 }
@@ -39,7 +42,7 @@ bool Device::connectTo(const ComPort _port) {
 }
 
 void Device::checkRecieve() {
-    if (state != States::NotConnected) {
+    if (isConnected()) {
         // Get new messages
         if (const Uint8* data = (Uint8*)serial.readData()) {
             switch (Get(data[0])) {
