@@ -11,6 +11,7 @@ NodeSelector::NodeSelector(const Window& _window, float _X, float _Y, float _W, 
 nodes{},
 background(_window, _X, _Y, _W, _H, 2.0) {
     // Creating all nodes
+    count = 0;
     addNode<StopNode>(_X, _Y, _H);
     addNode<SetMoveNode>(_X, _Y, _H);
     addNode<SetStepNode>(_X, _Y, _H);

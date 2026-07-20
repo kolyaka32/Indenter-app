@@ -21,6 +21,7 @@ class NodeSelector : GUI::Template {
 private:
     // Array with selectable variants
     std::array<Node*, 7> nodes;  // ! For now without loops
+    int count = 0;
 
     // Graphical part
     GUI::RectBackplate background;
@@ -39,8 +40,6 @@ public:
     void blit() const override;
 };
 
-
-static int count = 0;
 
 template <typename Obj>
 void NodeSelector::addNode(float _X, float _Y, float _H) {

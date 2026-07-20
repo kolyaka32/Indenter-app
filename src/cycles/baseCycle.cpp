@@ -64,8 +64,8 @@ void BaseCycle::update() {
     mouse.updatePos();
     settings.update();
     directControl.update();
-    programMenu.update(mouse);
     outputMenu.update();
+    programMenu.update(mouse);
 }
 
 void BaseCycle::draw() const {
@@ -74,8 +74,8 @@ void BaseCycle::draw() const {
     window.clear();
 
     directControl.blit();
-    programMenu.blit();
     outputMenu.blit();
+    programMenu.blit();
     settings.blit();
 
     // Render it

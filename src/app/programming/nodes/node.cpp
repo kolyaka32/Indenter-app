@@ -124,7 +124,7 @@ Node* Node::copy() const {
 }
 
 SDL_FPoint Node::getBottomPin() const {
-    return SDL_FPoint{rect.x, rect.y + rect.h};  // ! small correction required for pin
+    return SDL_FPoint{rect.x, rect.y + rect.h - 7.0f};  // ! small correction required for pin
 }
 
 SDL_FPoint Node::getUpperPin() const {

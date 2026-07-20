@@ -6,6 +6,7 @@
 #include <mutex>
 #include "programMenu.hpp"
 #include "../device.hpp"
+#include "../../data/cycleTemplate.hpp"
 
 
 std::vector<Node*> ProgramMenu::nodes{};
@@ -20,7 +21,8 @@ startButton(_window, _X+_W*0.37, _Y-_H*0.45, 0.03, Textures::ResumePauseButton),
 haltButton(_window,  _X+_W*0.45, _Y-_H*0.45, 0.03, Textures::HaltButton),
 saveButton(_window,  _X-_W*0.45, _Y-_H*0.45, 0.03, Textures::SaveButton),
 loadButton(_window,  _X-_W*0.37, _Y-_H*0.45, 0.03, Textures::LoadButton),
-stoppedInfo(_window, _X+_W*0.16, _Y-_H*0.30, {"Program stopped", "Программа остановлена"}, 1000),
+stoppedInfo(_window, _X+_W*0.16, _Y-_H*0.38, {"Program stopped", "Программа остановлена"}, 1000),
+netConnectedInfo(_window, _X+_W*0.16, _Y-_H*0.38, {"Not connected", "Не подключён"}, 1000),
 selector(_window, _X-_W/3, _Y+_H*0.05, _W/3, _H*0.9),
 filterText{"Program file", "Файл программы"},
 filter{filterText.getString().c_str(), "prg"} {
@@ -29,13 +31,16 @@ filter{filterText.getString().c_str(), "prg"} {
     SDL_CreateDirectory("scripts");
     snprintf(saveLocation, sizeof(saveLocation), "%sscripts\\script.prg", directory);
     SDL_free(directory);
-    reset();
+    currentNode = nullptr;
+    holdingNode = nullptr;
+    // On first entarance
+    if (!CycleTemplate::isRestarted()) {
+        reset();
+    }
 }
 
 void ProgramMenu::reset() {
     nodes.clear();
-    currentNode = nullptr;
-    holdingNode = nullptr;
     // Add first node
     nodes.emplace_back(new StartNode{window, 0.5, 0.5});
 }
@@ -73,7 +78,7 @@ bool ProgramMenu::click(const Mouse _mouse) {
             currentNode = nodes[0];
             logger.additional("Start program execution");
         } else {
-            // !
+            netConnectedInfo.reset();
         }
         return true;
     }
@@ -149,6 +154,10 @@ void ProgramMenu::unclick(const Mouse _mouse) {
 }
 
 void ProgramMenu::update(const Mouse _mouse) {
+    // Update info boxes
+    netConnectedInfo.update();
+    stoppedInfo.update();
+
     // Check for movement of node
     if (holdingNode) {
         // Get relative movement
@@ -203,6 +212,7 @@ void ProgramMenu::blit() const {
     haltButton.blit();
     saveButton.blit();
     loadButton.blit();
+    netConnectedInfo.blit();
     stoppedInfo.blit();
 
     // Draw program in reverse order

@@ -32,6 +32,7 @@ private:
     GUI::ImageButton haltButton;
     GUI::ImageButton saveButton;
     GUI::ImageButton loadButton;
+    GUI::InfoBox netConnectedInfo;
     GUI::InfoBox stoppedInfo;
 
 protected:
