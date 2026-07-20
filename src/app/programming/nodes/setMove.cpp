@@ -9,9 +9,17 @@
 
 SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockAction),
-text(_window, _X, _Y, {"Move", "Двигаться"}) {
+text(_window, _X-0.03, _Y, {"Move", "Двигаться"}, Height::Main, WHITE, GUI::Aligment::Left) {
     moveUp = false;
     moveIdle = false;
+}
+
+GUI::Code SetMoveNode::click(const Mouse _mouse) {
+    if (in(_mouse)) {
+        disconnectPrevious();
+        return GUI::Some;
+    }
+    return GUI::None;
 }
 
 Node* SetMoveNode::use() {
@@ -46,16 +54,4 @@ void SetMoveNode::move(float _X, float _Y) {
 void SetMoveNode::blit() const {
     Node::blit();
     text.blit();
-}
-
-Node* SetMoveNode::handleGetPos() {
-    return (Node*)this;
-}
-
-Node* SetMoveNode::handlReachPos() const {
-    return (Node*)this;
-}
-
-Node* SetMoveNode::handleReachForce() const {
-    return (Node*)this;
 }

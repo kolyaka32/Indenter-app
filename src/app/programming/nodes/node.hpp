@@ -42,43 +42,49 @@ private:
     SDL_FRect arrowRect;
     SDL_Texture* arrowTexture;
     const float connectDistance = 100.0;
+    const bool delitable;
 
 protected:
     // Create double-linked list
     Node* previousNode;
     Node* nextNode;
+    //
+    void disconnectPrevious();
+    void disconnectNext();
 
 public:
-    // Place at specified
-    Node(const Window& window, float X, float Y, Textures texture);
-    bool click(const Mouse mouse);
-    void update();
+    Node(const Window& window, float X, float Y, Textures texture, bool delitable = true);
+
     // Get next connected node
     Node* getNext() const;
+    // Check, if could delete current node
+    bool isDeletable() const;
+
     // Try connect upper pin of current node to target
     bool connectUpTo(Node* target);
     // Try connect bottom pin of current node to target
     bool connectBottomTo(Node* target);
-    // Check on taking current node by cursor
-    Node* take(const Mouse mouse);
     // Draw part
     void blit() const override;
     void blitCurrent() const;
 
-    // Activate current node
-    // Return nullptr, for stop; next node, if correct (including itself)
-    virtual Node* use();
+    // Virtual function, modifiable for child nodes
+    // Try make action in current node (Button1) or start moving it (Some)
+    virtual GUI::Code click(const Mouse mouse);
+    // Basic update function
+    virtual void update();
     // Create useful copy of current node
     virtual Node* copy() const;
-    // Return connection pins
+    // Return connection pins positions
     virtual SDL_FPoint getBottomPin() const;
     virtual SDL_FPoint getUpperPin() const;
     // Move current node with all it content
     virtual void move(float X, float Y);
     // Check if use this node (for it deletion)
     virtual void disconnect(const Node* node);
-    // Check, if can delete current node
-    virtual bool isDeletable() const;
+
+    // Activate current node, return nullptr, for stop or next node
+    virtual Node* use();
 
     // Proceed actions from get new packets
     // Return nullptr, for stop; next node, if correct (including itself)

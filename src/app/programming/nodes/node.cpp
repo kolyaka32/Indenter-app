@@ -6,11 +6,12 @@
 #include "node.hpp"
 
 
-Node::Node(const Window& _window, float _X, float _Y, Textures _texture)
+Node::Node(const Window& _window, float _X, float _Y, Textures _texture, bool _delitable)
 : TextureTemplate(_window, _window.getTexture(_texture)),
 arrowTexture(window.getTexture(Textures::UpButton)),
 previousNode(nullptr),
-nextNode(nullptr) {
+nextNode(nullptr),
+delitable(_delitable) {
     // Update pos
     rect.w = texture->w;
     rect.h = texture->h;
@@ -23,10 +24,6 @@ nextNode(nullptr) {
     arrowRect.y = _Y * window.getHeight() - arrowRect.h/2;
 }
 
-bool Node::click(const Mouse mouse) {
-    return false;
-}
-
 void Node::move(float _X, float _Y) {
     // Move current node
     TextureTemplate::move(_X, _Y);
@@ -37,6 +34,24 @@ void Node::move(float _X, float _Y) {
 
 Node* Node::getNext() const {
     return nextNode;
+}
+
+bool Node::isDeletable() const {
+    return delitable;
+}
+
+void Node::disconnectPrevious() {
+    if (previousNode) {
+        previousNode->nextNode = nullptr;
+        previousNode = nullptr;
+    }
+}
+
+void Node::disconnectNext() {
+    if (nextNode) {
+        nextNode->previousNode = nullptr;
+        nextNode = nullptr;
+    }
 }
 
 bool Node::connectUpTo(Node* _target) {
@@ -99,16 +114,12 @@ bool Node::connectBottomTo(Node* _target) {
     return false;
 }
 
-Node* Node::take(const Mouse _mouse) {
+GUI::Code Node::click(const Mouse _mouse) {
     if (in(_mouse)) {
-        // Disconnect previous node
-        if (previousNode) {
-            previousNode->nextNode = nullptr;
-            previousNode = nullptr;
-        }
-        return this;
+        disconnectPrevious();
+        return GUI::Some;
     }
-    return nullptr;
+    return GUI::None;
 }
 
 void Node::update() {
@@ -124,32 +135,27 @@ Node* Node::copy() const {
 }
 
 SDL_FPoint Node::getBottomPin() const {
-    return SDL_FPoint{rect.x, rect.y + rect.h - 7.0f};  // ! small correction required for pin
+    return SDL_FPoint{rect.x, rect.y + rect.h - 7.0f};
 }
 
 SDL_FPoint Node::getUpperPin() const {
     return SDL_FPoint{rect.x, rect.y};
 }
 
-
 void Node::disconnect(const Node* _node) {
     // Don't do anything with it
 }
 
-bool Node::isDeletable() const {
-    return true;
-}
-
 Node* Node::handleGetPos() {
-    return nullptr;
+    return (Node*)this;
 }
 
 Node* Node::handlReachPos() const {
-    return nullptr;
+    return (Node*)this;
 }
 
 Node* Node::handleReachForce() const {
-    return nullptr;
+    return (Node*)this;
 }
 
 void Node::blit() const  {

@@ -97,10 +97,13 @@ bool ProgramMenu::click(const Mouse _mouse) {
     }
     // Check, if start movement of node
     for (unsigned i=0; i < nodes.size(); ++i) {
-        if (holdingNode = nodes[i]->take(_mouse)) {
-            // Save current pos
-            lastPos = _mouse.getPos();
-            logger.additional("Start holding %d", i);
+        if (int code = nodes[i]->click(_mouse)) {
+            if (code == GUI::Some) {
+                holdingNode = nodes[i];
+                // Save current pos
+                lastPos = _mouse.getPos();
+                logger.additional("Start holding %d", i);
+            }
             return true;
         }
     }

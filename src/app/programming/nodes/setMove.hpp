@@ -19,15 +19,14 @@ private:
 public:
     SetMoveNode(const Window& window, float X, float Y);
 
-    Node* use() override;
+    GUI::Code click(const Mouse mouse) override;
     Node* copy() const override;
-    //void disconnect(const Node* node) override;
-    //bool isDeletable() const override;
     void move(float X, float Y) override;
     void blit() const override;
 
     // Handles
-    Node* handleGetPos() override;
-    Node* handlReachPos() const override;
-    Node* handleReachForce() const override;
+    Node* use() override;
+    //Node* handleGetPos() override;
+    //Node* handlReachPos() const override;
+    //Node* handleReachForce() const override;
 };
