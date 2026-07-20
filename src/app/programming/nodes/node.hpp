@@ -42,6 +42,7 @@ private:
     SDL_FRect arrowRect;
     SDL_Texture* arrowTexture;
     const float connectDistance = 100.0;
+    const bool connectableUp, connectableDown;
     const bool delitable;
 
 protected:
@@ -53,7 +54,8 @@ protected:
     void disconnectNext();
 
 public:
-    Node(const Window& window, float X, float Y, Textures texture, bool delitable = true);
+    Node(const Window& window, float X, float Y, Textures texture,
+        bool connectableUp = true, bool connectableDown = true, bool delitable = true);
 
     // Get next connected node
     Node* getNext() const;

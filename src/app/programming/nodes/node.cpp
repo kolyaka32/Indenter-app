@@ -6,11 +6,14 @@
 #include "node.hpp"
 
 
-Node::Node(const Window& _window, float _X, float _Y, Textures _texture, bool _delitable)
+Node::Node(const Window& _window, float _X, float _Y, Textures _texture,
+    bool _connectableUp, bool _connectableDown, bool _delitable)
 : TextureTemplate(_window, _window.getTexture(_texture)),
 arrowTexture(window.getTexture(Textures::UpButton)),
 previousNode(nullptr),
 nextNode(nullptr),
+connectableUp(_connectableUp),
+connectableDown(_connectableDown),
 delitable(_delitable) {
     // Update pos
     rect.w = texture->w;
@@ -59,6 +62,10 @@ bool Node::connectUpTo(Node* _target) {
     if (_target == this) {
         return false;
     }
+    // Check on node rules
+    if (!connectableUp || !_target->connectableDown) {
+        return false;
+    }
     // Try connect with upper pin
     if (_target->nextNode == nullptr) {
         // Check, if near
@@ -87,6 +94,10 @@ bool Node::connectUpTo(Node* _target) {
 bool Node::connectBottomTo(Node* _target) {
     // Check, if himself
     if (_target == this) {
+        return false;
+    }
+    // Check on node rules
+    if (!connectableDown || !_target->connectableUp) {
         return false;
     }
     // Try connect with down pin

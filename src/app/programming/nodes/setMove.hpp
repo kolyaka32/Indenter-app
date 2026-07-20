@@ -15,6 +15,8 @@ private:
     bool moveIdle;
 
     GUI::StaticText text;
+    SDL_FRect directionRect;
+    SDL_FRect speedRect;
 
 public:
     SetMoveNode(const Window& window, float X, float Y);

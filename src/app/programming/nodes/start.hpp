@@ -11,8 +11,12 @@
 // Node, from what program start execution
 class StartNode : public Node {
 private:
-    /* data */
+    GUI::StaticText text;
 
 public:
     StartNode(const Window& window, float X, float Y);
+
+    void move(float _X, float _Y) override;
+    void disconnect(const Node* node) override;
+    void blit() const override;
 };
