@@ -59,7 +59,7 @@ void Device::checkRecieve() {
                 break;
 
             case Get::Packet:
-                collectedData.addFrame(data+1);
+                collectedData.addFrame(data);
                 break;
 
             case Get::Position:
