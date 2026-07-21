@@ -29,7 +29,6 @@ bool Serial::tryConnectTo(const ComPort& _port) {
         return false;
     }
     // Fill in some DCB values and set the com state:
-    // 57,600 bps, 8 data bits, no parity, and 1 stop bit.
     dcb.BaudRate = 57600;       // baud rate
     dcb.ByteSize = 8;           // data size, xmit and rcv
     dcb.Parity   = NOPARITY;    // parity bit
@@ -41,11 +40,11 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     }
     // Setting timeouts
     COMMTIMEOUTS timeouts = {0};
-    timeouts.ReadIntervalTimeout =         10;
-    timeouts.ReadTotalTimeoutConstant =    10;
-    timeouts.ReadTotalTimeoutMultiplier =  1;
-    timeouts.WriteTotalTimeoutConstant =   10;
-    timeouts.WriteTotalTimeoutMultiplier = 1;
+    timeouts.ReadIntervalTimeout =         50;
+    timeouts.ReadTotalTimeoutConstant =    50;
+    timeouts.ReadTotalTimeoutMultiplier =  10;
+    timeouts.WriteTotalTimeoutConstant =   50;
+    timeouts.WriteTotalTimeoutMultiplier = 10;
     if (!SetCommTimeouts(handle, &timeouts)) {
         logger.important("Can't set timeouts: %d", GetLastError());
         return false;

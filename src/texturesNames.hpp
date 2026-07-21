@@ -34,12 +34,15 @@ enum class Textures : unsigned {
 
     // Programming part
     BlockStart,
+    BlockStop,
     BlockLoopStart,
     BlockLoopMiddle,
     BlockLoopEnd,
     BlockWhileEnd,
     BlockAction,
+    BlockLongAction,
     BlockWait,
+    BlockLongWait,
 
     // Global counter of all textures
     Count,
