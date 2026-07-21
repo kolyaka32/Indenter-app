@@ -7,9 +7,9 @@
 
 
 StopNode::StopNode(const Window& _window, float _X, float _Y)
-: Node(_window, _X, _Y, Textures::BlockStop),
-text(_window, _X-rect.w/(2*window.getWidth())+0.03, _Y-0.005, {"Stop", "Стоп"}, Height::Main, WHITE, GUI::Aligment::Left) {
-}
+: Node(_window, _X, _Y, Textures::BlockStop, true, false),
+text(_window, _X-rect.w/(2*window.getWidth())+0.03, _Y-0.005, {"Stop", "Стоп"},
+    Height::Main, WHITE, GUI::Aligment::Left) {}
 
 Node* StopNode::copy() const {
     return new StopNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -26,8 +26,10 @@ void StopNode::blit() const {
     text.blit();
 }
 
-Node* StopNode::use() {}
+Node* StopNode::use() {
+    return nullptr;
+}
 
-// void StopNode::save(SDL_IOStream* _fout) const {
-//     SDL_IOprintf(_fout, "s\n");
-// }
+void StopNode::save(SDL_IOStream* _fout) const {
+    SDL_IOprintf(_fout, "h\n");
+}

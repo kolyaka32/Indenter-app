@@ -4,33 +4,42 @@
  */
 
 #include "setTarget.hpp"
+#include "../../device.hpp"
 
 
 SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
-text(_window,_X-rect.w/(2*window.getWidth())+0.005, _Y, {"Set Target", "Установить точку"}, Height::Main, WHITE, GUI::Aligment::Left) {
-}
+text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move to", "Двигаться к"},
+    Height::Main, WHITE, GUI::Aligment::Left) {}
 
-Node *SetTargetNode::copy() const
-{
+Node* SetTargetNode::copy() const {
     return new SetTargetNode{window, (rect.x + rect.w / 2) / window.getWidth(),
-                        (rect.y + rect.h / 2) / window.getHeight()};
+        (rect.y + rect.h / 2) / window.getHeight()};
 }
 
-void SetTargetNode::move(float _X, float _Y)
-{
+void SetTargetNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
     text.move(_X, _Y);
 }
 
-void SetTargetNode::blit() const
-{
+void SetTargetNode::blit() const {
     Node::blit();
     text.blit();
 }
 
-Node *SetTargetNode::use() {}
+Node* SetTargetNode::use() {
+    // Check if position avaliable
+    // !
+    // Send move
+    //device.sendMoveToPos(pos);
+    return this;
+}
 
-// void StopNode::save(SDL_IOStream* _fout) const {
-//     SDL_IOprintf(_fout, "s\n");
-// }
+Node* SetTargetNode::handlReachPos() const {
+    // Get at target - move to next node
+    return nextNode;
+}
+
+void SetTargetNode::save(SDL_IOStream* _fout) const {
+    SDL_IOprintf(_fout, "t\n");
+}
