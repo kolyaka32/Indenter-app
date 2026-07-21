@@ -13,6 +13,7 @@
 #include "nodes/getPos.hpp"
 #include "nodes/waitReach.hpp"
 #include "nodes/waitLose.hpp"
+#include "nodes/halt.hpp"
 // ! more
 
 
@@ -20,7 +21,7 @@
 class NodeSelector : GUI::Template {
 private:
     // Array with selectable variants
-    std::array<Node*, 7> nodes;  // ! For now without loops
+    std::array<Node*, 8> nodes;  // ! For now without loops
     int count = 0;
 
     // Graphical part
@@ -43,7 +44,7 @@ public:
 
 template <typename Obj>
 void NodeSelector::addNode(float _X, float _Y, float _H) {
-    float pos = _H * (count - (int)nodes.size()/2) / nodes.size();
+    float pos = _H * (count - (float)nodes.size()/2 + 0.5) / nodes.size();
     nodes[count] = new Obj{window, _X, _Y + pos};
     count++;
 }

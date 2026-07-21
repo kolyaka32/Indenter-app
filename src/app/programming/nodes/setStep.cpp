@@ -8,8 +8,8 @@
 
 SetStepNode::SetStepNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockAction),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Steping", "Шагать"}, Height::Main, WHITE, GUI::Aligment::Left) {}
-
+text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Steping", "Шагать"},
+    Height::Main, WHITE, GUI::Aligment::Left) {}
 
 Node* SetStepNode::copy() const {
     return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -26,8 +26,15 @@ void SetStepNode::blit() const {
     text.blit();
 }
 
-Node* SetStepNode::use() {}
+Node* SetStepNode::use() {
+    // Wait until finish
+    return this;
+}
 
-// void StopNode::save(SDL_IOStream* _fout) const {
-//     SDL_IOprintf(_fout, "s\n");
-// }
+Node* SetStepNode::handlReachPos() const {
+    return nextNode;
+}
+
+void SetStepNode::save(SDL_IOStream* _fout) const {
+    SDL_IOprintf(_fout, "s\n");
+}

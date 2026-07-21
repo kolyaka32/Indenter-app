@@ -20,7 +20,7 @@ public:
     // GUI::Code click(const Mouse mouse) override;
     void move(float X, float Y) override;
     void blit() const override;
-    
+
     // Execution
     Node* use() override;
     void save(SDL_IOStream* ofstream) const override;

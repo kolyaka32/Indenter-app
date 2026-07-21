@@ -4,11 +4,12 @@
  */
 
 #include "setStop.hpp"
+#include "../../device.hpp"
 
 
 StopNode::StopNode(const Window& _window, float _X, float _Y)
-: Node(_window, _X, _Y, Textures::BlockStop, true, false),
-text(_window, _X-rect.w/(2*window.getWidth())+0.03, _Y-0.005, {"Stop", "Стоп"},
+: Node(_window, _X, _Y, Textures::BlockAction),
+text(_window, _X-rect.w/2/window.getWidth()+0.005, _Y, {"Stop", "Остановить"},
     Height::Main, WHITE, GUI::Aligment::Left) {}
 
 Node* StopNode::copy() const {
@@ -27,9 +28,10 @@ void StopNode::blit() const {
 }
 
 Node* StopNode::use() {
-    return nullptr;
+    device.sendStop();
+    return nextNode;
 }
 
 void StopNode::save(SDL_IOStream* _fout) const {
-    SDL_IOprintf(_fout, "h\n");
+    SDL_IOprintf(_fout, "s\n");
 }

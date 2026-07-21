@@ -16,8 +16,11 @@ private:
 public:
     StartNode(const Window& window, float X, float Y);
 
+    // Programming
     void move(float _X, float _Y) override;
     void disconnect(const Node* node) override;
     void blit() const override;
+
+    // Execution
     void save(SDL_IOStream* ofstream) const override;
 };

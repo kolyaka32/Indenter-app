@@ -11,18 +11,19 @@
 // Node for move by setted [distance]
 class SetStepNode : public Node {
 private:
-    /* data */
     GUI::StaticText text;
 
 public:
     SetStepNode(const Window& window, float X, float Y);
 
+    // Programming
     // GUI::Code click(const Mouse mouse) override;
     Node *copy() const override;
     void move(float X, float Y) override;
     void blit() const override;
-    // void save(SDL_IOStream* ofstream) const override;
 
-    // // Handles
+    // Execution
     Node *use() override;
+    Node* handlReachPos() const override;
+    void save(SDL_IOStream* ofstream) const override;
 };

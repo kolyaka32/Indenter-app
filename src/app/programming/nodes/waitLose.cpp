@@ -4,11 +4,13 @@
  */
 
 #include "waitLose.hpp"
+#include "../../device.hpp"
 
 
 WaitLoseNode::WaitLoseNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockLongWait),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Wait for the decrease", "Ждать ослабления"}, Height::Main, WHITE, GUI::Aligment::Left) {}
+text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Wait for the decrease", "Ждать ослабления"},
+    Height::Main, WHITE, GUI::Aligment::Left) {}
 
 Node* WaitLoseNode::copy() const {
     return new WaitLoseNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -25,8 +27,16 @@ void WaitLoseNode::blit() const {
     text.blit();
 }
 
-Node* WaitLoseNode::use() {}
+Node* WaitLoseNode::use() {
+    // ! Maybe should add force to compare
+    device.sendLoseForce();
+    return this;
+}
 
-// void StopNode::save(SDL_IOStream* _fout) const {
-//     SDL_IOprintf(_fout, "s\n");
-// }
+Node* WaitLoseNode::handleReachForce() const {
+    return nextNode;
+}
+
+void WaitLoseNode::save(SDL_IOStream* _fout) const {
+    SDL_IOprintf(_fout, "d\n");
+}

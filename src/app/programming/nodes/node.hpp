@@ -16,7 +16,7 @@ enum class NodeType {
 
     // Control commands
     SetStop,    // Command to stop move, 's'
-    SetMov,     // Set infinite movement in [selected] direction with [selected] speed, 'm'
+    SetMove,    // Set infinite movement in [selected] direction with [selected] speed, 'm'
     SetSteps,   // Set realtive movement in [mm], work speed, 'e'
     SetTarget,  // Set absolute [target], move to, 't'
 
@@ -60,24 +60,18 @@ public:
 
     // Get next connected node
     Node* getNext() const;
-    // Check, if could delete current node
-    bool isDeletable() const;
 
-    // Try connect upper pin of current node to target
-    bool connectUpTo(Node* target);
-    // Try connect bottom pin of current node to target
-    bool connectBottomTo(Node* target);
     // Draw part
     void blit() const override;
     void blitCurrent() const;
 
-    // Virtual function, modifiable for child nodes
-    // Reset node state at start
-    virtual void reset();
-    // Try make action in current node (Button1) or start moving it (Some)
-    virtual GUI::Code click(const Mouse mouse);
-    // Basic update function
-    virtual void update();
+    // Programming part
+    // Check, if could delete current node
+    bool isDeletable() const;
+    // Try connect upper pin of current node to target
+    bool connectUpTo(Node* target);
+    // Try connect bottom pin of current node to target
+    bool connectBottomTo(Node* target);
     // Create useful copy of current node
     virtual Node* copy() const;
     // Return connection pins positions
@@ -87,15 +81,21 @@ public:
     virtual void move(float X, float Y);
     // Check if use this node (for it deletion)
     virtual void disconnect(const Node* node);
+    // Interaction
+    // Try make action in current node (Button1) or start moving it (Some)
+    virtual GUI::Code click(const Mouse mouse);
+    // Basic update function
+    virtual void update();
 
-    // Save node with it properties
-    virtual void save(SDL_IOStream* ofstream) const;
-
-    // Proceed actions from get new packets
+    // Execution
+    // Reset node state at start
+    virtual void reset();
     // Activate current node, return nullptr, for stop or next node
     virtual Node* use();
     // Return nullptr, for stop; next node, if correct (including itself)
     virtual Node* handleGetPos(int pos);
     virtual Node* handlReachPos() const;
     virtual Node* handleReachForce() const;
+    // Save node with it properties
+    virtual void save(SDL_IOStream* ofstream) const;
 };

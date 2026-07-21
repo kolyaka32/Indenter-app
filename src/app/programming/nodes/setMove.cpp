@@ -9,7 +9,8 @@
 
 SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, bool _moveUp, bool _moveIdle)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y+0.001, {"Move", "Двигаться"}, Height::Main, WHITE, GUI::Aligment::Left),
+text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move", "Двигаться"},
+    Height::Main, WHITE, GUI::Aligment::Left),
 moveUp(_moveUp),
 moveIdle(_moveIdle) {
     directionRect = {(_X+0.018f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};

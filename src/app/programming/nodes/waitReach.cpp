@@ -4,11 +4,13 @@
  */
 
 #include "waitReach.hpp"
+#include "../../device.hpp"
 
 
 WaitReachNode::WaitReachNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockLongWait),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Wait for the excess", "Ждать превышения"}, Height::Main, WHITE, GUI::Aligment::Left) {}
+text(_window, _X-rect.w/2/window.getWidth()+0.005, _Y, {"Wait for the excess", "Ждать превышения"},
+    Height::Main, WHITE, GUI::Aligment::Left) {}
 
 Node* WaitReachNode::copy() const {
     return new WaitReachNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -25,8 +27,16 @@ void WaitReachNode::blit() const {
     text.blit();
 }
 
-Node* WaitReachNode::use() {}
+Node* WaitReachNode::use() {
+    // ! Maybe should add force to compare
+    device.sendReachForce();
+    return this;
+}
 
-// void StopNode::save(SDL_IOStream* _fout) const {
-//     SDL_IOprintf(_fout, "s\n");
-// }
+Node* WaitReachNode::handleReachForce() const {
+    return nextNode;
+}
+
+void WaitReachNode::save(SDL_IOStream* _fout) const {
+    SDL_IOprintf(_fout, "r\n");
+}

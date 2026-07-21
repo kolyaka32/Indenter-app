@@ -19,6 +19,7 @@ background(_window, _X, _Y, _W, _H, 2.0) {
     addNode<GetPosNode>(_X, _Y, _H);
     addNode<WaitReachNode>(_X, _Y, _H);
     addNode<WaitLoseNode>(_X, _Y, _H);
+    addNode<HaltNode>(_X, _Y, _H);
     //addNode<Node>(_X, _Y, _H);  // WhileStart
     //addNode<Node>(_X, _Y, _H);  // LoopStart
 }

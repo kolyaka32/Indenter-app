@@ -5,27 +5,22 @@
 
 #pragma once
 
-#include "getPos.hpp"
+#include "node.hpp"
 
-
-// Node for absolute movement to stored 
-class SetTargetNode : public Node {
+// Node for stop program execution
+class HaltNode : public Node {
 private:
-    GetPosNode* positionNode;
     GUI::StaticText text;
-    // ! Required destination node source
 
 public:
-    SetTargetNode(const Window& window, float X, float Y);
+    HaltNode(const Window &window, float X, float Y);
 
     // Programming
     Node* copy() const override;
-    // GUI::Code click(const Mouse mouse) override;
     void move(float X, float Y) override;
     void blit() const override;
 
     // Execution
     Node* use() override;
-    Node* handlReachPos() const override;
     void save(SDL_IOStream* ofstream) const override;
 };
