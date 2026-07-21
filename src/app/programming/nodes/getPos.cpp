@@ -4,11 +4,17 @@
  */
 
 #include "getPos.hpp"
+#include "../../device.hpp"
 
 
 GetPosNode::GetPosNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Save position", "Запомнить точку"}, Height::Main, WHITE, GUI::Aligment::Left) {}
+
+void GetPosNode::reset() {
+    // Reset remembered state
+    legimate = false;
+}
 
 Node* GetPosNode::copy() const {
     return new GetPosNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -25,8 +31,19 @@ void GetPosNode::blit() const {
     text.blit();
 }
 
-Node* GetPosNode::use() {}
+Node* GetPosNode::use() {
+    // Send message to get position
+    device.sendGetPos();
+    return this;
+}
 
-// void StopNode::save(SDL_IOStream* _fout) const {
-//     SDL_IOprintf(_fout, "s\n");
-// }
+Node* GetPosNode::handleGetPos(int _pos) {
+    // Save getted position
+    position = _pos;
+    legimate = true;
+    return nextNode;
+}
+
+void GetPosNode::save(SDL_IOStream* _fout) const {
+    SDL_IOprintf(_fout, "p\n");
+}

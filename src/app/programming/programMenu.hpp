@@ -15,8 +15,8 @@ private:
     // Current executing programm
     static std::vector<Node*> nodes;
     static Node* currentNode;  // Current executing node to check
+    static Node* previousNode;  // Node, that was current in previous cycle
     // Runtime part
-    bool wasWorking;
     Node* holdingNode;     // Node, that is holding by mouse or -1 if don't
     SDL_FPoint lastPos;    // Position, where it was holded last time
     LanguagedText filterText;  // Text for filter hint
@@ -38,6 +38,8 @@ private:
 protected:
     // Delete node with all connected
     void deleteNode(Node* node);
+    // Start current program execution
+    void start();
 
 public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);
@@ -53,7 +55,7 @@ public:
     void load(SDL_IOStream* fin);
 
     // Proceed action from get messages, start executing next command
-    static void handlePos();
+    static void handlePos(int pos);
     static void handleReachPos();
     static void handleReachForce();
     // Return, if currently run any programs

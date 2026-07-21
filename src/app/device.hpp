@@ -77,9 +77,9 @@ class Device {
         Waiting,     // Currently waiting for command
         Working,     // Currently moving
         // New measures
-        Packet,      // One frame with new sensors values
+        Packet,      // One frame with new [position], [force] and [temperature]
         // Complete task
-        Position,    // Signal with current position
+        Position,    // Signal with current [position]
         ReachPos,    // Signal, that reach setted position
         ReachForce,  // Signal, that reach setted force
     };

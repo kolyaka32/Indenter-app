@@ -11,18 +11,24 @@
 // Node for get and save current [position]
 class GetPosNode : public Node {
 private:
-    /* data */
+    // Useful data
+    int position;
+    bool legimate;  // Is position can be used
+
+    // Graphical part
     GUI::StaticText text;
 
 public:
     GetPosNode(const Window& window, float X, float Y);
 
+    void reset() override;
     // GUI::Code click(const Mouse mouse) override;
     Node *copy() const override;
     void move(float X, float Y) override;
     void blit() const override;
-    // void save(SDL_IOStream* ofstream) const override;
+    void save(SDL_IOStream* ofstream) const override;
 
-    // // Handles
+    // Handles
     Node *use() override;
+    Node* handleGetPos(int pos) override;
 };

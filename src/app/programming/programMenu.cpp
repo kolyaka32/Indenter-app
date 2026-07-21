@@ -11,6 +11,7 @@
 
 std::vector<Node*> ProgramMenu::nodes{};
 Node* ProgramMenu::currentNode{};
+Node* ProgramMenu::previousNode{};
 
 ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
@@ -71,12 +72,20 @@ void ProgramMenu::deleteNode(Node* _node) {
     }
 }
 
+void ProgramMenu::start() {
+    // Resetting all nodes
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->reset();
+    }
+    // Always start from first node (start, can't be changed)
+    currentNode = nodes[0];
+    logger.additional("Start program execution");
+}
+
 bool ProgramMenu::click(const Mouse _mouse) {
     if (startButton.in(_mouse)) {
         if (device.isConnected()) {
-            // Always start from first node (start, can't be changed)
-            currentNode = nodes[0];
-            logger.additional("Start program execution");
+            start();
         } else {
             netConnectedInfo.reset();
         }
@@ -176,17 +185,24 @@ void ProgramMenu::update(const Mouse _mouse) {
         lastPos = _mouse.getPos();
     }
 
-    // Check, if stopped working
-    if (currentNode == nullptr && wasWorking) {
-        // Show message
-        stoppedInfo.reset();
+    if (currentNode != previousNode) {
+        // Save current state as previous
+        previousNode = currentNode;
+
+        // Check, if stopped working
+        if (currentNode == nullptr) {
+            // Show message
+            stoppedInfo.reset();
+        } else {
+            // Executing current node
+            currentNode = currentNode->use();
+            // ! Could add check for too much time for resend
+        }
     }
-    // Update previous state
-    wasWorking = isExecuting();
 }
 
-void ProgramMenu::handlePos() {
-    currentNode = currentNode->handleGetPos();
+void ProgramMenu::handlePos(int _pos) {
+    currentNode = currentNode->handleGetPos(_pos);
 }
 
 void ProgramMenu::handleReachPos() {

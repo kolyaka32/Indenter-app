@@ -127,6 +127,10 @@ bool Node::connectBottomTo(Node* _target) {
     return false;
 }
 
+void Node::reset() {
+    // Noting
+}
+
 GUI::Code Node::click(const Mouse _mouse) {
     if (in(_mouse)) {
         disconnectPrevious();
@@ -163,7 +167,7 @@ void Node::disconnect(const Node* _node) {
     // Don't do anything with it
 }
 
-Node* Node::handleGetPos() {
+Node* Node::handleGetPos(int _pos) {
     return (Node*)this;
 }
 

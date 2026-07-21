@@ -63,7 +63,7 @@ void Device::checkRecieve() {
                 break;
 
             case Get::Position:
-                ProgramMenu::handlePos();
+                ProgramMenu::handlePos(int(*(data+1)));
                 break;
 
             case Get::ReachPos:

@@ -26,6 +26,7 @@ enum class NodeType {
     WaitLoseForce,   // Wait until get less force, 'd'
 
     // Control commands
+    Stop,        // Stop program execution, set motor to stop 'h'
     WhileStart,  // Infinite loop, store nothing, 'w'
     WhileEnd,    // Store position of loop start, 'W'
     LoopStart,   // Basic for-loop, store current position and end (as input parameter) 'l'
@@ -71,6 +72,8 @@ public:
     void blitCurrent() const;
 
     // Virtual function, modifiable for child nodes
+    // Reset node state at start
+    virtual void reset();
     // Try make action in current node (Button1) or start moving it (Some)
     virtual GUI::Code click(const Mouse mouse);
     // Basic update function
@@ -85,14 +88,14 @@ public:
     // Check if use this node (for it deletion)
     virtual void disconnect(const Node* node);
 
-    // Activate current node, return nullptr, for stop or next node
-    virtual Node* use();
     // Save node with it properties
     virtual void save(SDL_IOStream* ofstream) const;
 
     // Proceed actions from get new packets
+    // Activate current node, return nullptr, for stop or next node
+    virtual Node* use();
     // Return nullptr, for stop; next node, if correct (including itself)
-    virtual Node* handleGetPos();
+    virtual Node* handleGetPos(int pos);
     virtual Node* handlReachPos() const;
     virtual Node* handleReachForce() const;
 };
