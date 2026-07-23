@@ -57,7 +57,41 @@ void Node::disconnectNext() {
     }
 }
 
-bool Node::connectUpTo(Node* _target) {
+void Node::connectTopTo(Node* _target) {
+    // Exchanging pointers
+    previousNode = _target;
+    _target->nextNode = this;
+    // Move this and connected nodes
+    SDL_FPoint current = getUpperPin();
+    SDL_FPoint target = _target->getBottomPin();
+    float dx = (target.x - current.x) / window.getWidth();
+    float dy = (target.y - current.y) / window.getHeight();
+    // Move all connected nodes
+    Node* moveNode = this;
+    while (moveNode) {
+        moveNode->move(dx, dy);
+        moveNode = moveNode->nextNode;
+    }
+}
+
+void Node::connectBottomTo(Node* _target) {
+    // Exchanging pointers
+    nextNode = _target;
+    _target->previousNode = this;
+    // Move this and connected nodes
+    SDL_FPoint current = getBottomPin();
+    SDL_FPoint target = _target->getUpperPin();
+    float dx = (target.x - current.x) / window.getWidth();
+    float dy = (target.y - current.y) / window.getHeight();
+    // Move this and connected nodes in reverse order
+    Node* moveNode = this;
+    while (moveNode) {
+        moveNode->move(dx, dy);
+        moveNode = moveNode->previousNode;
+    }
+}
+
+bool Node::tryConnectTopTo(Node* _target) {
     // Check, if himself
     if (_target == this) {
         return false;
@@ -73,26 +107,14 @@ bool Node::connectUpTo(Node* _target) {
     // Check, if near
     SDL_FPoint current = getUpperPin();
     SDL_FPoint targetPin = _target->getBottomPin();
-    float delta = sqr(current.x - targetPin.x) + sqr(current.y - targetPin.y);
-    if (delta < connectDistance) {
-        // Exchanging pointers
-        previousNode = _target;
-        _target->nextNode = this;
-        // Move this and connected nodes
-        float dx = (targetPin.x - current.x) / window.getWidth();
-        float dy = (targetPin.y - current.y) / window.getHeight();
-        // Move all connected nodes
-        Node* moveNode = this;
-        while (moveNode) {
-            moveNode->move(dx, dy);
-            moveNode = moveNode->nextNode;
-        }
+    if (sqr(current.x-targetPin.x) + sqr(current.y-targetPin.y) < connectDistance) {
+        connectTopTo(_target);
         return true;
     }
     return false;
 }
 
-bool Node::connectBottomTo(Node* _target) {
+bool Node::tryConnectBottomTo(Node* _target) {
     // Check, if himself
     if (_target == this) {
         return false;
@@ -108,20 +130,8 @@ bool Node::connectBottomTo(Node* _target) {
     // Check, if near
     SDL_FPoint current = getBottomPin();
     SDL_FPoint targetPin = _target->getUpperPin();
-    float delta = sqr(current.x - targetPin.x) + sqr(current.y - targetPin.y);
-    if (delta < connectDistance) {
-        // Exchanging pointers
-        nextNode = _target;
-        _target->previousNode = this;
-        // Move this and connected nodes
-        float dx = (targetPin.x - current.x) / window.getWidth();
-        float dy = (targetPin.y - current.y) / window.getHeight();
-        // Move this and connected nodes in reverse order
-        Node* moveNode = this;
-        while (moveNode) {
-            moveNode->move(dx, dy);
-            moveNode = moveNode->previousNode;
-        }
+    if (sqr(current.x-targetPin.x) + sqr(current.y-targetPin.y) < connectDistance) {
+        connectBottomTo(_target);
         return true;
     }
     return false;

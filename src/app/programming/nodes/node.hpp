@@ -68,10 +68,12 @@ public:
     // Programming part
     // Check, if could delete current node
     bool isDeletable() const;
-    // Try connect upper pin of current node to target
-    bool connectUpTo(Node* target);
-    // Try connect bottom pin of current node to target
-    bool connectBottomTo(Node* target);
+    // Connect current node to target
+    void connectTopTo(Node* target);
+    void connectBottomTo(Node* target);
+    // Try connect pin of current node to target pin
+    bool tryConnectTopTo(Node* target);
+    bool tryConnectBottomTo(Node* target);
     // Create useful copy of current node
     virtual Node* copy();
     // Return connection pins positions
@@ -81,6 +83,7 @@ public:
     void move(float X, float Y) override;
     // Check if use this node (for it deletion)
     virtual void disconnect(const Node* node);
+
     // Interaction
     // Check on stop interaction with object
     virtual void checkOff(const Mouse mouse);

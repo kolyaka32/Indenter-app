@@ -145,7 +145,7 @@ void ProgramMenu::unclick(const Mouse _mouse) {
 
         // Try link holding node (first) to previous node
         for (int i=0; i < nodes.size(); ++i) {
-            if (holdingNode->connectUpTo(nodes[i])) {
+            if (holdingNode->tryConnectTopTo(nodes[i])) {
                 logger.additional("Connect node up to %d", i);
                 holdingNode = nullptr;
                 return;
@@ -158,7 +158,7 @@ void ProgramMenu::unclick(const Mouse _mouse) {
         }
         // Try link last node to node
         for (int i=0; i < nodes.size(); ++i) {
-            if (lastNode->connectBottomTo(nodes[i])) {
+            if (lastNode->tryConnectBottomTo(nodes[i])) {
                 holdingNode = nullptr;
                 logger.additional("Connect node bottom to %d", i);
                 return;
@@ -301,21 +301,53 @@ void ProgramMenu::load(SDL_IOStream* fin) {
         case 'i':
             // Start node
             // Ignore
-            break;
+            continue;
 
         case 's':
-            //nodes.emplace_back(new SetStopNode{window, previousNode});
+            nodes.emplace_back(new SetStopNode{window, 0.0, 0.0});
             break;
 
         case 'm':
-            //nodes.emplace_back(new SetMoveNode{window, previousNode, });
+            nodes.emplace_back(new SetMoveNode{window, 0.0, 0.0, *(c+1), *(c+2)});
+            break;
+
+        case 'e':
+            // Get text
+            char buffer[10];
+            for (int i = 0; i < sizeof(buffer) && c[i] && (c[i] != '\n'); ++i) {
+                buffer[i] = c[i];
+            }
+            nodes.emplace_back(new SetStepNode{window, 0.0, 0.0, c});
+            break;
+
+        case 't':
+            nodes.emplace_back(new SetTargetNode{window, 0.0, 0.0});
+            break;
+
+        case 'p':
+            nodes.emplace_back(new GetPosNode{window, 0.0, 0.0});
+            break;
+
+        case 'r':
+            nodes.emplace_back(new WaitReachNode{window, 0.0, 0.0});
+            break;
+
+        case 'd':
+            nodes.emplace_back(new WaitLoseNode{window, 0.0, 0.0});
+            break;
+
+        case 'h':
+            nodes.emplace_back(new HaltNode{window, 0.0, 0.0});
             break;
 
         // ! Finish loading all
         
         default:
-            break;
+            continue;
         }
+        // ! Connect new node to previous
+        nodes.back()->connectTopTo(previousNode);
+        previousNode = nodes.back();
     }
 }
 
