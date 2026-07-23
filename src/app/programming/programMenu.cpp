@@ -34,6 +34,7 @@ filter{filterText.getString().c_str(), "prg"} {
     SDL_free(directory);
     currentNode = nullptr;
     holdingNode = nullptr;
+    holdingSubNode = nullptr;
     // On first entarance
     if (!CycleTemplate::isRestarted()) {
         reset();
@@ -42,6 +43,9 @@ filter{filterText.getString().c_str(), "prg"} {
 
 void ProgramMenu::reset() {
     nodes.clear();
+    currentNode = nullptr;
+    holdingNode = nullptr;
+    holdingSubNode = nullptr;
     // Add first node
     nodes.emplace_back(new StartNode{window, 0.5, 0.5});
 }
@@ -118,6 +122,11 @@ bool ProgramMenu::click(const Mouse _mouse) {
                 // Save current pos
                 lastPos = _mouse.getPos();
                 logger.additional("Start holding %d", i);
+            } else if (code == GUI::Action) {
+                holdingSubNode = nodes[i]->takeSubNode();
+                // Update position
+                lastPos = _mouse.getPos();
+                logger.additional("Start holding subnode", i);
             }
             return true;
         }
@@ -169,6 +178,16 @@ void ProgramMenu::unclick(const Mouse _mouse) {
         holdingNode = nullptr; 
         logger.additional("Stop movement");
     }
+    if (holdingSubNode) {
+        // Check, if could add
+        for (int i=0; i < nodes.size(); ++i) {
+            if (nodes[i]->placeSubNode(holdingSubNode)) {
+                holdingSubNode = nullptr;
+                return;
+            }
+        }
+        return;
+    }
     // Check on unclicking on nodes
     selector.unclick();
     for (int i=0; i < nodes.size(); ++i) {
@@ -210,6 +229,19 @@ void ProgramMenu::update(const Mouse _mouse) {
         // Update position
         lastPos = _mouse.getPos();
     }
+    if (holdingSubNode) {
+        // Get relative movement
+        float dx = (_mouse.getX() - lastPos.x) / window.getWidth();
+        float dy = (_mouse.getY() - lastPos.y) / window.getHeight();
+        // Move this and connected nodes in reverse order
+        Node* moveNode = holdingSubNode;
+        while (moveNode) {
+            moveNode->move(dx, dy);
+            moveNode = moveNode->getNext();
+        }
+        // Update position
+        lastPos = _mouse.getPos();
+    }
 
     // Update nodes
     for (int i=0; i < nodes.size(); ++i) {
@@ -233,15 +265,21 @@ void ProgramMenu::update(const Mouse _mouse) {
 }
 
 void ProgramMenu::handlePos(int _pos) {
-    currentNode = currentNode->handleGetPos(_pos);
+    if (currentNode) {
+        currentNode = currentNode->handleGetPos(_pos);
+    }
 }
 
 void ProgramMenu::handleReachPos() {
-    currentNode = currentNode->handlReachPos();
+    if (currentNode) {
+        currentNode = currentNode->handlReachPos();
+    }
 }
 
 void ProgramMenu::handleReachForce() {
-    currentNode = currentNode->handleReachForce();
+    if (currentNode) {
+        currentNode = currentNode->handleReachForce();
+    }
 }
 
 bool ProgramMenu::isExecuting() {
@@ -272,6 +310,9 @@ void ProgramMenu::blit() const {
     // Draw current node highlight
     if (currentNode) {
         currentNode->blitCurrent();
+    }
+    if (holdingSubNode) {
+        holdingSubNode->blit();
     }
 }
 

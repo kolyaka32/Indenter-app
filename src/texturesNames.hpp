@@ -43,6 +43,7 @@ enum class Textures : unsigned {
     BlockLongAction,
     BlockWait,
     BlockLongWait,
+    SubBlock,
 
     // Global counter of all textures
     Count,

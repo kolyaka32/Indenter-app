@@ -157,6 +157,14 @@ void Node::writeString(const char* _str) {}
 
 void Node::update(float _mouseX) {}
 
+Node* Node::takeSubNode() {
+    return nullptr;
+}
+
+bool Node::placeSubNode(Node* subNode) {
+    return false;
+}
+
 Node* Node::use() {
     return nullptr;
 }

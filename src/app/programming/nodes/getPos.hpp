@@ -14,9 +14,13 @@ private:
     // Useful data
     int position;
     bool legimate;  // Is position can be used
+    static int number;
 
     // Graphical part
     GUI::StaticText text;
+    SDL_Texture* pointTexture;
+    SDL_FRect pointRect;
+    GUI::StaticText pointText;
 
 public:
     GetPosNode(const Window& window, float X, float Y);

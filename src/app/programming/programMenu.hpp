@@ -18,6 +18,7 @@ private:
     static Node* previousNode;  // Node, that was current in previous cycle
     // Runtime part
     Node* holdingNode;     // Node, that is holding by mouse or -1 if don't
+    Node* holdingSubNode;  // Special node, that is argument for node
     SDL_FPoint lastPos;    // Position, where it was holded last time
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection program file

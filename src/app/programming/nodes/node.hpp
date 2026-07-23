@@ -83,11 +83,15 @@ public:
     void move(float X, float Y) override;
     // Check if use this node (for it deletion)
     virtual void disconnect(const Node* node);
+    // Get subNode for hold
+    virtual Node* takeSubNode();
+    // Try place holding subnode, true if could
+    virtual bool placeSubNode(Node* subNode);
 
     // Interaction
     // Check on stop interaction with object
     virtual void checkOff(const Mouse mouse);
-    // Try make action in current node (Button1) or start moving it (Some)
+    // Try make action in current node (Button1), Activate for take subnode or start moving it (Some)
     virtual GUI::Code click(const Mouse mouse);
     virtual void unclick();
     virtual void type(SDL_Keycode code);
