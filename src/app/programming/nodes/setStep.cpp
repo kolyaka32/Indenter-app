@@ -11,7 +11,7 @@ SetStepNode::SetStepNode(const Window& _window, float _X, float _Y, const char* 
 : Node(_window, _X, _Y, Textures::BlockAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Steping", "Шагать"},
     Height::Main, WHITE, GUI::Aligment::Left),
-distanceTyper(_window, _X+0.02, _Y, _val, Height::Medium, GUI::Aligment::Left) {}
+distanceTyper(_window, _X, _Y, _val, Height::Medium, GUI::Aligment::Left) {}
 
 Node* SetStepNode::copy() {
     return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -62,7 +62,12 @@ void SetStepNode::blit() const {
 
 Node* SetStepNode::use() {
     // Get distance
-    float distance = std::stof(distanceTyper.getString());
+    float distance = 0.0;
+    try {
+        float distance = std::stof(distanceTyper.getString());
+    } catch (const char* text) {
+        return nullptr;
+    }
     if (distance > 0) {
         device.sendStepDown(distance);
     } else {
