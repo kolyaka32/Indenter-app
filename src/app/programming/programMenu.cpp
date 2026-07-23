@@ -46,6 +46,7 @@ void ProgramMenu::reset() {
     currentNode = nullptr;
     holdingNode = nullptr;
     holdingSubNode = nullptr;
+    GetPosNode::resetCounter();
     // Add first node
     nodes.emplace_back(new StartNode{window, 0.5, 0.5});
 }
@@ -122,7 +123,7 @@ bool ProgramMenu::click(const Mouse _mouse) {
                 // Save current pos
                 lastPos = _mouse.getPos();
                 logger.additional("Start holding %d", i);
-            } else if (code == GUI::Action) {
+            } else if (code == GUI::Activate) {
                 holdingSubNode = nodes[i]->takeSubNode();
                 // Update position
                 lastPos = _mouse.getPos();
@@ -181,11 +182,14 @@ void ProgramMenu::unclick(const Mouse _mouse) {
     if (holdingSubNode) {
         // Check, if could add
         for (int i=0; i < nodes.size(); ++i) {
-            if (nodes[i]->placeSubNode(holdingSubNode)) {
+            if (nodes[i]->tryConnectSubNode(holdingSubNode)) {
                 holdingSubNode = nullptr;
                 return;
             }
         }
+        // Delete this node as unconnected
+        delete holdingSubNode;
+        holdingSubNode = nullptr;
         return;
     }
     // Check on unclicking on nodes

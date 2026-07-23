@@ -71,9 +71,11 @@ public:
     // Connect current node to target
     void connectTopTo(Node* target);
     void connectBottomTo(Node* target);
+    virtual void connectSubNode(Node* subNode);
     // Try connect pin of current node to target pin
     bool tryConnectTopTo(Node* target);
     bool tryConnectBottomTo(Node* target);
+    virtual bool tryConnectSubNode(Node* subNode);
     // Create useful copy of current node
     virtual Node* copy();
     // Return connection pins positions
@@ -85,8 +87,6 @@ public:
     virtual void disconnect(const Node* node);
     // Get subNode for hold
     virtual Node* takeSubNode();
-    // Try place holding subnode, true if could
-    virtual bool placeSubNode(Node* subNode);
 
     // Interaction
     // Check on stop interaction with object

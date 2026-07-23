@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "node.hpp"
+#include "pos.hpp"
 
 
 // Node for get and save current [position]
@@ -18,21 +18,24 @@ private:
 
     // Graphical part
     GUI::StaticText text;
-    SDL_Texture* pointTexture;
-    SDL_FRect pointRect;
-    GUI::StaticText pointText;
+    // Saved position as part of interface for interaction
+    PosSubNode posSubNode;
 
 public:
     GetPosNode(const Window& window, float X, float Y);
 
-    void reset() override;
-    // GUI::Code click(const Mouse mouse) override;
-    Node *copy() override;
+    // Programming
+    GUI::Code click(const Mouse mouse) override;
+    Node* copy() override;
     void move(float X, float Y) override;
+    Node* takeSubNode() override;
     void blit() const override;
-    
-    // Handles
-    Node *use() override;
+
+    // Execution
+    void reset() override;
+    Node* use() override;
     Node* handleGetPos(int pos) override;
     void save(SDL_IOStream* ofstream) override;
+
+    static void resetCounter();
 };

@@ -7,20 +7,20 @@
 
 #include "node.hpp"
 
-// Node for stop movement
-class SetStopNode : public Node {
+
+// Sub node for trasfer absolute position (from getPos to setTarget)
+class PosSubNode : public Node {
 private:
+    int number;
+    Node* srcNode;
+
     GUI::StaticText text;
 
 public:
-    SetStopNode(const Window &window, float X, float Y);
+    PosSubNode(const Window& window, float X, float Y, Node* sourceNode, int number);
 
     // Programming
     Node* copy() override;
     void move(float X, float Y) override;
     void blit() const override;
-
-    // Execution
-    Node* use() override;
-    void save(SDL_IOStream* ofstream) override;
 };

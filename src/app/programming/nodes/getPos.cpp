@@ -13,17 +13,19 @@ GetPosNode::GetPosNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Save position", "Запомнить точку"},
     Height::Main, WHITE, GUI::Aligment::Left),
-pointTexture(window.getTexture(Textures::SubBlock)),
-pointText(window, _X+0.04, _Y, {"p%d", "p%d"}, Height::Main, BLACK, GUI::Aligment::Left, number) {
-    pointRect.w = pointTexture->w;
-    pointRect.h = pointTexture->h;
-    pointRect.x = (_X+0.045)*window.getWidth() - pointRect.w/2;
-    pointRect.y = _Y*window.getHeight() - pointRect.h/2;
+posSubNode(_window, _X+0.05, _Y, this, number) {
+    number++;
 }
 
-void GetPosNode::reset() {
-    // Reset remembered state
-    legimate = false;
+GUI::Code GetPosNode::click(const Mouse _mouse) {
+    if (in(_mouse)){
+        if (posSubNode.in(_mouse)) {
+            return GUI::Activate;
+        }
+        disconnectPrevious();
+        return GUI::Some;
+    }
+    return GUI::None;
 }
 
 Node* GetPosNode::copy() {
@@ -34,13 +36,22 @@ Node* GetPosNode::copy() {
 void GetPosNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
     text.move(_X, _Y);
+    posSubNode.move(_X, _Y);
+}
+
+Node* GetPosNode::takeSubNode() {
+    return posSubNode.copy();
 }
 
 void GetPosNode::blit() const {
     Node::blit();
     text.blit();
-    window.blit(pointTexture, pointRect);
-    pointText.blit();
+    posSubNode.blit();
+}
+
+void GetPosNode::reset() {
+    // Reset remembered state
+    legimate = false;
 }
 
 Node* GetPosNode::use() {
@@ -58,4 +69,8 @@ Node* GetPosNode::handleGetPos(int _pos) {
 
 void GetPosNode::save(SDL_IOStream* _fout) {
     SDL_IOprintf(_fout, "p\n");
+}
+
+void GetPosNode::resetCounter() {
+    number = 0;
 }

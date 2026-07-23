@@ -20,7 +20,6 @@ public:
 
     // Programming
     Node* copy() override;
-    // GUI::Code click(const Mouse mouse) override;
     void move(float X, float Y) override;
     void blit() const override;
 

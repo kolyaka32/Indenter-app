@@ -91,6 +91,8 @@ void Node::connectBottomTo(Node* _target) {
     }
 }
 
+void Node::connectSubNode(Node* _subNode) {}
+
 bool Node::tryConnectTopTo(Node* _target) {
     // Check, if himself
     if (_target == this) {
@@ -137,6 +139,10 @@ bool Node::tryConnectBottomTo(Node* _target) {
     return false;
 }
 
+bool tryConnectSubNode(Node* _subNode) {
+    return false;
+}
+
 void Node::reset() {}
 
 void Node::checkOff(const Mouse _mouse) {}
@@ -161,7 +167,7 @@ Node* Node::takeSubNode() {
     return nullptr;
 }
 
-bool Node::placeSubNode(Node* subNode) {
+bool Node::tryConnectSubNode(Node* subNode) {
     return false;
 }
 
