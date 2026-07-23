@@ -42,7 +42,7 @@ private:
     // Graphical part
     SDL_FRect arrowRect;
     SDL_Texture* arrowTexture;
-    const float connectDistance = 100.0;
+    const float connectDistance = 500.0;
     const bool connectableUp, connectableDown;
     const bool delitable;
 
@@ -102,5 +102,5 @@ public:
     virtual Node* handlReachPos() const;
     virtual Node* handleReachForce() const;
     // Save node with it properties
-    virtual void save(SDL_IOStream* ofstream) const;
+    virtual void save(SDL_IOStream* ofstream);
 };

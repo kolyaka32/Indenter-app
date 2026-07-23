@@ -45,6 +45,6 @@ Node* GetPosNode::handleGetPos(int _pos) {
     return nextNode;
 }
 
-void GetPosNode::save(SDL_IOStream* _fout) const {
+void GetPosNode::save(SDL_IOStream* _fout) {
     SDL_IOprintf(_fout, "p\n");
 }

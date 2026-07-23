@@ -9,9 +9,9 @@
 
 SetStepNode::SetStepNode(const Window& _window, float _X, float _Y, const char* _val)
 : Node(_window, _X, _Y, Textures::BlockAction),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Steping", "Шагать"},
+text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Steping           mm", "Шагать           мм"},
     Height::Main, WHITE, GUI::Aligment::Left),
-distanceTyper(_window, _X, _Y, _val, Height::Medium, GUI::Aligment::Left) {}
+distanceTyper(_window, _X+0.002, _Y, _val, Height::Medium, GUI::Aligment::Left) {}
 
 Node* SetStepNode::copy() {
     return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -81,6 +81,6 @@ Node* SetStepNode::handlReachPos() const {
     return nextNode;
 }
 
-void SetStepNode::save(SDL_IOStream* _fout) const {
-    SDL_IOprintf(_fout, "s\n");
+void SetStepNode::save(SDL_IOStream* _fout) {
+    SDL_IOprintf(_fout, "e%s\n", distanceTyper.getString());
 }

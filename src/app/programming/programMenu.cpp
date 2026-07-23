@@ -303,8 +303,11 @@ void ProgramMenu::load(SDL_IOStream* fin) {
             // Ignore
             break;
 
+        case 's':
+            //nodes.emplace_back(new SetStopNode{window, previousNode});
+            break;
+
         case 'm':
-            // !
             //nodes.emplace_back(new SetMoveNode{window, previousNode, });
             break;
 

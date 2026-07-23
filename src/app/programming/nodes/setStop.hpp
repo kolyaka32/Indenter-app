@@ -8,12 +8,12 @@
 #include "node.hpp"
 
 // Node for stop movement
-class StopNode : public Node {
+class SetStopNode : public Node {
 private:
     GUI::StaticText text;
 
 public:
-    StopNode(const Window &window, float X, float Y);
+    SetStopNode(const Window &window, float X, float Y);
 
     // Programming
     Node* copy() override;
@@ -23,5 +23,5 @@ public:
 
     // Execution
     Node* use() override;
-    void save(SDL_IOStream* ofstream) const override;
+    void save(SDL_IOStream* ofstream) override;
 };

@@ -151,7 +151,7 @@ Node* Node::use() {
     return nullptr;
 }
 
-void Node::save(SDL_IOStream* _fout) const {
+void Node::save(SDL_IOStream* _fout) {
     SDL_IOprintf(_fout, "n\n");
 }
 
@@ -188,5 +188,5 @@ void Node::blit() const  {
 }
 
 void Node::blitCurrent() const {
-    window.blit(arrowTexture, arrowRect);
+    window.blit(arrowTexture, 90.0, arrowRect);
 }

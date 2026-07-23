@@ -22,5 +22,5 @@ public:
 
     // Execution
     Node* use() override;
-    void save(SDL_IOStream* ofstream) const override;
+    void save(SDL_IOStream* ofstream) override;
 };

@@ -26,9 +26,9 @@ public:
     Node *copy() override;
     void move(float X, float Y) override;
     void blit() const override;
-    void save(SDL_IOStream* ofstream) const override;
-
+    
     // Handles
     Node *use() override;
     Node* handleGetPos(int pos) override;
+    void save(SDL_IOStream* ofstream) override;
 };

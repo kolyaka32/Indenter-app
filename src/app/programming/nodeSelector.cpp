@@ -12,7 +12,7 @@ nodes{},
 background(_window, _X, _Y, _W, _H, 2.0) {
     // Creating all nodes
     count = 0;
-    addNode<StopNode>(_X, _Y, _H);
+    addNode<SetStopNode>(_X, _Y, _H);
     addNode<SetMoveNode>(_X, _Y, _H);
     addNode<SetStepNode>(_X, _Y, _H);
     addNode<SetTargetNode>(_X, _Y, _H);

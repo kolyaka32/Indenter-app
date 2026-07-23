@@ -81,6 +81,6 @@ void SetMoveNode::blit() const {
     }
 }
 
-void SetMoveNode::save(SDL_IOStream* _fout) const {
+void SetMoveNode::save(SDL_IOStream* _fout) {
     SDL_IOprintf(_fout, "m%c%c\n", moveUp+'c', moveIdle+'c');
 }

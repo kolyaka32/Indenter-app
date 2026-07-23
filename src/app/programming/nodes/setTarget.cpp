@@ -40,6 +40,7 @@ Node* SetTargetNode::handlReachPos() const {
     return nextNode;
 }
 
-void SetTargetNode::save(SDL_IOStream* _fout) const {
+void SetTargetNode::save(SDL_IOStream* _fout) {
+    // ! Add save of position
     SDL_IOprintf(_fout, "t\n");
 }

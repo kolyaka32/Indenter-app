@@ -22,5 +22,5 @@ public:
     void blit() const override;
 
     // Execution
-    void save(SDL_IOStream* ofstream) const override;
+    void save(SDL_IOStream* ofstream) override;
 };

@@ -30,6 +30,6 @@ Node* HaltNode::use() {
     return nullptr;
 }
 
-void HaltNode::save(SDL_IOStream* _fout) const {
+void HaltNode::save(SDL_IOStream* _fout) {
     SDL_IOprintf(_fout, "h\n");
 }

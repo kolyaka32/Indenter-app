@@ -27,5 +27,5 @@ public:
     // Execution
     Node* use() override;
     Node* handlReachPos() const override;
-    void save(SDL_IOStream* ofstream) const override;
+    void save(SDL_IOStream* ofstream) override;
 };

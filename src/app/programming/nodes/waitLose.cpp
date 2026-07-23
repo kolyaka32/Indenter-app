@@ -37,6 +37,6 @@ Node* WaitLoseNode::handleReachForce() const {
     return nextNode;
 }
 
-void WaitLoseNode::save(SDL_IOStream* _fout) const {
+void WaitLoseNode::save(SDL_IOStream* _fout) {
     SDL_IOprintf(_fout, "d\n");
 }
