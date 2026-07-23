@@ -12,6 +12,7 @@
 std::vector<Node*> ProgramMenu::nodes{};
 Node* ProgramMenu::currentNode{};
 Node* ProgramMenu::previousNode{};
+static std::mutex saveMutex;
 
 ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
@@ -215,6 +216,7 @@ void ProgramMenu::writeString(const char* _str) {
 
 void ProgramMenu::update(const Mouse _mouse) {
     // Update info boxes
+    saveMutex.lock();
     netConnectedInfo.update();
     stoppedInfo.update();
     selector.update(_mouse);
@@ -261,6 +263,7 @@ void ProgramMenu::update(const Mouse _mouse) {
             // ! Could add check for too much time for resend
         }
     }
+    saveMutex.unlock();
 }
 
 void ProgramMenu::handlePos(int _pos) {
@@ -330,12 +333,20 @@ void ProgramMenu::load(SDL_IOStream* fin) {
     // Clearing previous
     reset();
 
-    // Loading nodes from it
+    // Loading data to buffer
     char buffer[2000];
     SDL_ReadIO(fin, buffer, sizeof(buffer));
+
+    // Saving
+    struct TargetNodeLoad {
+        Node* node;
+        int number;
+    };
+    std::vector<TargetNodeLoad> targetLoads;
+    int number = 0;
     Node* previousNode = nodes[0];
     // Read all getted data
-    for (char *c = buffer; *c; ++c) {
+    for (char* c = buffer; *c; ++c) {
         // Create node by text description
         switch (*c) {
         case 'i':
@@ -352,20 +363,30 @@ void ProgramMenu::load(SDL_IOStream* fin) {
             break;
 
         case 'e':
-            // Get text
-            char buffer[10];
-            for (int i = 0; i < sizeof(buffer) && c[i] && (c[i] != '\n'); ++i) {
-                buffer[i] = c[i];
-            }
             nodes.emplace_back(new SetStepNode{window, 0.0, 0.0, c});
             break;
 
         case 't':
             nodes.emplace_back(new SetTargetNode{window, 0.0, 0.0});
+            // Finding argument
+            number = 0;
+            for (c++; (*c >= '0') && (*c <= '9'); ++c) {
+                number = number*10 + *c - '0';
+            }
+            // Check, if required to connect
+            if (number) {
+                // Saving node for future argument set
+                targetLoads.emplace_back(TargetNodeLoad{nodes.back(), number});
+            }
             break;
 
         case 'p':
-            nodes.emplace_back(new GetPosNode{window, 0.0, 0.0});
+            // Finding argument
+            number = 0;
+            for (c++; (*c >= '0') && (*c <= '9'); ++c) {
+                number = number*10 + *c - '0';
+            }
+            nodes.emplace_back(new GetPosNode{window, 0.0, 0.0, number});
             break;
 
         case 'r':
@@ -379,20 +400,34 @@ void ProgramMenu::load(SDL_IOStream* fin) {
         case 'h':
             nodes.emplace_back(new HaltNode{window, 0.0, 0.0});
             break;
+        // ! Finish adding all nodes
 
-        // ! Finish loading all
-        
         default:
             continue;
         }
-        // ! Connect new node to previous
         nodes.back()->connectTopTo(previousNode);
         previousNode = nodes.back();
     }
+    // SubNodes connection
+    for (int load=0; load < targetLoads.size(); ++load) {
+        // Find corresponding getPos
+        Node* sourceNode = nullptr;
+        for (int i=0; i < nodes.size(); ++i) {
+            if (nodes[i]->getID() == targetLoads[load].number) {
+                sourceNode = nodes[i];
+                break;
+            }
+        }
+        // Connect node as source and this as target
+        if (sourceNode) {
+            SubNode* sourceSubNode = sourceNode->takeSubNode();
+            if (sourceSubNode) {
+                targetLoads[load].node->connectSubNode(sourceSubNode);
+                continue;
+            }
+        }
+    }
 }
-
-
-static std::mutex saveMutex;
 
 void ProgramMenu::save(void* _userdata, const char* const* _filelist, int _filter) {
     // Check, if all avaliable

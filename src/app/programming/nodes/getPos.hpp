@@ -15,7 +15,7 @@ private:
     // Useful data
     int position;   // Saved position
     bool legimate;  // Is position can be used
-    static int number;  // Global counter for proper naming
+    static int counter;  // Global counter for proper naming
 
     // Graphical part
     GUI::StaticText text;
@@ -23,6 +23,9 @@ private:
     PosSubNode posSubNode;
 
 public:
+    // Create from save
+    GetPosNode(const Window& window, float X, float Y, int number);
+    // Normal create with new number
     GetPosNode(const Window& window, float X, float Y);
 
     // Programming
@@ -31,6 +34,7 @@ public:
     void move(float X, float Y) override;
     SubNode* takeSubNode() override;
     void blit() const override;
+    int getID() const override;
     // Exclusive for that node
     bool isLegimate() const;
     int getPos() const;

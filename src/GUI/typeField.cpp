@@ -27,8 +27,9 @@ font(window.createFontCopy(Fonts::Main, _height)) {
     inversedRectDest.y = window.getHeight()*_Y-_height/2;
     inversedRectSrc.y = 0;
 
-    // Copying text to caret
-    length = strlen(_startText);
+    // Copying text to buffer
+    length = 0;
+    for (; _startText[length] && _startText[length] != '\n'; ++length) {}
     setMax(length, (size_t)bufferSize);
     memcpy(buffer, _startText, length);
 

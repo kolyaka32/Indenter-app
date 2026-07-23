@@ -19,7 +19,7 @@ private:
     SDL_FRect speedRect;
 
 public:
-    SetMoveNode(const Window& window, float X, float Y, char moveUp = 'a', char moveIdle = '0');
+    SetMoveNode(const Window& window, float X, float Y, char moveUp = '0', char moveIdle = '0');
 
     GUI::Code click(const Mouse mouse) override;
     Node* copy() override;

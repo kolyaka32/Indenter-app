@@ -116,5 +116,9 @@ void SetTargetNode::disconnect(const Node* _node) {
 }
 
 void SetTargetNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "t%d\n", positionNode->getNumber());
+    if (positionNode) {
+        SDL_IOprintf(_fout, "t%d\n", positionNode->getNumber());
+    } else {
+        SDL_IOprintf(_fout, "t0\n");
+    }
 }

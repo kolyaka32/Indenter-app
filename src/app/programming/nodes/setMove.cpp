@@ -11,7 +11,7 @@ SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, char _moveUp
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move", "Двигаться"},
     Height::Main, WHITE, GUI::Aligment::Left),
-moveUp(char(_moveUp - 'a')),
+moveUp(char(_moveUp - '0')),
 moveIdle(char(_moveIdle - '0')) {
     directionRect = {(_X+0.018f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
     speedRect = {(_X+0.033f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
@@ -19,7 +19,7 @@ moveIdle(char(_moveIdle - '0')) {
 
 Node* SetMoveNode::copy() {
     return new SetMoveNode{window, (rect.x+rect.w/2)/window.getWidth(),
-        (rect.y+rect.h/2)/window.getHeight(), char(moveUp + 'a'), char(moveIdle + '0')};
+        (rect.y+rect.h/2)/window.getHeight(), char(moveUp + '0'), char(moveIdle + '0')};
 }
 
 GUI::Code SetMoveNode::click(const Mouse _mouse) {
@@ -82,5 +82,5 @@ void SetMoveNode::blit() const {
 }
 
 void SetMoveNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "m%c%c\n", moveUp+'a', moveIdle+'0');
+    SDL_IOprintf(_fout, "m%c%c\n", moveUp+'0', moveIdle+'0');
 }
