@@ -80,5 +80,5 @@ void GetPosNode::save(SDL_IOStream* _fout) {
 }
 
 void GetPosNode::resetCounter() {
-    number = 0;
+    number = 1;
 }

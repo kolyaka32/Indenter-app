@@ -14,6 +14,23 @@ text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move to", "Двига
 connectTarget(_window, _X+0.023, _Y),
 positionNode(nullptr) {}
 
+GUI::Code SetTargetNode::click(const Mouse _mouse) {
+    if (in(_mouse)) {
+        if (positionNode && positionNode->in(_mouse)) {
+            return GUI::Activate;
+        }
+        disconnectPrevious();
+        return GUI::Some;
+    }
+    return GUI::None;
+}
+
+SubNode* SetTargetNode::takeSubNode() {
+    SubNode* temp = positionNode;
+    positionNode = nullptr;
+    return temp;
+}
+
 Node* SetTargetNode::copy() {
     return new SetTargetNode{window, (rect.x + rect.w / 2) / window.getWidth(),
         (rect.y + rect.h / 2) / window.getHeight()};
@@ -99,6 +116,5 @@ void SetTargetNode::disconnect(const Node* _node) {
 }
 
 void SetTargetNode::save(SDL_IOStream* _fout) {
-    // ! Add save of position
-    SDL_IOprintf(_fout, "t\n");
+    SDL_IOprintf(_fout, "t%d\n", positionNode->getNumber());
 }

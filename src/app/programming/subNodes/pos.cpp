@@ -25,3 +25,7 @@ void PosSubNode::blit() const {
     SubNode::blit();
     text.blit();
 }
+
+int PosSubNode::getNumber() const {
+    return number;
+}

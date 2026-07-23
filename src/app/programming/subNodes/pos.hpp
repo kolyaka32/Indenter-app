@@ -24,4 +24,6 @@ public:
     SubNode* copy() override;
     void move(float X, float Y) override;
     void blit() const override;
+    // Exclusive
+    int getNumber() const;
 };
