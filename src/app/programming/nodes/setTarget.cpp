@@ -10,7 +10,8 @@
 SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move to", "Двигаться к"},
-    Height::Main, WHITE, GUI::Aligment::Left) {}
+    Height::Main, WHITE, GUI::Aligment::Left),
+connectTarget(_window, _X+0.023, _Y) {}
 
 Node* SetTargetNode::copy() {
     return new SetTargetNode{window, (rect.x + rect.w / 2) / window.getWidth(),
@@ -20,11 +21,13 @@ Node* SetTargetNode::copy() {
 void SetTargetNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
     text.move(_X, _Y);
+    connectTarget.move(_X, _Y);
 }
 
 void SetTargetNode::blit() const {
     Node::blit();
     text.blit();
+    connectTarget.blit();
 }
 
 Node* SetTargetNode::use() {
@@ -38,6 +41,15 @@ Node* SetTargetNode::use() {
 Node* SetTargetNode::handlReachPos() const {
     // Get at target - move to next node
     return nextNode;
+}
+
+void SetTargetNode::connectSubNode(SubNode* subNode) {
+    // !
+}
+
+bool SetTargetNode::tryConnectSubNode(SubNode* subNode) {
+    // !
+    return false;
 }
 
 void SetTargetNode::save(SDL_IOStream* _fout) {

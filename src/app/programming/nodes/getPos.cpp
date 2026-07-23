@@ -39,7 +39,7 @@ void GetPosNode::move(float _X, float _Y) {
     posSubNode.move(_X, _Y);
 }
 
-Node* GetPosNode::takeSubNode() {
+SubNode* GetPosNode::takeSubNode() {
     return posSubNode.copy();
 }
 

@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include "node.hpp"
+#include "subNode.hpp"
+#include "../nodes/node.hpp"
 
 
 // Sub node for trasfer absolute position (from getPos to setTarget)
-class PosSubNode : public Node {
+class PosSubNode : public SubNode {
 private:
-    int number;
     Node* srcNode;
 
     GUI::StaticText text;
@@ -20,7 +20,7 @@ public:
     PosSubNode(const Window& window, float X, float Y, Node* sourceNode, int number);
 
     // Programming
-    Node* copy() override;
+    SubNode* copy() override;
     void move(float X, float Y) override;
     void blit() const override;
 };

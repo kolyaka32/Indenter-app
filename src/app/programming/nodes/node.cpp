@@ -91,7 +91,7 @@ void Node::connectBottomTo(Node* _target) {
     }
 }
 
-void Node::connectSubNode(Node* _subNode) {}
+void Node::connectSubNode(SubNode* _subNode) {}
 
 bool Node::tryConnectTopTo(Node* _target) {
     // Check, if himself
@@ -139,7 +139,7 @@ bool Node::tryConnectBottomTo(Node* _target) {
     return false;
 }
 
-bool tryConnectSubNode(Node* _subNode) {
+bool Node::tryConnectSubNode(SubNode* _subNode) {
     return false;
 }
 
@@ -163,12 +163,8 @@ void Node::writeString(const char* _str) {}
 
 void Node::update(float _mouseX) {}
 
-Node* Node::takeSubNode() {
+SubNode* Node::takeSubNode() {
     return nullptr;
-}
-
-bool Node::tryConnectSubNode(Node* subNode) {
-    return false;
 }
 
 Node* Node::use() {

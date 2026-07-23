@@ -11,9 +11,12 @@
 // Node for absolute movement to stored 
 class SetTargetNode : public Node {
 private:
-    GetPosNode* positionNode;
+    PosSubNode* positionNode;
+
+    // Graphica part
     GUI::StaticText text;
-    // ! Required destination node source
+    // Place to connect posSubNode
+    SubNode connectTarget;
 
 public:
     SetTargetNode(const Window& window, float X, float Y);
@@ -26,5 +29,7 @@ public:
     // Execution
     Node* use() override;
     Node* handlReachPos() const override;
+    void connectSubNode(SubNode* subNode) override;
+    bool tryConnectSubNode(SubNode* subNode) override;
     void save(SDL_IOStream* ofstream) override;
 };

@@ -6,6 +6,7 @@
 #pragma once
 
 #include "../../../GUI/interface.hpp"
+#include "../subNodes/subNode.hpp"
 
 
 // posible variants of nodes
@@ -39,12 +40,14 @@ enum class NodeType {
 // Simple individual block of command to execute in language with in visual
 class Node : public GUI::TextureTemplate {
 private:
+    // Flags
+    const bool connectableUp, connectableDown;
+    const bool delitable;
+
     // Graphical part
     SDL_FRect arrowRect;
     SDL_Texture* arrowTexture;
     const float connectDistance = 500.0;
-    const bool connectableUp, connectableDown;
-    const bool delitable;
 
 protected:
     // Create double-linked list
@@ -53,6 +56,9 @@ protected:
     //
     void disconnectPrevious();
     void disconnectNext();
+    // Return connection pins positions
+    SDL_FPoint getBottomPin() const;
+    SDL_FPoint getUpperPin() const;
 
 public:
     Node(const Window& window, float X, float Y, Textures texture,
@@ -71,22 +77,21 @@ public:
     // Connect current node to target
     void connectTopTo(Node* target);
     void connectBottomTo(Node* target);
-    virtual void connectSubNode(Node* subNode);
+    // Connect subNode to this
+    virtual void connectSubNode(SubNode* target);
     // Try connect pin of current node to target pin
     bool tryConnectTopTo(Node* target);
     bool tryConnectBottomTo(Node* target);
-    virtual bool tryConnectSubNode(Node* subNode);
+    // Try to connect subNode to this, return true if can
+    virtual bool tryConnectSubNode(SubNode* target);
     // Create useful copy of current node
     virtual Node* copy();
-    // Return connection pins positions
-    virtual SDL_FPoint getBottomPin() const;
-    virtual SDL_FPoint getUpperPin() const;
     // Move current node with all it content
     void move(float X, float Y) override;
     // Check if use this node (for it deletion)
     virtual void disconnect(const Node* node);
     // Get subNode for hold
-    virtual Node* takeSubNode();
+    virtual SubNode* takeSubNode();
 
     // Interaction
     // Check on stop interaction with object

@@ -5,7 +5,8 @@
 
 #pragma once
 
-#include "pos.hpp"
+#include "node.hpp"
+#include "../subNodes/pos.hpp"
 
 
 // Node for get and save current [position]
@@ -28,7 +29,7 @@ public:
     GUI::Code click(const Mouse mouse) override;
     Node* copy() override;
     void move(float X, float Y) override;
-    Node* takeSubNode() override;
+    SubNode* takeSubNode() override;
     void blit() const override;
 
     // Execution

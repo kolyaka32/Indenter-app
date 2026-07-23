@@ -237,12 +237,7 @@ void ProgramMenu::update(const Mouse _mouse) {
         // Get relative movement
         float dx = (_mouse.getX() - lastPos.x) / window.getWidth();
         float dy = (_mouse.getY() - lastPos.y) / window.getHeight();
-        // Move this and connected nodes in reverse order
-        Node* moveNode = holdingSubNode;
-        while (moveNode) {
-            moveNode->move(dx, dy);
-            moveNode = moveNode->getNext();
-        }
+        holdingSubNode->move(dx, dy);
         // Update position
         lastPos = _mouse.getPos();
     }
