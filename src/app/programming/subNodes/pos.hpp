@@ -12,12 +12,13 @@
 // Sub node for trasfer absolute position (from getPos to setTarget)
 class PosSubNode : public SubNode {
 private:
-    Node* srcNode;
+    // Number on node, connected to
+    int number;
 
     GUI::StaticText text;
 
 public:
-    PosSubNode(const Window& window, float X, float Y, Node* sourceNode, int number);
+    PosSubNode(const Window& window, float X, float Y, int number, Node* sourceNode);
 
     // Programming
     SubNode* copy() override;

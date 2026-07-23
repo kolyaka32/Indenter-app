@@ -8,25 +8,26 @@
 #include "../../../GUI/interface.hpp"
 
 
+class Node;
+
 // Special node for use as additional argument in function
 class SubNode : public GUI::TextureTemplate {
 private:
     const float connectDistance = 500.0;
 
 protected:
-    // Number of node, for correct global save/load
-    // + for source, - for target
-    int number;
+    // Source node for source, nullptr for target
+    Node* srcNode;
 
 public:
     // Movable node for connection
-    SubNode(const Window& window, float X, float Y, int number, Textures texture = Textures::SubBlock);
+    SubNode(const Window& window, float X, float Y, Node* srcNode, Textures texture = Textures::SubBlock);
     // Connection pin constructor
     SubNode(const Window& window, float X, float Y, Textures texture = Textures::SubBlock);
 
     // Interaction
-    void connectSubNode(SubNode* subNode);
-    bool tryConnectSubNode(SubNode* subNode);
+    bool isNear(const SubNode* other) const;
+    void moveTo(const SubNode* target);
     virtual SubNode* copy();
-    int getNumber() const;
+    Node* getSource() const;
 };

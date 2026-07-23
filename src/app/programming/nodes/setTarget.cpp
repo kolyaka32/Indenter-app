@@ -11,7 +11,8 @@ SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move to", "Двигаться к"},
     Height::Main, WHITE, GUI::Aligment::Left),
-connectTarget(_window, _X+0.023, _Y) {}
+connectTarget(_window, _X+0.023, _Y),
+positionNode(nullptr) {}
 
 Node* SetTargetNode::copy() {
     return new SetTargetNode{window, (rect.x + rect.w / 2) / window.getWidth(),
@@ -22,20 +23,34 @@ void SetTargetNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
     text.move(_X, _Y);
     connectTarget.move(_X, _Y);
+    if (positionNode) {
+        positionNode->move(_X, _Y);
+    }
 }
 
 void SetTargetNode::blit() const {
     Node::blit();
     text.blit();
-    connectTarget.blit();
+    // Check, what node to draw
+    if (positionNode) {
+        positionNode->blit();
+    } else {
+        connectTarget.blit();
+    }
 }
 
 Node* SetTargetNode::use() {
     // Check if position avaliable
-    // !
-    // Send move
-    //device.sendMoveToPos(pos);
-    return this;
+    if (positionNode) {
+        GetPosNode* node = (GetPosNode*)positionNode->getSource();
+        if (node && node->isLegimate()) {
+            // Send move
+            device.sendMoveToPos(node->getPos());
+            return this;
+        }
+    }
+    // return stop in any other case
+    return nullptr;
 }
 
 Node* SetTargetNode::handlReachPos() const {
@@ -43,13 +58,44 @@ Node* SetTargetNode::handlReachPos() const {
     return nextNode;
 }
 
-void SetTargetNode::connectSubNode(SubNode* subNode) {
-    // !
+void SetTargetNode::connectSubNode(SubNode* _subNode) {
+    // Save node
+    positionNode = (PosSubNode*)_subNode;
+    // Move it to place
+    _subNode->moveTo(&connectTarget);
 }
 
-bool SetTargetNode::tryConnectSubNode(SubNode* subNode) {
-    // !
+bool SetTargetNode::tryConnectSubNode(SubNode* _subNode) {
+    // Check, if already has node
+    if (positionNode) {
+        return false;
+    }
+    // Check, if near
+    if (connectTarget.isNear(_subNode)) {
+        connectSubNode(_subNode);
+        return true;
+    }
     return false;
+}
+
+void SetTargetNode::disconnect(const Node* _node) {
+    // Check, if delete current node
+    if (_node == this) {
+        // Check, if has position
+        if (positionNode) {
+            delete positionNode;
+            positionNode = nullptr;
+        }
+        return;
+    }
+
+    // Check, if delete argument node
+    if (positionNode) {
+        if (positionNode->getSource() == _node) {
+            delete positionNode;
+            positionNode = nullptr;
+        }
+    }
 }
 
 void SetTargetNode::save(SDL_IOStream* _fout) {

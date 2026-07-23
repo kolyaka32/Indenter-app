@@ -13,9 +13,9 @@
 class GetPosNode : public Node {
 private:
     // Useful data
-    int position;
+    int position;   // Saved position
     bool legimate;  // Is position can be used
-    static int number;
+    static int number;  // Global counter for proper naming
 
     // Graphical part
     GUI::StaticText text;
@@ -31,6 +31,9 @@ public:
     void move(float X, float Y) override;
     SubNode* takeSubNode() override;
     void blit() const override;
+    // Exclusive for that node
+    bool isLegimate() const;
+    int getPos() const;
 
     // Execution
     void reset() override;

@@ -31,5 +31,6 @@ public:
     Node* handlReachPos() const override;
     void connectSubNode(SubNode* subNode) override;
     bool tryConnectSubNode(SubNode* subNode) override;
+    void disconnect(const Node* node) override;
     void save(SDL_IOStream* ofstream) override;
 };
