@@ -17,7 +17,6 @@ public:
     WaitLoseNode(const Window& window, float X, float Y);
 
     // Programming
-    // GUI::Code click(const Mouse mouse) override;
     Node* copy() override;
     void move(float X, float Y) override;
     void blit() const override;

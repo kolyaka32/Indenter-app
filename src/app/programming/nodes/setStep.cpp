@@ -27,6 +27,7 @@ GUI::Code SetStepNode::click(const Mouse _mouse) {
         if (distanceTyper.click(_mouse)) {
             return GUI::Button1;
         }
+        disconnectPrevious();
         return GUI::Some;
     }
     return GUI::None;
