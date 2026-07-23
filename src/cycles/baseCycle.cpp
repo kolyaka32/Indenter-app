@@ -49,6 +49,7 @@ bool BaseCycle::inputKeys(SDL_Keycode _key) {
         settings.toggle();
         return true;
     }
+    programMenu.type(_key);
     return false;
 }
 
@@ -57,6 +58,7 @@ bool BaseCycle::inputMouseWheel(float _wheelY) {
 }
 
 bool BaseCycle::inputText(const char* _text) {
+    programMenu.writeString(_text);
     return false;
 }
 

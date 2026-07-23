@@ -34,10 +34,15 @@ public:
     NodeSelector(const Window& window, float X, float Y, float W, float H);
     ~NodeSelector();
 
+    bool in(const Mouse mouse) const;
+
     // Interaction
+    void checkOff(const Mouse mouse);
     Node* click(const Mouse mouse);  // return new node or nullptr, if don't
-    bool unclick(const Mouse mouse);  // Return true, if end selection here (for deletion)
-    void update();
+    void unclick();
+    void type(SDL_Keycode code);
+    void writeString(const char* str);
+    void update(const Mouse mouse);
     void blit() const override;
 };
 

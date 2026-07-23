@@ -12,7 +12,7 @@ StopNode::StopNode(const Window& _window, float _X, float _Y)
 text(_window, _X-rect.w/2/window.getWidth()+0.005, _Y, {"Stop", "Остановить"},
     Height::Main, WHITE, GUI::Aligment::Left) {}
 
-Node* StopNode::copy() const {
+Node* StopNode::copy() {
     return new StopNode{window, (rect.x+rect.w/2)/window.getWidth(),
         (rect.y+rect.h/2)/window.getHeight()};
 }

@@ -16,7 +16,7 @@ public:
     StopNode(const Window &window, float X, float Y);
 
     // Programming
-    Node* copy() const override;
+    Node* copy() override;
     // GUI::Code click(const Mouse mouse) override;
     void move(float X, float Y) override;
     void blit() const override;

@@ -73,19 +73,24 @@ public:
     // Try connect bottom pin of current node to target
     bool connectBottomTo(Node* target);
     // Create useful copy of current node
-    virtual Node* copy() const;
+    virtual Node* copy();
     // Return connection pins positions
     virtual SDL_FPoint getBottomPin() const;
     virtual SDL_FPoint getUpperPin() const;
     // Move current node with all it content
-    virtual void move(float X, float Y);
+    void move(float X, float Y) override;
     // Check if use this node (for it deletion)
     virtual void disconnect(const Node* node);
     // Interaction
+    // Check on stop interaction with object
+    virtual void checkOff(const Mouse mouse);
     // Try make action in current node (Button1) or start moving it (Some)
     virtual GUI::Code click(const Mouse mouse);
+    virtual void unclick();
+    virtual void type(SDL_Keycode code);
+    virtual void writeString(const char* str);
     // Basic update function
-    virtual void update();
+    virtual void update(float mouseX);
 
     // Execution
     // Reset node state at start

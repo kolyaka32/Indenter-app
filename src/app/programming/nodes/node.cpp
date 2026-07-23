@@ -127,9 +127,9 @@ bool Node::connectBottomTo(Node* _target) {
     return false;
 }
 
-void Node::reset() {
-    // Noting
-}
+void Node::reset() {}
+
+void Node::checkOff(const Mouse _mouse) {}
 
 GUI::Code Node::click(const Mouse _mouse) {
     if (in(_mouse)) {
@@ -139,9 +139,13 @@ GUI::Code Node::click(const Mouse _mouse) {
     return GUI::None;
 }
 
-void Node::update() {
+void Node::unclick() {}
 
-}
+void Node::type(SDL_Keycode _code) {}
+
+void Node::writeString(const char* _str) {}
+
+void Node::update(float _mouseX) {}
 
 Node* Node::use() {
     return nullptr;
@@ -151,7 +155,7 @@ void Node::save(SDL_IOStream* _fout) const {
     SDL_IOprintf(_fout, "n\n");
 }
 
-Node* Node::copy() const {
+Node* Node::copy() {
     return new Node{window, rect.x/window.getWidth(), rect.y/window.getHeight(), Textures::BlockLoopStart};
 }
 

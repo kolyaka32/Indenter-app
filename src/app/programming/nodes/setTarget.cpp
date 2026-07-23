@@ -12,7 +12,7 @@ SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y)
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move to", "Двигаться к"},
     Height::Main, WHITE, GUI::Aligment::Left) {}
 
-Node* SetTargetNode::copy() const {
+Node* SetTargetNode::copy() {
     return new SetTargetNode{window, (rect.x + rect.w / 2) / window.getWidth(),
         (rect.y + rect.h / 2) / window.getHeight()};
 }

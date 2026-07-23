@@ -458,6 +458,16 @@ void GUI::TypeField<bufferSize>::unclick() {
 }
 
 template <unsigned bufferSize>
+void GUI::TypeField<bufferSize>::move(float _X, float _Y) {
+    TextureTemplate::move(_X, _Y);
+    posX += _X*window.getWidth();
+    caretRect.x += _X*window.getWidth();
+    caretRect.y += _Y*window.getHeight();
+    inversedRectDest.x += _X*window.getWidth();
+    inversedRectDest.y += _Y*window.getHeight();
+}
+
+template <unsigned bufferSize>
 void GUI::TypeField<bufferSize>::update(float _mouseX) {
     if (pressed) {
         size_t measure;

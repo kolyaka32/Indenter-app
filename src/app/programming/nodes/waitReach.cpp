@@ -12,7 +12,7 @@ WaitReachNode::WaitReachNode(const Window& _window, float _X, float _Y)
 text(_window, _X-rect.w/2/window.getWidth()+0.005, _Y, {"Wait for the excess", "Ждать превышения"},
     Height::Main, WHITE, GUI::Aligment::Left) {}
 
-Node* WaitReachNode::copy() const {
+Node* WaitReachNode::copy() {
     return new WaitReachNode{window, (rect.x+rect.w/2)/window.getWidth(),
         (rect.y+rect.h/2)/window.getHeight()};
 }

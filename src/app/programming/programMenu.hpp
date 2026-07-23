@@ -49,6 +49,8 @@ public:
     bool click(const Mouse mouse);
     void unclick(const Mouse mouse);
     void update(const Mouse mouse);
+    void type(SDL_Keycode code);
+    void writeString(const char* str);
     void blit() const override;
 
     void save(SDL_IOStream* fout) const;

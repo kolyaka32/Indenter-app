@@ -83,6 +83,12 @@ void ProgramMenu::start() {
 }
 
 bool ProgramMenu::click(const Mouse _mouse) {
+    // Check on stop interaction
+    selector.checkOff(_mouse);
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->checkOff(_mouse);
+    }
+    // Check on buttons press
     if (startButton.in(_mouse)) {
         if (device.isConnected()) {
             start();
@@ -131,7 +137,7 @@ bool ProgramMenu::click(const Mouse _mouse) {
 void ProgramMenu::unclick(const Mouse _mouse) {
     if (holdingNode) {
         // Check, if delete node
-        if (selector.unclick(_mouse)) {
+        if (selector.in(_mouse)) {
             deleteNode(holdingNode);
             holdingNode = nullptr;
             return;
@@ -163,12 +169,32 @@ void ProgramMenu::unclick(const Mouse _mouse) {
         holdingNode = nullptr; 
         logger.additional("Stop movement");
     }
+    // Check on unclicking on nodes
+    selector.unclick();
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->unclick();
+    }
+}
+
+void ProgramMenu::type(SDL_Keycode _code) {
+    selector.type(_code);
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->type(_code);
+    }
+}
+
+void ProgramMenu::writeString(const char* _str) {
+    selector.writeString(_str);
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->writeString(_str);
+    }
 }
 
 void ProgramMenu::update(const Mouse _mouse) {
     // Update info boxes
     netConnectedInfo.update();
     stoppedInfo.update();
+    selector.update(_mouse);
 
     // Check for movement of node
     if (holdingNode) {
@@ -183,6 +209,11 @@ void ProgramMenu::update(const Mouse _mouse) {
         }
         // Update position
         lastPos = _mouse.getPos();
+    }
+
+    // Update nodes
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->update(_mouse.getX());
     }
 
     if (currentNode != previousNode) {

@@ -21,6 +21,12 @@ GUI::TypeBox<bufferSize>::TypeBox(TypeBox&& _object) noexcept
 backplate(std::move(_object.backplate)) {}
 
 template <unsigned bufferSize>
+void GUI::TypeBox<bufferSize>::move(float _X, float _Y) {
+    TypeField<bufferSize>::move(_X, _Y);
+    backplate.move(_X, _Y);
+}
+
+template <unsigned bufferSize>
 void GUI::TypeBox<bufferSize>::blit() const {
     // Rendering background picture for better typing
     backplate.blit();

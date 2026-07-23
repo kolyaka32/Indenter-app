@@ -12,18 +12,24 @@
 class SetStepNode : public Node {
 private:
     GUI::StaticText text;
+    GUI::TypeBox<4> distanceTyper;
 
 public:
-    SetStepNode(const Window& window, float X, float Y);
+    SetStepNode(const Window& window, float X, float Y, const char* val = "0");
 
     // Programming
-    // GUI::Code click(const Mouse mouse) override;
-    Node *copy() const override;
+    void checkOff(const Mouse mouse) override;
+    GUI::Code click(const Mouse mouse) override;
+    void unclick() override;
+    Node *copy() override;
+    void type(SDL_Keycode code) override;
+    void writeString(const char* str) override;
+    void update(float mouseX) override;
     void move(float X, float Y) override;
     void blit() const override;
 
     // Execution
-    Node *use() override;
+    Node* use() override;
     Node* handlReachPos() const override;
     void save(SDL_IOStream* ofstream) const override;
 };

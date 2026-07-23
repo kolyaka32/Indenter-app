@@ -23,7 +23,7 @@ public:
 
     void reset() override;
     // GUI::Code click(const Mouse mouse) override;
-    Node *copy() const override;
+    Node *copy() override;
     void move(float X, float Y) override;
     void blit() const override;
     void save(SDL_IOStream* ofstream) const override;

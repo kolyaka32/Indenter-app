@@ -17,6 +17,11 @@ moveIdle(_moveIdle) {
     speedRect = {(_X+0.033f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
 }
 
+Node* SetMoveNode::copy() {
+    return new SetMoveNode{window, (rect.x+rect.w/2)/window.getWidth(),
+        (rect.y+rect.h/2)/window.getHeight(), moveUp, moveIdle};
+}
+
 GUI::Code SetMoveNode::click(const Mouse _mouse) {
     if (in(_mouse)) {
         if (_mouse.in(directionRect)) {
@@ -50,11 +55,6 @@ Node* SetMoveNode::use() {
     }
     // Move to next node
     return nextNode;
-}
-
-Node* SetMoveNode::copy() const {
-    return new SetMoveNode{window, (rect.x+rect.w/2)/window.getWidth(),
-        (rect.y+rect.h/2)/window.getHeight(), moveUp, moveIdle};
 }
 
 void SetMoveNode::move(float _X, float _Y) {

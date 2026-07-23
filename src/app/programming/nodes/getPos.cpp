@@ -17,7 +17,7 @@ void GetPosNode::reset() {
     legimate = false;
 }
 
-Node* GetPosNode::copy() const {
+Node* GetPosNode::copy() {
     return new GetPosNode{window, (rect.x+rect.w/2)/window.getWidth(),
         (rect.y+rect.h/2)/window.getHeight()};
 }

@@ -12,7 +12,7 @@ WaitLoseNode::WaitLoseNode(const Window& _window, float _X, float _Y)
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Wait for the decrease", "Ждать ослабления"},
     Height::Main, WHITE, GUI::Aligment::Left) {}
 
-Node* WaitLoseNode::copy() const {
+Node* WaitLoseNode::copy() {
     return new WaitLoseNode{window, (rect.x+rect.w/2)/window.getWidth(),
         (rect.y+rect.h/2)/window.getHeight()};
 }

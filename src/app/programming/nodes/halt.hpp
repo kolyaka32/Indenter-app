@@ -16,7 +16,7 @@ public:
     HaltNode(const Window &window, float X, float Y);
 
     // Programming
-    Node* copy() const override;
+    Node* copy() override;
     void move(float X, float Y) override;
     void blit() const override;
 
