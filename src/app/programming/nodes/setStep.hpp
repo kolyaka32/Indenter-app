@@ -24,11 +24,9 @@ public:
     void type(SDL_Keycode code) override;
     void writeString(const char* str) override;
     void update(float mouseX) override;
-    void blit() const override;
-
-    // Programming
     Node* copy() override;
     void move(float X, float Y) override;
+    void blit() const override;
 
     // Execution
     Node* use() override;

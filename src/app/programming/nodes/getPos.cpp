@@ -29,6 +29,10 @@ GUI::Code GetPosNode::click(const Mouse _mouse) {
     return GUI::None;
 }
 
+SubNode* GetPosNode::takeSubNode() {
+    return posSubNode.copy();
+}
+
 Node* GetPosNode::copy() {
     return new GetPosNode{window, (rect.x+rect.w/2)/window.getWidth(),
         (rect.y+rect.h/2)/window.getHeight()};
@@ -38,10 +42,6 @@ void GetPosNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
     text.move(_X, _Y);
     posSubNode.move(_X, _Y);
-}
-
-SubNode* GetPosNode::takeSubNode() {
-    return posSubNode.copy();
 }
 
 void GetPosNode::blit() const {

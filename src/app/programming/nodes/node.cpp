@@ -27,22 +27,6 @@ delitable(_delitable) {
     arrowRect.y = _Y * window.getHeight() - arrowRect.h/2;
 }
 
-void Node::move(float _X, float _Y) {
-    // Move current node
-    TextureTemplate::move(_X, _Y);
-    // Move arrow
-    arrowRect.x += _X * window.getWidth();
-    arrowRect.y += _Y * window.getHeight();
-}
-
-Node* Node::getNext() const {
-    return nextNode;
-}
-
-bool Node::isDeletable() const {
-    return delitable;
-}
-
 void Node::disconnectPrevious() {
     if (previousNode) {
         previousNode->nextNode = nullptr;
@@ -55,6 +39,57 @@ void Node::disconnectNext() {
         nextNode->previousNode = nullptr;
         nextNode = nullptr;
     }
+}
+
+SDL_FPoint Node::getBottomPin() const {
+    return SDL_FPoint{rect.x, rect.y + rect.h - 7.0f};
+}
+
+SDL_FPoint Node::getUpperPin() const {
+    return SDL_FPoint{rect.x, rect.y};
+}
+
+Node* Node::copy() {
+    return new Node{window, rect.x/window.getWidth(), rect.y/window.getHeight(),
+        Textures::BlockLoopStart, connectableUp, connectableDown, delitable};
+}
+
+void Node::move(float _X, float _Y) {
+    // Move current node
+    TextureTemplate::move(_X, _Y);
+    // Move arrow
+    arrowRect.x += _X * window.getWidth();
+    arrowRect.y += _Y * window.getHeight();
+}
+
+void Node::checkOff(const Mouse _mouse) {}
+
+GUI::Code Node::click(const Mouse _mouse) {
+    if (in(_mouse)) {
+        disconnectPrevious();
+        return GUI::Some;
+    }
+    return GUI::None;
+}
+
+void Node::unclick() {}
+
+void Node::type(SDL_Keycode _code) {}
+
+void Node::writeString(const char* _str) {}
+
+SubNode* Node::takeSubNode() {
+    return nullptr;
+}
+
+void Node::update(float _mouseX) {}
+
+void Node::blit() const  {
+    window.blit(texture, rect);
+}
+
+void Node::blitCurrent() const {
+    window.blit(arrowTexture, 90.0, arrowRect);
 }
 
 void Node::connectTopTo(Node* _target) {
@@ -143,52 +178,20 @@ bool Node::tryConnectSubNode(SubNode* _subNode) {
     return false;
 }
 
+bool Node::isDeletable() const {
+    return delitable;
+}
+
+void Node::disconnect(const Node* _node) {}
+
+Node* Node::getNext() const {
+    return nextNode;
+}
+
 void Node::reset() {}
-
-void Node::checkOff(const Mouse _mouse) {}
-
-GUI::Code Node::click(const Mouse _mouse) {
-    if (in(_mouse)) {
-        disconnectPrevious();
-        return GUI::Some;
-    }
-    return GUI::None;
-}
-
-void Node::unclick() {}
-
-void Node::type(SDL_Keycode _code) {}
-
-void Node::writeString(const char* _str) {}
-
-void Node::update(float _mouseX) {}
-
-SubNode* Node::takeSubNode() {
-    return nullptr;
-}
 
 Node* Node::use() {
     return nullptr;
-}
-
-void Node::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "n\n");
-}
-
-Node* Node::copy() {
-    return new Node{window, rect.x/window.getWidth(), rect.y/window.getHeight(), Textures::BlockLoopStart};
-}
-
-SDL_FPoint Node::getBottomPin() const {
-    return SDL_FPoint{rect.x, rect.y + rect.h - 7.0f};
-}
-
-SDL_FPoint Node::getUpperPin() const {
-    return SDL_FPoint{rect.x, rect.y};
-}
-
-void Node::disconnect(const Node* _node) {
-    // Don't do anything with it
 }
 
 Node* Node::handleGetPos(int _pos) {
@@ -203,10 +206,6 @@ Node* Node::handleReachForce() const {
     return (Node*)this;
 }
 
-void Node::blit() const  {
-    window.blit(texture, rect);
-}
-
-void Node::blitCurrent() const {
-    window.blit(arrowTexture, 90.0, arrowRect);
+void Node::save(SDL_IOStream* _fout) {
+    SDL_IOprintf(_fout, "n\n");
 }

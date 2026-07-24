@@ -13,13 +13,14 @@
 class ProgramMenu : GUI::Template {
 private:
     // Current executing programm
-    static std::vector<Node*> nodes;
-    static Node* currentNode;  // Current executing node to check
+    static std::vector<Node*> nodes;  // List with all nodes for draw/interaction/execution
+    static Node* currentNode;   // Current executing node to check
     static Node* previousNode;  // Node, that was current in previous cycle
     // Runtime part
-    Node* holdingNode;     // Node, that is holding by mouse or -1 if don't
-    SubNode* holdingSubNode;  // Special node, refer as argument for nodes
-    SDL_FPoint lastPos;    // Position, where it was holded last time
+    Node* holdingNode;        // Node, that is holding by mouse or nullptr if don't
+    SubNode* holdingSubNode;  // Special node, refer as argument for other nodes
+    SDL_FPoint lastPos;       // Position, where it was holded last time
+    // Save/load
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection program file
     char saveLocation[100];    // Location with directory for save/load programs

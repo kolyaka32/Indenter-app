@@ -33,9 +33,6 @@ filter{filterText.getString().c_str(), "prg"} {
     SDL_CreateDirectory("scripts");
     snprintf(saveLocation, sizeof(saveLocation), "%sscripts\\script.prg", directory);
     SDL_free(directory);
-    currentNode = nullptr;
-    holdingNode = nullptr;
-    holdingSubNode = nullptr;
     // On first entarance
     if (!CycleTemplate::isRestarted()) {
         reset();

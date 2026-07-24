@@ -13,11 +13,6 @@ text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Steping           mm"
     Height::Main, WHITE, GUI::Aligment::Left),
 distanceTyper(_window, _X+0.002, _Y, _val, Height::Medium, GUI::Aligment::Left) {}
 
-Node* SetStepNode::copy() {
-    return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),
-        (rect.y+rect.h/2)/window.getHeight(), distanceTyper.getString()};
-}
-
 void SetStepNode::checkOff(const Mouse _mouse) {
     distanceTyper.checkOff(_mouse);
 }
@@ -45,14 +40,19 @@ void SetStepNode::writeString(const char* _str) {
     distanceTyper.writeString(_str);
 }
 
+void SetStepNode::update(float _mouseX) {
+    distanceTyper.update(_mouseX);
+}
+
+Node* SetStepNode::copy() {
+    return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),
+        (rect.y+rect.h/2)/window.getHeight(), distanceTyper.getString()};
+}
+
 void SetStepNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
     text.move(_X, _Y);
     distanceTyper.move(_X, _Y);
-}
-
-void SetStepNode::update(float _mouseX) {
-    distanceTyper.update(_mouseX);
 }
 
 void SetStepNode::blit() const {

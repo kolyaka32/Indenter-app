@@ -31,6 +31,47 @@ SubNode* SetTargetNode::takeSubNode() {
     return temp;
 }
 
+void SetTargetNode::disconnect(const Node* _node) {
+    // Check, if delete current node
+    if (_node == this) {
+        // Check, if has position
+        if (positionNode) {
+            delete positionNode;
+            positionNode = nullptr;
+        }
+        return;
+    }
+
+    // Check, if delete argument node
+    if (positionNode) {
+        if (positionNode->getSource() == _node) {
+            delete positionNode;
+            positionNode = nullptr;
+        }
+    }
+}
+
+void SetTargetNode::connectSubNode(SubNode* _subNode) {
+    // Check, if already has node
+    if (positionNode) {
+        // Remove previous
+        delete positionNode;
+    }
+    // Set new node
+    positionNode = (PosSubNode*)_subNode;
+    // Move it to place
+    _subNode->moveTo(&connectTarget);
+}
+
+bool SetTargetNode::tryConnectSubNode(SubNode* _subNode) {
+    // Check, if near
+    if (connectTarget.isNear(_subNode)) {
+        connectSubNode(_subNode);
+        return true;
+    }
+    return false;
+}
+
 Node* SetTargetNode::copy() {
     return new SetTargetNode{window, (rect.x + rect.w / 2) / window.getWidth(),
         (rect.y + rect.h / 2) / window.getHeight()};
@@ -73,47 +114,6 @@ Node* SetTargetNode::use() {
 Node* SetTargetNode::handlReachPos() const {
     // Get at target - move to next node
     return nextNode;
-}
-
-void SetTargetNode::connectSubNode(SubNode* _subNode) {
-    // Check, if already has node
-    if (positionNode) {
-        // Remove previous
-        delete positionNode;
-    }
-    // Set new node
-    positionNode = (PosSubNode*)_subNode;
-    // Move it to place
-    _subNode->moveTo(&connectTarget);
-}
-
-bool SetTargetNode::tryConnectSubNode(SubNode* _subNode) {
-    // Check, if near
-    if (connectTarget.isNear(_subNode)) {
-        connectSubNode(_subNode);
-        return true;
-    }
-    return false;
-}
-
-void SetTargetNode::disconnect(const Node* _node) {
-    // Check, if delete current node
-    if (_node == this) {
-        // Check, if has position
-        if (positionNode) {
-            delete positionNode;
-            positionNode = nullptr;
-        }
-        return;
-    }
-
-    // Check, if delete argument node
-    if (positionNode) {
-        if (positionNode->getSource() == _node) {
-            delete positionNode;
-            positionNode = nullptr;
-        }
-    }
 }
 
 void SetTargetNode::save(SDL_IOStream* _fout) {

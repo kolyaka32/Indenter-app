@@ -23,16 +23,16 @@ private:
     PosSubNode posSubNode;
 
 public:
-    // Normal create with new number
     GetPosNode(const Window& window, float X, float Y);
 
     // Programming
     GUI::Code click(const Mouse mouse) override;
+    SubNode* takeSubNode() override;
     Node* copy() override;
     void move(float X, float Y) override;
-    SubNode* takeSubNode() override;
     void blit() const override;
-    // Exclusive for that node
+
+    // Exclusive getters for that node
     bool isLegimate() const;
     int getPos() const;
 

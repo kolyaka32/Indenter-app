@@ -17,11 +17,6 @@ moveIdle(char(_moveIdle - '0')) {
     speedRect = {(_X+0.033f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
 }
 
-Node* SetMoveNode::copy() {
-    return new SetMoveNode{window, (rect.x+rect.w/2)/window.getWidth(),
-        (rect.y+rect.h/2)/window.getHeight(), char(moveUp + '0'), char(moveIdle + '0')};
-}
-
 GUI::Code SetMoveNode::click(const Mouse _mouse) {
     if (in(_mouse)) {
         if (_mouse.in(directionRect)) {
@@ -36,6 +31,20 @@ GUI::Code SetMoveNode::click(const Mouse _mouse) {
         return GUI::Some;
     }
     return GUI::None;
+}
+
+Node* SetMoveNode::copy() {
+    return new SetMoveNode{window, (rect.x+rect.w/2)/window.getWidth(),
+        (rect.y+rect.h/2)/window.getHeight(), char(moveUp + '0'), char(moveIdle + '0')};
+}
+
+void SetMoveNode::move(float _X, float _Y) {
+    Node::move(_X, _Y);
+    text.move(_X, _Y);
+    directionRect.x += _X * window.getWidth();
+    directionRect.y += _Y * window.getHeight();
+    speedRect.x += _X * window.getWidth();
+    speedRect.y += _Y * window.getHeight();
 }
 
 Node* SetMoveNode::use() {
@@ -55,15 +64,6 @@ Node* SetMoveNode::use() {
     }
     // Move to next node
     return nextNode;
-}
-
-void SetMoveNode::move(float _X, float _Y) {
-    Node::move(_X, _Y);
-    text.move(_X, _Y);
-    directionRect.x += _X * window.getWidth();
-    directionRect.y += _Y * window.getHeight();
-    speedRect.x += _X * window.getWidth();
-    speedRect.y += _Y * window.getHeight();
 }
 
 void SetMoveNode::blit() const {
