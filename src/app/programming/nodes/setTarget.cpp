@@ -76,17 +76,18 @@ Node* SetTargetNode::handlReachPos() const {
 }
 
 void SetTargetNode::connectSubNode(SubNode* _subNode) {
-    // Save node
+    // Check, if already has node
+    if (positionNode) {
+        // Remove previous
+        delete positionNode;
+    }
+    // Set new node
     positionNode = (PosSubNode*)_subNode;
     // Move it to place
     _subNode->moveTo(&connectTarget);
 }
 
 bool SetTargetNode::tryConnectSubNode(SubNode* _subNode) {
-    // Check, if already has node
-    if (positionNode) {
-        return false;
-    }
     // Check, if near
     if (connectTarget.isNear(_subNode)) {
         connectSubNode(_subNode);

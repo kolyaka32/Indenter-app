@@ -10,18 +10,11 @@
 int GetPosNode::counter = 0;
 
 
-GetPosNode::GetPosNode(const Window& _window, float _X, float _Y, int _number)
+GetPosNode::GetPosNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Save position", "Запомнить точку"},
     Height::Main, WHITE, GUI::Aligment::Left),
-posSubNode(_window, _X+0.05, _Y, _number, this) {
-    if (counter <= _number) {
-        counter = _number;
-    }
-}
-
-GetPosNode::GetPosNode(const Window& _window, float _X, float _Y)
-: GetPosNode(_window, _X, _Y, counter) {
+posSubNode(_window, _X+0.05, _Y, counter, this) {
     counter++;
 }
 
@@ -55,10 +48,6 @@ void GetPosNode::blit() const {
     Node::blit();
     text.blit();
     posSubNode.blit();
-}
-
-int GetPosNode::getID() const {
-    return posSubNode.getNumber();
 }
 
 bool GetPosNode::isLegimate() const {

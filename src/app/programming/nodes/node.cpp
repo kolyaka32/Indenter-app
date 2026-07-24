@@ -167,10 +167,6 @@ SubNode* Node::takeSubNode() {
     return nullptr;
 }
 
-int Node::getID() const {
-    return 0;
-}
-
 Node* Node::use() {
     return nullptr;
 }

@@ -337,13 +337,19 @@ void ProgramMenu::load(SDL_IOStream* fin) {
     char buffer[2000];
     SDL_ReadIO(fin, buffer, sizeof(buffer));
 
-    // Saving
-    struct TargetNodeLoad {
+    // Struct for save nodes with corresponding subNode argument
+    struct NodeLoad {
+        char type;
         Node* node;
         int number;
     };
-    std::vector<TargetNodeLoad> targetLoads;
-    int number = 0;
+    // Array with all loaded getPosition node for connection
+    std::vector<NodeLoad> positionLoad;
+    // Array with all loaded setTarget node for connection
+    std::vector<NodeLoad> targetLoads;
+    // Argument for use in switch
+    int argument = 0;
+    Node* node = nullptr;
     Node* previousNode = nodes[0];
     // Read all getted data
     for (char* c = buffer; *c; ++c) {
@@ -367,26 +373,33 @@ void ProgramMenu::load(SDL_IOStream* fin) {
             break;
 
         case 't':
-            nodes.emplace_back(new SetTargetNode{window, 0.0, 0.0});
-            // Finding argument
-            number = 0;
+            // Getting argument
+            argument = 0;
             for (c++; (*c >= '0') && (*c <= '9'); ++c) {
-                number = number*10 + *c - '0';
+                argument = argument*10 + *c - '0';
             }
+            node = new SetTargetNode{window, 0.0, 0.0};
             // Check, if required to connect
-            if (number) {
+            if (argument) {
                 // Saving node for future argument set
-                targetLoads.emplace_back(TargetNodeLoad{nodes.back(), number});
+                targetLoads.emplace_back(NodeLoad{'t', node, argument});
             }
+            nodes.emplace_back(node);
             break;
 
         case 'p':
-            // Finding argument
-            number = 0;
+            // Getting argument
+            argument = 0;
             for (c++; (*c >= '0') && (*c <= '9'); ++c) {
-                number = number*10 + *c - '0';
+                argument = argument*10 + *c - '0';
             }
-            nodes.emplace_back(new GetPosNode{window, 0.0, 0.0, number});
+            node = new GetPosNode{window, 0.0, 0.0};
+            // Check, if required to connect
+            if (argument) {
+                // Saving node for future use as argument
+                positionLoad.emplace_back(NodeLoad{'p', node, argument});
+            }
+            nodes.emplace_back(node);
             break;
 
         case 'r':
@@ -412,9 +425,9 @@ void ProgramMenu::load(SDL_IOStream* fin) {
     for (int load=0; load < targetLoads.size(); ++load) {
         // Find corresponding getPos
         Node* sourceNode = nullptr;
-        for (int i=0; i < nodes.size(); ++i) {
-            if (nodes[i]->getID() == targetLoads[load].number) {
-                sourceNode = nodes[i];
+        for (int i=0; i < positionLoad.size(); ++i) {
+            if (positionLoad[i].number == targetLoads[load].number) {
+                sourceNode = positionLoad[i].node;
                 break;
             }
         }

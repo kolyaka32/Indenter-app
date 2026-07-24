@@ -92,8 +92,6 @@ public:
     virtual void disconnect(const Node* node);
     // Get subNode to hold and place
     virtual SubNode* takeSubNode();
-    // Get ID of node (for comparison in load (mostly for getPos))
-    virtual int getID() const;
 
     // Interaction
     virtual void checkOff(const Mouse mouse);  // Check on stop interaction with object

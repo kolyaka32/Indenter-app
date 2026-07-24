@@ -23,8 +23,6 @@ private:
     PosSubNode posSubNode;
 
 public:
-    // Create from save
-    GetPosNode(const Window& window, float X, float Y, int number);
     // Normal create with new number
     GetPosNode(const Window& window, float X, float Y);
 
@@ -34,7 +32,6 @@ public:
     void move(float X, float Y) override;
     SubNode* takeSubNode() override;
     void blit() const override;
-    int getID() const override;
     // Exclusive for that node
     bool isLegimate() const;
     int getPos() const;
