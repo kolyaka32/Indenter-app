@@ -13,9 +13,9 @@ mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, _X, _Y-_H*0.45, {"Getted data", "Полученные данные"}, 2, Height::Info),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
 forceChart(_window, _X+0.015, _Y-0.2*_H, _W*0.85, _H*0.25,
-    collectedData.getPositions(), collectedData.getForces(), {"Force", "Сила"}),
+    collectedData.getPositions(), collectedData.getForces(), {"Force", "Сила"}, RED),
 tempertureChart(_window, _X+0.015, _Y+0.15*_H, _W*0.85, _H*0.25,
-    collectedData.getPositions(), collectedData.getTemperatures(), {"Temperature", "Температура"}),
+    collectedData.getPositions(), collectedData.getTemperatures(), {"Temperature", "Температура"}, BLUE),
 counterText(_window, _X, _Y+_H*0.35, {"Packets getted: %d", "Пакетов получено: %d"}),
 notSavedText(_window, _X, _Y+_H*0.4, {"Not saved", "Не сохранено"}, 1),
 saveButton(_window, _X, _Y+_H*0.45, {"Save", "Сохранить"}),
@@ -44,6 +44,8 @@ bool OutputMenu::click(const Mouse _mouse) {
 
 void OutputMenu::update() {
     counterText.setValues(collectedData.getLineCount());
+    forceChart.update();
+    tempertureChart.update();
 }
 
 void OutputMenu::blit() const {

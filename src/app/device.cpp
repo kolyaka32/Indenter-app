@@ -93,12 +93,12 @@ void Device::sendStop() {
     serial.writeData(&data, sizeof(data));
 }
 
-void Device::sendMoveUp() {
+void Device::sendWorkUp() {
     char data = char(Send::SetWorkUp);
     serial.writeData(&data, sizeof(data));
 }
 
-void Device::sendMoveDown() {
+void Device::sendWorkDown() {
     char data = char(Send::SetWorkDown);
     serial.writeData(&data, sizeof(data));
 }

@@ -54,8 +54,8 @@ class Device {
     // Immidiate stop
     void sendStop();
     // Working speed infinite movement
-    void sendMoveUp();
-    void sendMoveDown();
+    void sendWorkUp();
+    void sendWorkDown();
     // Idle speed infinite movement
     void sendIdleUp();
     void sendIdleDown();
@@ -77,7 +77,7 @@ class Device {
         Waiting,     // Currently waiting for command
         Working,     // Currently moving
         // New measures
-        Packet,      // One frame with new [position], [force] and [temperature]
+        Packet,     // One frame with new [position], [force] and [temperature]
         // Complete task
         Position,    // Signal with current [position]
         ReachPos,    // Signal, that reach setted position

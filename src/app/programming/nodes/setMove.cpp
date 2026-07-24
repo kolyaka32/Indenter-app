@@ -53,13 +53,13 @@ Node* SetMoveNode::use() {
         if (moveIdle) {
             device.sendIdleUp();
         } else {
-            device.sendMoveUp();
+            device.sendWorkUp();
         }
     } else {
         if (moveIdle) {
             device.sendIdleUp();
         } else {
-            device.sendMoveUp();
+            device.sendWorkUp();
         }
     }
     // Move to next node

@@ -20,7 +20,8 @@ private:
     const SDL_FRect drawRect;
     const SDL_Color color;
     GUI::HighlightedStaticText title;
-    GUI::DynamicText marks[5];
+    GUI::DynamicText yMarks[5];
+    GUI::DynamicText xMarks[2];
 
 public:
     Chart(const Window& window, float X, float Y, float W, float H, const BoundedArray<xAxis>& pos,

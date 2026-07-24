@@ -44,7 +44,7 @@ bool DirectControl::click(const Mouse _mouse) {
     }
     if (workUpButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendMoveUp();
+            device.sendWorkUp();
         } else {
             activatableBox.reset();
         }
@@ -58,7 +58,7 @@ bool DirectControl::click(const Mouse _mouse) {
     }
     if (workDownButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendMoveDown();
+            device.sendWorkDown();
         } else {
             activatableBox.reset();
         }
