@@ -23,11 +23,11 @@ class BaseCycle : public CycleTemplate {
 
  protected:
     bool inputMouseDown() override;
-    void update() override;
     void inputMouseUp() override;
     bool inputKeys(SDL_Keycode key) override;
     bool inputMouseWheel(float wheelY) override;
     bool inputText(const char* text) override;
+    void update() override;
     void draw() const override;
 
  public:

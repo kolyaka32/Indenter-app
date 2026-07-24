@@ -57,7 +57,7 @@ namespace GUI {
         TextureTemplate(const Window& window, SDL_Texture* texture = nullptr);
         TextureTemplate(const Window& window, SDL_FRect rect, SDL_Texture* texture = nullptr);
         TextureTemplate(TextureTemplate&& object) noexcept;
-        void move(float X, float Y);
+        virtual void move(float X, float Y);
         void blit() const override;
         virtual bool in(const Mouse mouse) const;
     };
@@ -232,13 +232,13 @@ namespace GUI {
     class TypeField : public TextureTemplate {
      protected:
         // Class constants
-        const int posX;               // Relevant x position on screen
         const Aligment aligment;      // Aligment type for correct placed position
         const Color textColor;        // Color of typing text (and inversed background)
         const Color backColor;        // Color of background plate (and inversed text)
         TTF_Font* font;               // Font for type text
 
         // Variables
+        int posX;                     // Relevant x position on screen
         char buffer[bufferSize+1];    // String, that was typed
         size_t length = 0;            // Length of all text
         size_t caret = 0;             // Position of place, where user type
@@ -274,6 +274,7 @@ namespace GUI {
         bool checkOff(const Mouse mouse);   // Check if click in other place, true if end entering
         Code click(const Mouse mouse);      // Set caret for typing at specified place
         void unclick();                     // Reset pressing
+        void move(float X, float Y) override;  // Move current box
         void blit() const override;         // Draw current text with selection at screen
     };
 
@@ -288,6 +289,7 @@ namespace GUI {
         TypeBox(const Window& window, float posX, float posY, const char *startText = "", float height = Height::TypeBox,
             Aligment aligment = Aligment::Midle, unsigned frameWidth = 2, Color textColor = BLACK);
         TypeBox(TypeBox&& object) noexcept;
+        void move(float X, float Y) override;
         void blit() const override;  // Function for draw inputting text with backplate
         bool in(const Mouse mouse) const override;
     };

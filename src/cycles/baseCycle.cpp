@@ -17,6 +17,7 @@ outputMenu(_window, 0.84, 0.55, 0.32, 0.9) {
         programMenu.reset();
         outputMenu.reset();
     }
+    logger.additional("Start base cycle");
 }
 
 bool BaseCycle::inputMouseDown() {
@@ -37,6 +38,7 @@ bool BaseCycle::inputMouseDown() {
 
 void BaseCycle::inputMouseUp() {
     settings.unClick();
+    programMenu.unclick(mouse);
 }
 
 bool BaseCycle::inputKeys(SDL_Keycode _key) {
@@ -47,6 +49,7 @@ bool BaseCycle::inputKeys(SDL_Keycode _key) {
         settings.toggle();
         return true;
     }
+    programMenu.type(_key);
     return false;
 }
 
@@ -55,14 +58,16 @@ bool BaseCycle::inputMouseWheel(float _wheelY) {
 }
 
 bool BaseCycle::inputText(const char* _text) {
+    programMenu.writeString(_text);
     return false;
 }
 
 void BaseCycle::update() {
+    mouse.updatePos();
     settings.update();
     directControl.update();
-    programMenu.update();
     outputMenu.update();
+    programMenu.update(mouse);
 }
 
 void BaseCycle::draw() const {
@@ -71,8 +76,8 @@ void BaseCycle::draw() const {
     window.clear();
 
     directControl.blit();
-    programMenu.blit();
     outputMenu.blit();
+    programMenu.blit();
     settings.blit();
 
     // Render it

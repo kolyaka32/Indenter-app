@@ -8,16 +8,20 @@
 
 NodeSelector::NodeSelector(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
+nodes{},
 background(_window, _X, _Y, _W, _H, 2.0) {
     // Creating all nodes
-    addNode<Node>(_window, _X, _Y, _H);  // Start
-    addNode<Node>(_window, _X, _Y, _H);  // WhileStart
-    addNode<Node>(_window, _X, _Y, _H);  // LoopStart
-    addNode<Node>(_window, _X, _Y, _H);  // SetSpeed
-    addNode<Node>(_window, _X, _Y, _H);  // Stop
-    addNode<Node>(_window, _X, _Y, _H);  // WaitNone
-    addNode<Node>(_window, _X, _Y, _H);  // WaitPosition
-    addNode<Node>(_window, _X, _Y, _H);  // WaitForce
+    count = 0;
+    addNode<SetStopNode>(_X, _Y, _H);
+    addNode<SetMoveNode>(_X, _Y, _H);
+    addNode<SetStepNode>(_X, _Y, _H);
+    addNode<SetTargetNode>(_X, _Y, _H);
+    addNode<GetPosNode>(_X, _Y, _H);
+    addNode<WaitReachNode>(_X, _Y, _H);
+    addNode<WaitLoseNode>(_X, _Y, _H);
+    addNode<HaltNode>(_X, _Y, _H);
+    //addNode<Node>(_X, _Y, _H);  // WhileStart
+    //addNode<Node>(_X, _Y, _H);  // LoopStart
 }
 
 NodeSelector::~NodeSelector() {
@@ -26,16 +30,57 @@ NodeSelector::~NodeSelector() {
     }
 }
 
+bool NodeSelector::in(const Mouse _mouse) const {
+    return background.in(_mouse);
+}
+
+void NodeSelector::checkOff(const Mouse _mouse) {
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->checkOff(_mouse);
+    }
+}
+
 Node* NodeSelector::click(const Mouse _mouse) {
+    // Check on stop interaction
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->checkOff(_mouse);
+    }
+    // Check for all nodes
+    for (int i=0; i < nodes.size(); ++i) {
+        if (GUI::Code code = nodes[i]->click(_mouse)) {
+            // Check on action in this block
+            if (code == GUI::Some) {
+                // Create new node for interaction
+                logger.additional("Create new node at %d", i);
+                return nodes[i]->copy();
+            }
+        }
+    }
     return nullptr;
 }
 
-bool NodeSelector::unclick(const Mouse _mouse) {
-    return false;
+void NodeSelector::unclick() {
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->unclick();
+    }
 }
 
-void NodeSelector::update() {
+void NodeSelector::type(SDL_Keycode _code) {
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->type(_code);
+    }
+}
 
+void NodeSelector::writeString(const char* _str) {
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->writeString(_str);
+    }
+}
+
+void NodeSelector::update(const Mouse _mouse) {
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->update(_mouse.getX());
+    }
 }
 
 void NodeSelector::blit() const {

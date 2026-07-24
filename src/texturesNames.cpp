@@ -32,12 +32,16 @@ const char* texturesFilesNames[unsigned(Textures::Count)] = {
     "img/GUI/Flag_RUS.png",
 
     "img/program/Start.png",
+    "img/program/Stop.png",
     "img/program/LoopStart.png",
     "img/program/LoopMiddle.png",
     "img/program/LoopEnd.png",
     "img/program/WhileEnd.png",
     "img/program/Action.png",
+    "img/program/LongAction.png",
     "img/program/Wait.png",
+    "img/program/LongWait.png",
+    "img/program/SubNode.png"
 };
 
 Textures operator+(const Textures _color, int _offset) {

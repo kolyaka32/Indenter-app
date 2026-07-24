@@ -60,8 +60,8 @@ class Device {
     void sendIdleUp();
     void sendIdleDown();
     // Relative movement by step count
-    void sendStepUp(int steps);
-    void sendStepDown(int steps);
+    void sendStepUp(float distance);
+    void sendStepDown(float distance);
     // Absolute movement to pos (should by get only from get position)
     void sendMoveToPos(int pos);
     // Sensors
@@ -77,9 +77,9 @@ class Device {
         Waiting,     // Currently waiting for command
         Working,     // Currently moving
         // New measures
-        Packet,      // One frame with new sensors values
+        Packet,      // One frame with new [position], [force] and [temperature]
         // Complete task
-        Position,    // Signal with current position
+        Position,    // Signal with current [position]
         ReachPos,    // Signal, that reach setted position
         ReachForce,  // Signal, that reach setted force
     };

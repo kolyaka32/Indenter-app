@@ -19,6 +19,7 @@ class CollectedData {
     // One packet of data
     struct Measure {
         // Values
+        Uint8 type;
         Position position;
         Force force;
         Temperature temperature;

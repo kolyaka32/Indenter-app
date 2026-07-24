@@ -12,13 +12,19 @@ template <unsigned bufferSize>
 GUI::TypeBox<bufferSize>::TypeBox(const Window& _window, float _posX, float _posY, const char *_startText,
     float _height, Aligment _aligment, unsigned _frameWidth, Color _textColor)
 : TypeField<bufferSize>(_window, _posX, _posY, _startText, _height, _aligment, _textColor),
-backplate(_window, {_posX*_window.getWidth() - (6.5f*bufferSize+2), _posY*_window.getHeight()-_height*0.85f,
-    13.0f * bufferSize+4, _height * 1.8f}, 2, WHITE, BLACK) {}
+backplate(_window, {_posX*_window.getWidth()-(13*bufferSize-2)*(int)_aligment/2-4,
+    _posY*_window.getHeight()-_height*0.85f, 13.0f * bufferSize+4, _height * 1.8f}, 2, WHITE, BLACK) {}
 
 template <unsigned bufferSize>
 GUI::TypeBox<bufferSize>::TypeBox(TypeBox&& _object) noexcept
 : TypeField<bufferSize>(std::move(_object)),
 backplate(std::move(_object.backplate)) {}
+
+template <unsigned bufferSize>
+void GUI::TypeBox<bufferSize>::move(float _X, float _Y) {
+    TypeField<bufferSize>::move(_X, _Y);
+    backplate.move(_X, _Y);
+}
 
 template <unsigned bufferSize>
 void GUI::TypeBox<bufferSize>::blit() const {

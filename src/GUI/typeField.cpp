@@ -27,8 +27,9 @@ font(window.createFontCopy(Fonts::Main, _height)) {
     inversedRectDest.y = window.getHeight()*_Y-_height/2;
     inversedRectSrc.y = 0;
 
-    // Copying text to caret
-    length = strlen(_startText);
+    // Copying text to buffer
+    length = 0;
+    for (; _startText[length] && _startText[length] != '\n'; ++length) {}
     setMax(length, (size_t)bufferSize);
     memcpy(buffer, _startText, length);
 
@@ -455,6 +456,16 @@ GUI::Code GUI::TypeField<bufferSize>::click(const Mouse _mouse) {
 template <unsigned bufferSize>
 void GUI::TypeField<bufferSize>::unclick() {
     pressed = false;
+}
+
+template <unsigned bufferSize>
+void GUI::TypeField<bufferSize>::move(float _X, float _Y) {
+    TextureTemplate::move(_X, _Y);
+    posX += _X*window.getWidth();
+    caretRect.x += _X*window.getWidth();
+    caretRect.y += _Y*window.getHeight();
+    inversedRectDest.x += _X*window.getWidth();
+    inversedRectDest.y += _Y*window.getHeight();
 }
 
 template <unsigned bufferSize>
