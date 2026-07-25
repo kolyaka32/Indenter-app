@@ -367,16 +367,16 @@ void ProgramMenu::load(SDL_IOStream* fin) {
             break;
 
         case 'e':
-            nodes.emplace_back(new SetStepNode{window, 0.0, 0.0, c});
+            nodes.emplace_back(new SetStepNode{window, 0.0, 0.0, *(c+1), c+2});
             break;
 
         case 't':
+            node = new SetTargetNode{window, 0.0, 0.0, *(++c)};
             // Getting argument
             argument = 0;
             for (c++; (*c >= '0') && (*c <= '9'); ++c) {
                 argument = argument*10 + *c - '0';
             }
-            node = new SetTargetNode{window, 0.0, 0.0};
             // Check, if required to connect
             if (argument) {
                 // Saving node for future argument set
@@ -386,12 +386,12 @@ void ProgramMenu::load(SDL_IOStream* fin) {
             break;
 
         case 'p':
+            node = new GetPosNode{window, 0.0, 0.0};
             // Getting argument
             argument = 0;
             for (c++; (*c >= '0') && (*c <= '9'); ++c) {
                 argument = argument*10 + *c - '0';
             }
-            node = new GetPosNode{window, 0.0, 0.0};
             // Check, if required to connect
             if (argument) {
                 // Saving node for future use as argument

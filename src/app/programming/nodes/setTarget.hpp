@@ -11,16 +11,16 @@
 // Node for absolute movement to stored 
 class SetTargetNode : public Node {
 private:
+    Uint16 speed;  // Speeds: slow=1, normal=2, fast=3
     PosSubNode* positionNode;
-    // Add speeds
 
     // Graphica part
     GUI::StaticText text;
-    // Place to connect posSubNode
-    SubNode connectTarget;
+    SDL_FRect speedRect;
+    SubNode connectTarget;  // Place to connect posSubNode
 
 public:
-    SetTargetNode(const Window& window, float X, float Y);
+    SetTargetNode(const Window& window, float X, float Y, char speed = '1');
 
     // Programming
     GUI::Code click(const Mouse mouse) override;

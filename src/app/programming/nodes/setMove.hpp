@@ -15,8 +15,8 @@ private:
     bool direction;  // false for down and true for up
 
     GUI::StaticText text;
-    SDL_FRect directionRect;
     SDL_FRect speedRect;
+    SDL_FRect directionRect;
 
 public:
     SetMoveNode(const Window& window, float X, float Y, char speed = '1', char direction = '0');

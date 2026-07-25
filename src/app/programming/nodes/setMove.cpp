@@ -8,13 +8,13 @@
 
 
 SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, char _speed, char _direction)
-: Node(_window, _X, _Y, Textures::BlockLongAction),
+: Node(_window, _X, _Y, Textures::BlockAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move", "Двигаться"},
     Height::Main, WHITE, GUI::Aligment::Left),
 speed(_speed - '0'),
 direction(_direction - '0') {
-    directionRect = {(_X+0.018f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
-    speedRect = {(_X+0.033f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
+    speedRect = {(_X+0.014f)*window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
+    directionRect = {(_X+0.030f)*window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
 }
 
 GUI::Code SetMoveNode::click(const Mouse _mouse) {
@@ -60,12 +60,6 @@ Node* SetMoveNode::use() {
 void SetMoveNode::blit() const {
     Node::blit();
     text.blit();
-    // Direction
-    if (direction) {
-        window.blit(window.getTexture(Textures::SlowUpButton), directionRect);
-    } else {
-        window.blit(window.getTexture(Textures::SlowDownButton), directionRect);
-    }
     // Speed
     switch (speed) {
     case 1:
@@ -82,6 +76,12 @@ void SetMoveNode::blit() const {
 
     default:
         break;
+    }
+    // Direction
+    if (direction) {
+        window.blit(window.getTexture(Textures::SlowUpButton), directionRect);
+    } else {
+        window.blit(window.getTexture(Textures::SlowDownButton), directionRect);
     }
 }
 
