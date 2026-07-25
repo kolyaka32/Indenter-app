@@ -63,7 +63,11 @@ void Device::checkRecieve() {
                 break;
 
             case Get::Position:
-                ProgramMenu::handlePos(int(*(data+1)));
+                struct PosPacket {
+                    int type;
+                    int pos;
+                };
+                ProgramMenu::handlePos(((PosPacket*)data)->pos);
                 break;
 
             case Get::ReachPos:
@@ -89,64 +93,76 @@ void Device::checkRecieve() {
 }
 
 void Device::sendStop() {
-    char data = char(Send::Stop);
-    serial.writeData(&data, sizeof(data));
+    int packet = int(Send::Stop);
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 void Device::sendWorkUp() {
-    char data = char(Send::SetWorkUp);
-    serial.writeData(&data, sizeof(data));
+    int packet = int(Send::SetWorkUp);
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 void Device::sendWorkDown() {
-    char data = char(Send::SetWorkDown);
-    serial.writeData(&data, sizeof(data));
+    int packet = int(Send::SetWorkDown);
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 void Device::sendIdleUp() {
-    char data = char(Send::SetIdleUp);
-    serial.writeData(&data, sizeof(data));
+    int packet = int(Send::SetIdleUp);
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 void Device::sendIdleDown() {
-    char data = char(Send::SetIdleDown);
-    serial.writeData(&data, sizeof(data));
+    int packet = int(Send::SetIdleDown);
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 void Device::sendStepUp(float _distance) {
-    char data[5];
-    data[0] = char(Send::SetStepUp);
-    memcpy(data+1, &_distance, sizeof(_distance));
-    serial.writeData(data, sizeof(data));
+    struct Packet {
+        int type;
+        float distance;
+    };
+    Packet packet;
+    packet.type = int(Send::SetStepUp);
+    packet.distance = _distance;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 void Device::sendStepDown(float _distance) {
-    char data[5];
-    data[0] = char(Send::SetStepDown);
-    memcpy(data+1, &_distance, sizeof(_distance));
-    serial.writeData(data, sizeof(data));
+    struct Packet {
+        int type;
+        float distance;
+    };
+    Packet packet;
+    packet.type = int(Send::SetStepDown);
+    packet.distance = _distance;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 void Device::sendMoveToPos(int _pos) {
-    char data[5];
-    data[0] = char(Send::SetMoveTo);
-    memcpy(data+1, &_pos, sizeof(_pos));
-    serial.writeData(data, sizeof(data));
+    struct Packet {
+        int type;
+        int pos;
+    };
+    Packet packet;
+    packet.type = int(Send::SetMoveTo);
+    packet.pos = _pos;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 void Device::sendReachForce() {
     char data = char(Send::ReachForce);
-    serial.writeData(&data, sizeof(data));
+    serial.writeData((char*)&data, sizeof(data));
 }
 
 void Device::sendLoseForce() {
     char data = char(Send::LowerForce);
-    serial.writeData(&data, sizeof(data));
+    serial.writeData((char*)&data, sizeof(data));
 }
 
 void Device::sendGetPos() {
     char data = char(Send::GetPos);
-    serial.writeData(&data, sizeof(data));
+    serial.writeData((char*)&data, sizeof(data));
 }
 
 bool Device::isConnected() const {

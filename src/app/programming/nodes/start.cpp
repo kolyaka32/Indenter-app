@@ -26,6 +26,10 @@ void StartNode::blit() const {
     text.blit();
 }
 
+Node* StartNode::use() {
+    return nextNode;
+}
+
 void StartNode::save(SDL_IOStream* _fout) {
     SDL_IOprintf(_fout, "i\n");
 }
