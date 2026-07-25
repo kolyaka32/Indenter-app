@@ -21,10 +21,10 @@ notRespondingText(_window, _X, _Y-_H*0.1, {"Not responding", "Нет отвеч�
 waitingText(_window, _X, _Y-_H*0.1, {"Wait", "Ожидает"}, Height::Main, BLACK),
 workingText(_window, _X, _Y-_H*0.1, {"Running", "Работает"}, Height::Main, BLACK),
 activatableBox(_window, _X, _Y-_H*0.05, {"Not connected", "Не подключён"}, 800),
-slowUpButton(_window, _X-0.035,   _Y+_H*0.08, 0.03, Textures::SlowUpButton),
+slowUpButton(_window,   _X-0.035, _Y+_H*0.08, 0.03, Textures::SlowUpButton),
 normalUpButton(_window, _X,       _Y+_H*0.08, 0.03, Textures::NormalUpButton),
-fastUpButton(_window, _X+0.035,   _Y+_H*0.08, 0.03, Textures::FastUpButton),
-haltButton(_window, _X,           _Y+_H*0.16, 0.03, Textures::HaltButton),
+fastUpButton(_window,   _X+0.035, _Y+_H*0.08, 0.03, Textures::FastUpButton),
+haltButton(_window,     _X,       _Y+_H*0.16, 0.03, Textures::HaltButton),
 slowDownButton(_window, _X-0.035, _Y+_H*0.24, 0.03, Textures::SlowDownButton),
 normalDownButton(_window, _X,     _Y+_H*0.24, 0.03, Textures::NormalDownButton),
 fastDownButton(_window, _X+0.035, _Y+_H*0.24, 0.03, Textures::FastDownButton) {}

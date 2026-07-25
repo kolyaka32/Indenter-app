@@ -7,25 +7,25 @@
 #include "../../device.hpp"
 
 
-SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, char _moveUp, char _moveIdle)
+SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, char _speed, char _direction)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move", "Двигаться"},
     Height::Main, WHITE, GUI::Aligment::Left),
-moveUp(char(_moveUp - '0')),
-moveIdle(char(_moveIdle - '0')) {
+speed(_speed - '0'),
+direction(_direction - '0') {
     directionRect = {(_X+0.018f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
     speedRect = {(_X+0.033f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
 }
 
 GUI::Code SetMoveNode::click(const Mouse _mouse) {
     if (in(_mouse)) {
-        if (_mouse.in(directionRect)) {
-            moveUp ^= true;
-            return GUI::Button1;
-        }
         if (_mouse.in(speedRect)) {
-            moveIdle ^= true;
+            speed = (speed) % 3 + 1;  // Change to next with cycling
             return GUI::Button2;
+        }
+        if (_mouse.in(directionRect)) {
+            direction ^= true;
+            return GUI::Button1;
         }
         disconnectPrevious();
         return GUI::Some;
@@ -35,7 +35,7 @@ GUI::Code SetMoveNode::click(const Mouse _mouse) {
 
 Node* SetMoveNode::copy() {
     return new SetMoveNode{window, (rect.x+rect.w/2)/window.getWidth(),
-        (rect.y+rect.h/2)/window.getHeight(), char(moveUp + '0'), char(moveIdle + '0')};
+        (rect.y+rect.h/2)/window.getHeight(), char(speed + '0'), char(direction + '0')};
 }
 
 void SetMoveNode::move(float _X, float _Y) {
@@ -48,10 +48,10 @@ void SetMoveNode::move(float _X, float _Y) {
 }
 
 Node* SetMoveNode::use() {
-    if (moveUp) {
-        device.sendMoveUp(moveIdle);  // ! Add speeds
+    if (direction) {
+        device.sendMoveUp(speed);
     } else {
-        device.sendMoveDown(moveIdle);
+        device.sendMoveDown(speed);
     }
     // Move to next node
     return nextNode;
@@ -61,19 +61,30 @@ void SetMoveNode::blit() const {
     Node::blit();
     text.blit();
     // Direction
-    if (moveUp) {
+    if (direction) {
         window.blit(window.getTexture(Textures::SlowUpButton), directionRect);
     } else {
         window.blit(window.getTexture(Textures::SlowDownButton), directionRect);
     }
     // Speed
-    if (moveIdle) {
+    switch (speed) {
+    case 1:
         window.blit(window.getTexture(Textures::SlowUpButton), 90.0, speedRect);
-    } else {
+        break;
+
+    case 2:
+        window.blit(window.getTexture(Textures::NormalUpButton), 90.0, speedRect);
+        break;
+
+    case 3:
         window.blit(window.getTexture(Textures::FastUpButton), 90.0, speedRect);
+        break;
+
+    default:
+        break;
     }
 }
 
 void SetMoveNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "m%c%c\n", moveUp+'0', moveIdle+'0');
+    SDL_IOprintf(_fout, "m%c%c\n", speed+'0', direction+'0');
 }
