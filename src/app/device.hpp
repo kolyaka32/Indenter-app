@@ -25,6 +25,7 @@ class Device {
         Waiting,        // Waiting for command
         Working,        // Going to sample at full speed
     };
+    typedef Uint16 Type;
     // Main device state
     States state = NotConnected;
 
@@ -47,7 +48,7 @@ class Device {
         SetStepDown,  // Move down with [speed] by specified number of [steps]
         SetMoveTo,    // Move with [speed] to setted [position]
         // Stop
-        Stop,         // Stop movement
+        SetStop,      // Stop movement
     };
     // Immidiate stop
     void sendStop();

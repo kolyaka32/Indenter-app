@@ -11,8 +11,8 @@
 // Class of menu with game settings
 class SettingsMenu : public GUI::SubWindow {
  private:
-    timer nextSound = 0;      // Time to play next sound
-    Uint8 holdingSlider = 0;  // Index of holded slider
+    timer nextSound = 0;    // Time to play next sound
+    int holdingSlider = 0;  // Index of holded slider
 
     // Button for enter and quit settings menu
     const GUI::ImageButton settingButton;
