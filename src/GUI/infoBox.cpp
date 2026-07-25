@@ -25,7 +25,7 @@ endTime(_object.endTime) {
 }
 
 void GUI::InfoBox::update() {
-    if (endTime > getTime()) {
+    if (endTime >= getTime()) {
         // Setting text to be less and less visible
         SDL_SetTextureAlphaModFloat(texture, (float)(endTime - getTime()) / decayTime);
     }

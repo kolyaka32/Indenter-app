@@ -9,7 +9,7 @@
 Node::Node(const Window& _window, float _X, float _Y, Textures _texture,
     bool _connectableUp, bool _connectableDown, bool _delitable)
 : TextureTemplate(_window, _window.getTexture(_texture)),
-arrowTexture(window.getTexture(Textures::UpButton)),
+arrowTexture(window.getTexture(Textures::SlowUpButton)),
 previousNode(nullptr),
 nextNode(nullptr),
 connectableUp(_connectableUp),

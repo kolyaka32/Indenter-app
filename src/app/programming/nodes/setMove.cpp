@@ -60,13 +60,15 @@ Node* SetMoveNode::use() {
 void SetMoveNode::blit() const {
     Node::blit();
     text.blit();
+    // Direction
     if (moveUp) {
-        window.blit(window.getTexture(Textures::UpButton), directionRect);
+        window.blit(window.getTexture(Textures::SlowUpButton), directionRect);
     } else {
-        window.blit(window.getTexture(Textures::DownButton), directionRect);
+        window.blit(window.getTexture(Textures::SlowDownButton), directionRect);
     }
+    // Speed
     if (moveIdle) {
-        window.blit(window.getTexture(Textures::UpButton), 90.0, speedRect);
+        window.blit(window.getTexture(Textures::SlowUpButton), 90.0, speedRect);
     } else {
         window.blit(window.getTexture(Textures::FastUpButton), 90.0, speedRect);
     }

@@ -20,12 +20,14 @@ notConnectedText(_window, _X, _Y-_H*0.1, {"Not connected", "Нет подклю�
 notRespondingText(_window, _X, _Y-_H*0.1, {"Not responding", "Нет отвечает"}, Height::Main, BLACK),
 waitingText(_window, _X, _Y-_H*0.1, {"Wait", "Ожидает"}, Height::Main, BLACK),
 workingText(_window, _X, _Y-_H*0.1, {"Running", "Работает"}, Height::Main, BLACK),
-activatableBox(_window, _X, _Y-_H*0.03, {"Not connected", "Не подключён"}, 800),
-fastUpButton(_window, _X, _Y+_H*0.05, 0.03, Textures::FastUpButton),
-workUpButton(_window, _X, _Y+_H*0.12, 0.03, Textures::UpButton),
-haltButton(_window, _X, _Y+_H*0.19, 0.03, Textures::HaltButton),
-workDownButton(_window, _X, _Y+_H*0.26, 0.03, Textures::DownButton),
-fastDownButton(_window, _X, _Y+_H*0.33, 0.03, Textures::FastDownButton) {}
+activatableBox(_window, _X, _Y-_H*0.05, {"Not connected", "Не подключён"}, 800),
+slowUpButton(_window, _X-0.035,   _Y+_H*0.08, 0.03, Textures::SlowUpButton),
+normalUpButton(_window, _X,       _Y+_H*0.08, 0.03, Textures::NormalUpButton),
+fastUpButton(_window, _X+0.035,   _Y+_H*0.08, 0.03, Textures::FastUpButton),
+haltButton(_window, _X,           _Y+_H*0.16, 0.03, Textures::HaltButton),
+slowDownButton(_window, _X-0.035, _Y+_H*0.24, 0.03, Textures::SlowDownButton),
+normalDownButton(_window, _X,     _Y+_H*0.24, 0.03, Textures::NormalDownButton),
+fastDownButton(_window, _X+0.035, _Y+_H*0.24, 0.03, Textures::FastDownButton) {}
 
 void DirectControl::reset() {
     serialPort.reset();
@@ -35,16 +37,23 @@ bool DirectControl::click(const Mouse _mouse) {
     if (serialPort.click(_mouse)) {
         return true;
     }
-    if (fastUpButton.in(_mouse)) {
+    if (slowUpButton.in(_mouse)) {
+        if (device.isConnected()) {
+            device.sendMoveUp(1);
+        } else {
+            activatableBox.reset();
+        }
+    }
+    if (normalUpButton.in(_mouse)) {
         if (device.isConnected()) {
             device.sendMoveUp(2);
         } else {
             activatableBox.reset();
         }
     }
-    if (workUpButton.in(_mouse)) {
+    if (fastUpButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendMoveUp(1);
+            device.sendMoveUp(3);
         } else {
             activatableBox.reset();
         }
@@ -56,16 +65,23 @@ bool DirectControl::click(const Mouse _mouse) {
             activatableBox.reset();
         }
     }
-    if (workDownButton.in(_mouse)) {
+    if (slowDownButton.in(_mouse)) {
         if (device.isConnected()) {
             device.sendMoveDown(1);
         } else {
             activatableBox.reset();
         }
     }
-    if (fastDownButton.in(_mouse)) {
+    if (normalDownButton.in(_mouse)) {
         if (device.isConnected()) {
             device.sendMoveDown(2);
+        } else {
+            activatableBox.reset();
+        }
+    }
+    if (fastDownButton.in(_mouse)) {
+        if (device.isConnected()) {
+            device.sendMoveDown(3);
         } else {
             activatableBox.reset();
         }
@@ -119,9 +135,11 @@ void DirectControl::blit() const {
         break;
     }
     activatableBox.blit();
+    slowUpButton.blit();
+    normalUpButton.blit();
     fastUpButton.blit();
-    workUpButton.blit();
     haltButton.blit();
-    workDownButton.blit();
+    slowDownButton.blit();
+    normalDownButton.blit();
     fastDownButton.blit();
 }
