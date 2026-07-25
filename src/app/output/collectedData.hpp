@@ -22,7 +22,7 @@ class CollectedData {
     CollectedData();
     ~CollectedData();
     void reset();
-    void addFrame(const void* data);
+    void addFrame(float position, float force, float temp);
 
     const BoundedArray<float>& getPositions() const;
     const BoundedArray<float>& getForces() const;

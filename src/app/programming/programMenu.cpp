@@ -132,7 +132,8 @@ bool ProgramMenu::click(const Mouse _mouse) {
     }
 
     // Check, if create new node
-    if (holdingNode = selector.click(_mouse)) {
+    holdingNode = selector.click(_mouse);
+    if (holdingNode) {
         // Add to global list
         nodes.emplace_back(holdingNode);
         // Save position to move

@@ -19,7 +19,7 @@ class Serial {
     Serial();
     bool tryConnectTo(const ComPort& port);  // Trying connect to specified port, return true if sucsesful
     void reset();
-    const void* readData();
+    const void* readData(unsigned long* length);
     void writeData(const char* data, int length);
 };
 

@@ -48,23 +48,10 @@ CollectedData::~CollectedData() {
     }
 }
 
-void CollectedData::addFrame(const void* _data) {
-    // One packet of data
-    struct Measure {
-        // Values
-        int type;
-        float position;
-        float force;
-        Uint16 temperature;
-    };
-    const Measure* object = (Measure*)_data;
-    float pos = object->position;
-    float force = object->force;
-    float temp = object->temperature / 10.0;
-
-    positions.add(pos);
-    forces.add(force);
-    temperatures.add(temp);
+void CollectedData::addFrame(float _position, float _force, float _temp) {
+    positions.add(_position);
+    forces.add(_force);
+    temperatures.add(_temp);
     // Set that changed
     saved = true;
 }

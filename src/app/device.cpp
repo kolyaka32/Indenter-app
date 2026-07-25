@@ -44,51 +44,71 @@ bool Device::connectTo(const ComPort _port) {
 void Device::checkRecieve() {
     if (isConnected()) {
         // Get new messages
-        if (const Uint8* data = (Uint8*)serial.readData()) {
-            switch (Get(data[0])) {
-            case Get::None:
-                // Nothing
-                break;
+        DWORD length = 0;
+        const void* data = serial.readData(&length);
 
-            case Get::Waiting:
-                state = Waiting;
-                break;
-
-            case Get::Working:
-                state = Working;
-                break;
-
-            case Get::Packet:
-                collectedData.addFrame(data);
-                break;
-
-            case Get::Position:
-                struct PosPacket {
-                    int type;
-                    int pos;
-                };
-                ProgramMenu::handlePos(((PosPacket*)data)->pos);
-                break;
-
-            case Get::ReachPos:
-                ProgramMenu::handleReachPos();
-                break;
-                
-            case Get::ReachForce:
-                ProgramMenu::handleReachForce();
-                break;
-
-            default:
-                return;
-            }
+        if (data) {
             // Update timer
             lastRecieve = getTime() + exceedWait;
+            parseMessage((char*)data, length);
         } else {
             // Check, if hasn't got packet too long
             if (getTime() > lastRecieve) {
                 state = States::NotResponding;
             }
         }        
+    }
+}
+
+void Device::parseMessage(const char* _data, unsigned _length) {
+    for (int i=0; i < _length; i += 4) {
+        switch (Get(_data[i])) {
+        case Get::None:
+            // Nothing
+            break;
+
+        case Get::Waiting:
+            state = Waiting;
+            break;
+
+        case Get::Working:
+            state = Working;
+            break;
+
+        case Get::Packet:
+            // One packet of data
+            struct DataPacket {
+                // Values
+                int type;
+                float position;
+                float force;
+                Uint16 temperature;
+            };
+            collectedData.addFrame(((DataPacket*)_data)->position, 
+                ((DataPacket*)_data)->force, ((DataPacket*)_data)->temperature/10.0);
+            i += sizeof(DataPacket) - 4;
+            break;
+
+        case Get::Position:
+            struct PosPacket {
+                int type;
+                int pos;
+            };
+            ProgramMenu::handlePos(((PosPacket*)_data)->pos);
+            i += sizeof(PosPacket) - 4;
+            break;
+
+        case Get::ReachPos:
+            ProgramMenu::handleReachPos();
+            break;
+
+        case Get::ReachForce:
+            ProgramMenu::handleReachForce();
+            break;
+
+        default:
+            return;
+        }
     }
 }
 

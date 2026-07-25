@@ -90,6 +90,8 @@ class Device {
     // How long could don't messages until set to not responding
     timer lastRecieve = 0;
     const timer exceedWait = 1000;
+
+    void parseMessage(const char* data, unsigned length);
 };
 
 // Object store state of device and interact with him
