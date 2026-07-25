@@ -12,6 +12,7 @@
 class SetTargetNode : public Node {
 private:
     PosSubNode* positionNode;
+    // Add speeds
 
     // Graphica part
     GUI::StaticText text;

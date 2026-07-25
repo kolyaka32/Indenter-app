@@ -13,6 +13,7 @@ class SetStepNode : public Node {
 private:
     GUI::StaticText text;
     GUI::TypeBox<4> distanceTyper;
+    // ! Add speed selector
 
 public:
     SetStepNode(const Window& window, float X, float Y, const char* val = "0");

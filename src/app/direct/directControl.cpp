@@ -37,14 +37,14 @@ bool DirectControl::click(const Mouse _mouse) {
     }
     if (fastUpButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendIdleUp();
+            device.sendMoveUp(2);
         } else {
             activatableBox.reset();
         }
     }
     if (workUpButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendWorkUp();
+            device.sendMoveUp(1);
         } else {
             activatableBox.reset();
         }
@@ -58,14 +58,14 @@ bool DirectControl::click(const Mouse _mouse) {
     }
     if (workDownButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendWorkDown();
+            device.sendMoveDown(1);
         } else {
             activatableBox.reset();
         }
     }
     if (fastDownButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendIdleDown();
+            device.sendMoveDown(2);
         } else {
             activatableBox.reset();
         }

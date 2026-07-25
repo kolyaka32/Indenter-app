@@ -29,7 +29,7 @@ void WaitLoseNode::blit() const {
 
 Node* WaitLoseNode::use() {
     // ! Maybe should add force to compare
-    device.sendLoseForce();
+    device.sendLoseForce(20.0);  // ! Add force input
     return this;
 }
 

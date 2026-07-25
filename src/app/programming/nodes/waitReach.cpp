@@ -29,7 +29,7 @@ void WaitReachNode::blit() const {
 
 Node* WaitReachNode::use() {
     // ! Maybe should add force to compare
-    device.sendReachForce();
+    device.sendReachForce(10.0);  // ! Add force selection
     return this;
 }
 

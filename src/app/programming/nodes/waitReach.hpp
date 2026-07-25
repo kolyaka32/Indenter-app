@@ -11,6 +11,7 @@
 // Node for wait, until force exceed target
 class WaitReachNode : public Node {
 private:
+    // Add force input
     GUI::StaticText text;
 
 public:

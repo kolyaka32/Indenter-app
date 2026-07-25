@@ -49,18 +49,9 @@ void SetMoveNode::move(float _X, float _Y) {
 
 Node* SetMoveNode::use() {
     if (moveUp) {
-        // Could be changed to set speed as argument
-        if (moveIdle) {
-            device.sendIdleUp();
-        } else {
-            device.sendWorkUp();
-        }
+        device.sendMoveUp(moveIdle);  // ! Add speeds
     } else {
-        if (moveIdle) {
-            device.sendIdleUp();
-        } else {
-            device.sendWorkUp();
-        }
+        device.sendMoveDown(moveIdle);
     }
     // Move to next node
     return nextNode;

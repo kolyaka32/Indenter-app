@@ -32,6 +32,7 @@ private:
     GUI::ImageButton haltButton;
     GUI::ImageButton workDownButton;
     GUI::ImageButton fastDownButton;
+    // ! Add more buttons for fastest variant
 
 public:
     DirectControl(const Window& window, float X, float Y, float W, float H);

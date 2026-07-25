@@ -12,7 +12,7 @@
 class SetMoveNode : public Node {
 private:
     bool moveUp;
-    bool moveIdle;
+    bool moveIdle;  // ! Change speed to int, make 3 variants
 
     GUI::StaticText text;
     SDL_FRect directionRect;

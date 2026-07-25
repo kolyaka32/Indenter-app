@@ -70,9 +70,9 @@ Node* SetStepNode::use() {
         return nullptr;
     }
     if (distance > 0) {
-        device.sendStepDown(distance);
+        device.sendStepDown(1, distance);  // ! Add speeds
     } else {
-        device.sendStepUp(-distance);
+        device.sendStepUp(1, -distance);
     }
     // Wait until finish
     return this;

@@ -11,6 +11,7 @@
 // Node for wait, until force decrease less then target
 class WaitLoseNode : public Node {
 private:
+    // ! add force input
     GUI::StaticText text;
 
 public:
