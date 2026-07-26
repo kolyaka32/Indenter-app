@@ -11,15 +11,21 @@
 // Node for wait, until force exceed target
 class WaitReachNode : public Node {
 private:
-    // Add force input
     GUI::StaticText text;
+    GUI::TypeBox<4> forceTyper;
 
 public:
-    WaitReachNode(const Window& window, float X, float Y);
+    WaitReachNode(const Window& window, float X, float Y, const char* force = "60");
 
     // Programming
     Node* copy() override;
     void move(float X, float Y) override;
+    void checkOff(const Mouse mouse) override;
+    GUI::Code click(const Mouse mouse) override;
+    void unclick() override;
+    void type(SDL_Keycode code) override;
+    void writeString(const char* str) override;
+    void update(float mouseX) override;
     void blit() const override;
 
     // Execution

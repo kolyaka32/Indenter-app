@@ -13,8 +13,10 @@ text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move", "Двигат�
     Height::Main, WHITE, GUI::Aligment::Left),
 speed(_speed - '0'),
 direction(_direction - '0') {
-    speedRect = {(_X+0.014f)*window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
-    directionRect = {(_X+0.030f)*window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
+    speedRect = {(_X + (LanguagedText::getLanguage()==Language::Russian ? 0.014f : -0.011f))*
+        window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
+    directionRect = {(_X + (LanguagedText::getLanguage()==Language::Russian ? 0.030f : 0.005f))*
+        window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
 }
 
 GUI::Code SetMoveNode::click(const Mouse _mouse) {

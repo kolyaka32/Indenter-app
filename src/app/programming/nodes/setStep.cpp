@@ -91,7 +91,7 @@ Node* SetStepNode::use() {
     // Get distance
     float distance = 0.0;
     try {
-        float distance = std::stof(distanceTyper.getString());
+        distance = std::stof(distanceTyper.getString());
     } catch (const char* text) {
         return nullptr;
     }

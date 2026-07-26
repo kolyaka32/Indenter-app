@@ -14,7 +14,7 @@ private:
     Uint16 speed;  // Speeds: slow=1, normal=2, fast=3
     PosSubNode* positionNode;
 
-    // Graphica part
+    // Graphical part
     GUI::StaticText text;
     SDL_FRect speedRect;
     SubNode connectTarget;  // Place to connect posSubNode

@@ -46,7 +46,7 @@ void ProgramMenu::reset() {
     holdingSubNode = nullptr;
     GetPosNode::resetCounter();
     // Add first node
-    nodes.emplace_back(new StartNode{window, 0.5, 0.5});
+    nodes.emplace_back(new StartNode{window, 0.5, 0.3});
 }
 
 void ProgramMenu::deleteNode(Node* _node) {
