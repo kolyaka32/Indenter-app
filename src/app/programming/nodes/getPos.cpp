@@ -65,8 +65,8 @@ void GetPosNode::reset() {
 }
 
 Node* GetPosNode::use() {
-    // Send message to get position
     device.sendGetPos();
+    logger.additional("> Ask current position");
     return this;
 }
 
@@ -74,6 +74,7 @@ Node* GetPosNode::handleGetPos(int _pos) {
     // Save getted position
     position = _pos;
     legimate = true;
+    logger.additional("> Been at position %d", _pos);
     return nextNode;
 }
 

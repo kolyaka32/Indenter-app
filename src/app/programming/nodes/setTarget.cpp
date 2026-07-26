@@ -130,6 +130,7 @@ Node* SetTargetNode::use() {
         if (node && node->isLegimate()) {
             // Send move
             device.sendMoveToPos(speed, node->getPos());
+            logger.additional("Start move to %d", node->getPos());
             return this;
         }
     }
@@ -138,7 +139,7 @@ Node* SetTargetNode::use() {
 }
 
 Node* SetTargetNode::handlReachPos() const {
-    // Get at target - move to next node
+    logger.additional("> Get to target (position node)");
     return nextNode;
 }
 

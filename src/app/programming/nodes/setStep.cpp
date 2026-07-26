@@ -88,23 +88,18 @@ void SetStepNode::blit() const {
 }
 
 Node* SetStepNode::use() {
-    // Get distance
-    float distance = 0.0;
-    try {
-        distance = std::stof(distanceTyper.getString());
-    } catch (const char* text) {
-        return nullptr;
-    }
+    float distance = SDL_atof(distanceTyper.getString());
     if (distance > 0) {
         device.sendStepDown(speed, distance);
     } else {
         device.sendStepUp(speed, -distance);
     }
-    // Wait until finish
+    logger.additional("> Set move by %f", distance);
     return this;
 }
 
 Node* SetStepNode::handlReachPos() const {
+    logger.additional("> Get to target (step node)");
     return nextNode;
 }
 

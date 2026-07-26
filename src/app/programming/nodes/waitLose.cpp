@@ -65,14 +65,13 @@ void WaitLoseNode::blit() const {
 
 Node* WaitLoseNode::use() {
     float force = SDL_atof(forceTyper.getString());
-    if (force > 0.0) {
-        device.sendLoseForce(force);
-        //logger.additional("Force: %f", force);
-    }
+    device.sendLoseForce(force);
+    logger.additional("> Set wait force < %f", force);
     return this;
 }
 
 Node* WaitLoseNode::handleReachForce() const {
+    logger.additional("> Forced was get lower");
     return nextNode;
 }
 

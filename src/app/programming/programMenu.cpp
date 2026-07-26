@@ -82,7 +82,6 @@ void ProgramMenu::start() {
     }
     // Always start from first node (start, can't be changed)
     currentNode = nodes[0];
-    logger.additional("Start program execution");
 }
 
 bool ProgramMenu::click(const Mouse _mouse) {
@@ -101,8 +100,10 @@ bool ProgramMenu::click(const Mouse _mouse) {
         return true;
     }
     if (haltButton.in(_mouse)) {
-        currentNode = nullptr;
-        logger.additional("Stop program execution");
+        if (currentNode) {
+            currentNode = nullptr;
+            logger.additional("Stop program execution");
+        }
         return true;
     }
     if (saveButton.in(_mouse)) {
@@ -173,10 +174,7 @@ void ProgramMenu::unclick(const Mouse _mouse) {
                 return;
             }
         }
-
-        // Standart stop moving
         holdingNode = nullptr; 
-        logger.additional("Stop movement");
     }
     if (holdingSubNode) {
         // Check, if could add
@@ -401,11 +399,11 @@ void ProgramMenu::load(SDL_IOStream* fin) {
             break;
 
         case 'r':
-            nodes.emplace_back(new WaitReachNode{window, 0.0, 0.0});
+            nodes.emplace_back(new WaitReachNode{window, 0.0, 0.0, c+1});
             break;
 
         case 'd':
-            nodes.emplace_back(new WaitLoseNode{window, 0.0, 0.0});
+            nodes.emplace_back(new WaitLoseNode{window, 0.0, 0.0, c+1});
             break;
 
         case 'h':

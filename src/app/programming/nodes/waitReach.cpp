@@ -65,14 +65,13 @@ void WaitReachNode::blit() const {
 
 Node* WaitReachNode::use() {
     float force = SDL_atof(forceTyper.getString());
-    if (force > 0.0) {
-        device.sendReachForce(force);
-        //logger.additional("Force: %f", force);
-    }
+    device.sendReachForce(force);
+    logger.additional("> Set wait force > %f", force);
     return this;
 }
 
 Node* WaitReachNode::handleReachForce() const {
+    logger.additional("> Forced was exceeded");
     return nextNode;
 }
 

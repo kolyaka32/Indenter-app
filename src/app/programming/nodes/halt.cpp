@@ -27,6 +27,7 @@ void HaltNode::blit() const {
 }
 
 Node* HaltNode::use() {
+    logger.additional("> Halt program");
     return nullptr;
 }
 

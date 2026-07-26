@@ -19,22 +19,6 @@ direction(_direction - '0') {
         window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
 }
 
-GUI::Code SetMoveNode::click(const Mouse _mouse) {
-    if (in(_mouse)) {
-        if (_mouse.in(speedRect)) {
-            speed = (speed) % 3 + 1;  // Change to next with cycling
-            return GUI::Button2;
-        }
-        if (_mouse.in(directionRect)) {
-            direction ^= true;
-            return GUI::Button1;
-        }
-        disconnectPrevious();
-        return GUI::Some;
-    }
-    return GUI::None;
-}
-
 Node* SetMoveNode::copy() {
     return new SetMoveNode{window, (rect.x+rect.w/2)/window.getWidth(),
         (rect.y+rect.h/2)/window.getHeight(), char(speed + '0'), char(direction + '0')};
@@ -49,14 +33,20 @@ void SetMoveNode::move(float _X, float _Y) {
     speedRect.y += _Y * window.getHeight();
 }
 
-Node* SetMoveNode::use() {
-    if (direction) {
-        device.sendMoveUp(speed);
-    } else {
-        device.sendMoveDown(speed);
+GUI::Code SetMoveNode::click(const Mouse _mouse) {
+    if (in(_mouse)) {
+        if (_mouse.in(speedRect)) {
+            speed = (speed) % 3 + 1;
+            return GUI::Button2;
+        }
+        if (_mouse.in(directionRect)) {
+            direction ^= true;
+            return GUI::Button1;
+        }
+        disconnectPrevious();
+        return GUI::Some;
     }
-    // Move to next node
-    return nextNode;
+    return GUI::None;
 }
 
 void SetMoveNode::blit() const {
@@ -85,6 +75,17 @@ void SetMoveNode::blit() const {
     } else {
         window.blit(window.getTexture(Textures::SlowDownButton), directionRect);
     }
+}
+
+Node* SetMoveNode::use() {
+    if (direction) {
+        device.sendMoveUp(speed);
+        logger.additional("> Start movement up %d", speed);
+    } else {
+        device.sendMoveDown(speed);
+        logger.additional("> Start movement down %d", speed);
+    }
+    return nextNode;
 }
 
 void SetMoveNode::save(SDL_IOStream* _fout) {
