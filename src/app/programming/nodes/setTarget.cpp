@@ -7,15 +7,22 @@
 #include "../../device.hpp"
 
 
-SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y)
+SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y, char _speed)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move to", "Двигаться к"},
+positionNode(nullptr),
+speed(_speed - '0'),
+text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move       to", "Двигаться       к"},
     Height::Main, WHITE, GUI::Aligment::Left),
-connectTarget(_window, _X+0.023, _Y),
-positionNode(nullptr) {}
+speedRect{(_X + (LanguagedText::getLanguage()==Language::Russian ? -0.002f : -0.027f))*window.getWidth(),
+    _Y*window.getHeight()-18.0f, 32.0, 32.0},
+connectTarget(_window, _X + (LanguagedText::getLanguage()==Language::Russian ? 0.039f : 0.019f), _Y) {}
 
 GUI::Code SetTargetNode::click(const Mouse _mouse) {
     if (in(_mouse)) {
+        if (_mouse.in(speedRect)) {
+            speed = (speed) % 3 + 1;
+            return GUI::Button2;
+        }
         if (positionNode && positionNode->in(_mouse)) {
             return GUI::Activate;
         }
@@ -80,6 +87,8 @@ Node* SetTargetNode::copy() {
 void SetTargetNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
     text.move(_X, _Y);
+    speedRect.x += _X * window.getWidth();
+    speedRect.y += _Y * window.getHeight();
     connectTarget.move(_X, _Y);
     if (positionNode) {
         positionNode->move(_X, _Y);
@@ -89,6 +98,23 @@ void SetTargetNode::move(float _X, float _Y) {
 void SetTargetNode::blit() const {
     Node::blit();
     text.blit();
+    // Speed
+    switch (speed) {
+    case 1:
+        window.blit(window.getTexture(Textures::SlowUpButton), 90.0, speedRect);
+        break;
+
+    case 2:
+        window.blit(window.getTexture(Textures::NormalUpButton), 90.0, speedRect);
+        break;
+
+    case 3:
+        window.blit(window.getTexture(Textures::FastUpButton), 90.0, speedRect);
+        break;
+
+    default:
+        break;
+    }
     // Check, what node to draw
     if (positionNode) {
         positionNode->blit();
@@ -103,7 +129,8 @@ Node* SetTargetNode::use() {
         GetPosNode* node = (GetPosNode*)positionNode->getSource();
         if (node && node->isLegimate()) {
             // Send move
-            device.sendMoveToPos(node->getPos());
+            device.sendMoveToPos(speed, node->getPos());
+            logger.additional("Start move to %d", node->getPos());
             return this;
         }
     }
@@ -112,14 +139,14 @@ Node* SetTargetNode::use() {
 }
 
 Node* SetTargetNode::handlReachPos() const {
-    // Get at target - move to next node
+    logger.additional("> Get to target (position node)");
     return nextNode;
 }
 
 void SetTargetNode::save(SDL_IOStream* _fout) {
     if (positionNode) {
-        SDL_IOprintf(_fout, "t%d\n", positionNode->getNumber());
+        SDL_IOprintf(_fout, "t%c%d\n", speed+'0', positionNode->getNumber());
     } else {
-        SDL_IOprintf(_fout, "t0\n");
+        SDL_IOprintf(_fout, "t%c0\n", speed+'0');
     }
 }

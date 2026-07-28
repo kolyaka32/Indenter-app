@@ -32,7 +32,7 @@
 
 // System game name
 #define WINDOW_NAME "Indenter"
-#define LOG_NAME "log.txt"
+#define LOG_NAME "log%d.txt"
 
 // Base file names
 // File with all GFX

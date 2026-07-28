@@ -25,6 +25,7 @@ class Device {
         Waiting,        // Waiting for command
         Working,        // Going to sample at full speed
     };
+    typedef Uint16 Type;
     // Main device state
     States state = NotConnected;
 
@@ -38,35 +39,30 @@ class Device {
         // Getters
         GetPos,       // Ask current position
         // Set sensors
-        ReachForce,   // Send signal, when exceed setted force
-        LowerForce,   // Send signal, when get lower setted force
+        ReachForce,   // Send to said, when exceed setted [force]
+        LowerForce,   // Send to send, when get lower setted [force]
         // Movement
-        SetWorkUp,    // Start moving up with working (slow) speed
-        SetWorkDown,  // Start moving down with working (slow) speed
-        SetIdleUp,    // Start moving up with idle (fast) speed
-        SetIdleDown,  // Start moving down with idle (fast) speed
-        SetStepUp,    // Move up by specified number of steps
-        SetStepDown,  // Move down by specified number of steps
-        SetMoveTo,    // Move to setted position
+        SetMoveUp,    // Start move up with [speed]
+        SetMoveDown,  // Start move down with [speed]
+        SetStepUp,    // Move up with [speed] by specified number of [steps]
+        SetStepDown,  // Move down with [speed] by specified number of [steps]
+        SetMoveTo,    // Move with [speed] to setted [position]
         // Stop
-        Stop,         // Stop all movement
+        SetStop,      // Stop movement
     };
     // Immidiate stop
     void sendStop();
     // Working speed infinite movement
-    void sendMoveUp();
-    void sendMoveDown();
-    // Idle speed infinite movement
-    void sendIdleUp();
-    void sendIdleDown();
+    void sendMoveUp(Uint16 speed);
+    void sendMoveDown(Uint16 speed);
     // Relative movement by step count
-    void sendStepUp(float distance);
-    void sendStepDown(float distance);
+    void sendStepUp(Uint16 speed, float distance);
+    void sendStepDown(Uint16 speed, float distance);
     // Absolute movement to pos (should by get only from get position)
-    void sendMoveToPos(int pos);
+    void sendMoveToPos(Uint16 speed, int pos);
     // Sensors
-    void sendReachForce();
-    void sendLoseForce();
+    void sendReachForce(float force);
+    void sendLoseForce(float force);
     void sendGetPos();
 
     // Receiving
@@ -77,7 +73,7 @@ class Device {
         Waiting,     // Currently waiting for command
         Working,     // Currently moving
         // New measures
-        Packet,      // One frame with new [position], [force] and [temperature]
+        Packet,     // One frame with new [position], [force] and [temperature]
         // Complete task
         Position,    // Signal with current [position]
         ReachPos,    // Signal, that reach setted position
@@ -90,6 +86,8 @@ class Device {
     // How long could don't messages until set to not responding
     timer lastRecieve = 0;
     const timer exceedWait = 1000;
+
+    void parseMessage(const char* data, unsigned length);
 };
 
 // Object store state of device and interact with him

@@ -44,41 +44,13 @@ bool Device::connectTo(const ComPort _port) {
 void Device::checkRecieve() {
     if (isConnected()) {
         // Get new messages
-        if (const Uint8* data = (Uint8*)serial.readData()) {
-            switch (Get(data[0])) {
-            case Get::None:
-                // Nothing
-                break;
+        DWORD length = 0;
+        const void* data = serial.readData(&length);
 
-            case Get::Waiting:
-                state = Waiting;
-                break;
-
-            case Get::Working:
-                state = Working;
-                break;
-
-            case Get::Packet:
-                collectedData.addFrame(data);
-                break;
-
-            case Get::Position:
-                ProgramMenu::handlePos(int(*(data+1)));
-                break;
-
-            case Get::ReachPos:
-                ProgramMenu::handleReachPos();
-                break;
-                
-            case Get::ReachForce:
-                ProgramMenu::handleReachForce();
-                break;
-
-            default:
-                return;
-            }
+        if (data) {
             // Update timer
             lastRecieve = getTime() + exceedWait;
+            parseMessage((char*)data, length);
         } else {
             // Check, if hasn't got packet too long
             if (getTime() > lastRecieve) {
@@ -88,65 +60,169 @@ void Device::checkRecieve() {
     }
 }
 
+void Device::parseMessage(const char* _data, unsigned _length) {
+    for (int i=0; i < _length;) {
+        switch (Get(*((Type*)_data))) {
+        case Get::None:
+            // Nothing
+            i += sizeof(Type);
+            break;
+
+        case Get::Waiting:
+            state = Waiting;
+            i += sizeof(Type);
+            break;
+
+        case Get::Working:
+            state = Working;
+            i += sizeof(Type);
+            break;
+
+        case Get::Packet:
+            // One packet of data
+            struct DataPacket {
+                Type type;
+                Uint16 unused;
+                float position;
+                float force;
+                Uint16 temperature;
+            };
+            collectedData.addFrame(((DataPacket*)_data)->position, 
+                ((DataPacket*)_data)->force, ((DataPacket*)_data)->temperature);
+            i += sizeof(DataPacket);
+            break;
+
+        case Get::Position:
+            struct PosPacket {
+                Type type;
+                Uint16 unused;
+                int pos;
+            };
+            ProgramMenu::handlePos(((PosPacket*)_data)->pos);
+            i += sizeof(PosPacket);
+            break;
+
+        case Get::ReachPos:
+            ProgramMenu::handleReachPos();
+            i += sizeof(Type);
+            break;
+
+        case Get::ReachForce:
+            ProgramMenu::handleReachForce();
+            i += sizeof(Type);
+            break;
+
+        default:
+            i += sizeof(Type);
+            return;
+        }
+    }
+}
+
 void Device::sendStop() {
-    char data = char(Send::Stop);
-    serial.writeData(&data, sizeof(data));
+    struct Packet {
+        Type type;
+        Uint16 speed;
+    };
+    Packet packet;
+    packet.type = Uint16(Send::SetStop);
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendMoveUp() {
-    char data = char(Send::SetWorkUp);
-    serial.writeData(&data, sizeof(data));
+void Device::sendMoveUp(Uint16 _speed) {
+    struct Packet {
+        Type type;
+        Uint16 speed;
+    };
+    Packet packet;
+    packet.type = Uint16(Send::SetMoveUp);
+    packet.speed = _speed;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendMoveDown() {
-    char data = char(Send::SetWorkDown);
-    serial.writeData(&data, sizeof(data));
+void Device::sendMoveDown(Uint16 _speed) {
+    struct Packet {
+        Type type;
+        Uint16 speed;
+    };
+    Packet packet;
+    packet.type = Uint16(Send::SetMoveDown);
+    packet.speed = _speed;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendIdleUp() {
-    char data = char(Send::SetIdleUp);
-    serial.writeData(&data, sizeof(data));
+void Device::sendStepUp(Uint16 _speed, float _distance) {
+    struct Packet {
+        Type type;
+        Uint16 speed;
+        float distance;
+    };
+    Packet packet;
+    packet.type = Type(Send::SetStepUp);
+    packet.speed = _speed;
+    packet.distance = _distance;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendIdleDown() {
-    char data = char(Send::SetIdleDown);
-    serial.writeData(&data, sizeof(data));
+void Device::sendStepDown(Uint16 _speed, float _distance) {
+    struct Packet {
+        Type type;
+        Uint16 speed;
+        float distance;
+    };
+    Packet packet;
+    packet.type = Type(Send::SetStepDown);
+    packet.speed = _speed;
+    packet.distance = _distance;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendStepUp(float _distance) {
-    char data[5];
-    data[0] = char(Send::SetStepUp);
-    memcpy(data+1, &_distance, sizeof(_distance));
-    serial.writeData(data, sizeof(data));
+void Device::sendMoveToPos(Uint16 _speed, int _pos) {
+    struct Packet {
+        Type type;
+        Uint16 speed;
+        int pos;
+    };
+    Packet packet;
+    packet.type = Type(Send::SetMoveTo);
+    packet.speed = _speed;
+    packet.pos = _pos;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendStepDown(float _distance) {
-    char data[5];
-    data[0] = char(Send::SetStepDown);
-    memcpy(data+1, &_distance, sizeof(_distance));
-    serial.writeData(data, sizeof(data));
+void Device::sendReachForce(float _force) {
+    struct Packet {
+        Type type;
+        Uint16 unused;
+        float force;
+    };
+    Packet packet;
+    packet.type = Type(Send::ReachForce);
+    packet.unused = 0;
+    packet.force = _force;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendMoveToPos(int _pos) {
-    char data[5];
-    data[0] = char(Send::SetMoveTo);
-    memcpy(data+1, &_pos, sizeof(_pos));
-    serial.writeData(data, sizeof(data));
-}
-
-void Device::sendReachForce() {
-    char data = char(Send::ReachForce);
-    serial.writeData(&data, sizeof(data));
-}
-
-void Device::sendLoseForce() {
-    char data = char(Send::LowerForce);
-    serial.writeData(&data, sizeof(data));
+void Device::sendLoseForce(float _force) {
+    struct Packet {
+        Type type;
+        Uint16 unused;
+        float force;
+    };
+    Packet packet;
+    packet.type = Type(Send::LowerForce);
+    packet.unused = 0;
+    packet.force = _force;
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 void Device::sendGetPos() {
-    char data = char(Send::GetPos);
-    serial.writeData(&data, sizeof(data));
+    struct Packet {
+        Type type;
+    };
+    Packet packet;
+    packet.type = Type(Send::GetPos);
+    serial.writeData((char*)&packet, sizeof(packet));
 }
 
 bool Device::isConnected() const {

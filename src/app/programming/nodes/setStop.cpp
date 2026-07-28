@@ -29,6 +29,7 @@ void SetStopNode::blit() const {
 
 Node* SetStopNode::use() {
     device.sendStop();
+    logger.additional("> Stop movement");
     return nextNode;
 }
 

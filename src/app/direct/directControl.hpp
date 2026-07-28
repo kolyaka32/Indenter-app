@@ -27,10 +27,12 @@ private:
 
     // Buttons for start/stop device
     GUI::InfoBox activatableBox;
+    GUI::ImageButton slowUpButton;
+    GUI::ImageButton normalUpButton;
     GUI::ImageButton fastUpButton;
-    GUI::ImageButton workUpButton;
     GUI::ImageButton haltButton;
-    GUI::ImageButton workDownButton;
+    GUI::ImageButton slowDownButton;
+    GUI::ImageButton normalDownButton;
     GUI::ImageButton fastDownButton;
 
 public:

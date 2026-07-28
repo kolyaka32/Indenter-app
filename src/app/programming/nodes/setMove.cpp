@@ -7,35 +7,21 @@
 #include "../../device.hpp"
 
 
-SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, char _moveUp, char _moveIdle)
-: Node(_window, _X, _Y, Textures::BlockLongAction),
+SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, char _speed, char _direction)
+: Node(_window, _X, _Y, Textures::BlockAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move", "Двигаться"},
     Height::Main, WHITE, GUI::Aligment::Left),
-moveUp(char(_moveUp - '0')),
-moveIdle(char(_moveIdle - '0')) {
-    directionRect = {(_X+0.018f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
-    speedRect = {(_X+0.033f)*window.getWidth(), _Y*window.getHeight()-15.0f, 30.0, 30.0};
-}
-
-GUI::Code SetMoveNode::click(const Mouse _mouse) {
-    if (in(_mouse)) {
-        if (_mouse.in(directionRect)) {
-            moveUp ^= true;
-            return GUI::Button1;
-        }
-        if (_mouse.in(speedRect)) {
-            moveIdle ^= true;
-            return GUI::Button2;
-        }
-        disconnectPrevious();
-        return GUI::Some;
-    }
-    return GUI::None;
+speed(_speed - '0'),
+direction(_direction - '0') {
+    speedRect = {(_X + (LanguagedText::getLanguage()==Language::Russian ? 0.014f : -0.011f))*
+        window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
+    directionRect = {(_X + (LanguagedText::getLanguage()==Language::Russian ? 0.030f : 0.005f))*
+        window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
 }
 
 Node* SetMoveNode::copy() {
     return new SetMoveNode{window, (rect.x+rect.w/2)/window.getWidth(),
-        (rect.y+rect.h/2)/window.getHeight(), char(moveUp + '0'), char(moveIdle + '0')};
+        (rect.y+rect.h/2)/window.getHeight(), char(speed + '0'), char(direction + '0')};
 }
 
 void SetMoveNode::move(float _X, float _Y) {
@@ -47,40 +33,61 @@ void SetMoveNode::move(float _X, float _Y) {
     speedRect.y += _Y * window.getHeight();
 }
 
-Node* SetMoveNode::use() {
-    if (moveUp) {
-        // Could be changed to set speed as argument
-        if (moveIdle) {
-            device.sendIdleUp();
-        } else {
-            device.sendMoveUp();
+GUI::Code SetMoveNode::click(const Mouse _mouse) {
+    if (in(_mouse)) {
+        if (_mouse.in(speedRect)) {
+            speed = (speed) % 3 + 1;
+            return GUI::Button2;
         }
-    } else {
-        if (moveIdle) {
-            device.sendIdleUp();
-        } else {
-            device.sendMoveUp();
+        if (_mouse.in(directionRect)) {
+            direction ^= true;
+            return GUI::Button1;
         }
+        disconnectPrevious();
+        return GUI::Some;
     }
-    // Move to next node
-    return nextNode;
+    return GUI::None;
 }
 
 void SetMoveNode::blit() const {
     Node::blit();
     text.blit();
-    if (moveUp) {
-        window.blit(window.getTexture(Textures::UpButton), directionRect);
-    } else {
-        window.blit(window.getTexture(Textures::DownButton), directionRect);
-    }
-    if (moveIdle) {
-        window.blit(window.getTexture(Textures::UpButton), 90.0, speedRect);
-    } else {
+    // Speed
+    switch (speed) {
+    case 1:
+        window.blit(window.getTexture(Textures::SlowUpButton), 90.0, speedRect);
+        break;
+
+    case 2:
+        window.blit(window.getTexture(Textures::NormalUpButton), 90.0, speedRect);
+        break;
+
+    case 3:
         window.blit(window.getTexture(Textures::FastUpButton), 90.0, speedRect);
+        break;
+
+    default:
+        break;
+    }
+    // Direction
+    if (direction) {
+        window.blit(window.getTexture(Textures::SlowDownButton), directionRect);
+    } else {
+        window.blit(window.getTexture(Textures::SlowUpButton), directionRect);
     }
 }
 
+Node* SetMoveNode::use() {
+    if (direction) {
+        device.sendMoveUp(speed);
+        logger.additional("> Start movement up %d", speed);
+    } else {
+        device.sendMoveDown(speed);
+        logger.additional("> Start movement down %d", speed);
+    }
+    return nextNode;
+}
+
 void SetMoveNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "m%c%c\n", moveUp+'0', moveIdle+'0');
+    SDL_IOprintf(_fout, "m%c%c\n", speed+'0', direction+'0');
 }

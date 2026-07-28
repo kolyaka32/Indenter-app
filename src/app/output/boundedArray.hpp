@@ -17,7 +17,7 @@ private:
     T minVal, maxVal;
 
 public:
-   BoundedArray(const T maxVal = 0, const T minVal = 0);
+   BoundedArray();
    ~BoundedArray();
    void reset();
    void add(const T object);

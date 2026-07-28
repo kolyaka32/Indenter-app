@@ -12,9 +12,9 @@ CollectedData collectedData{};
 
 CollectedData::CollectedData()
 : saved(false),
-positions(10.0, 0.0),
-forces(20.0, 0.0),
-temperatures(25.0, 15.0) {}
+positions(),
+forces(),
+temperatures() {}
 
 void CollectedData::reset() {
     saved = false;
@@ -48,12 +48,10 @@ CollectedData::~CollectedData() {
     }
 }
 
-void CollectedData::addFrame(const void* _data) {
-    // Add new values
-    const Measure* object = (Measure*)_data;
-    positions.add(object->position);
-    forces.add(object->force);
-    temperatures.add(object->temperature);
+void CollectedData::addFrame(float _position, float _force, Uint16 _temp) {
+    positions.add(_position);
+    forces.add(_force);
+    temperatures.add(_temp/10.0);
     // Set that changed
     saved = true;
 }
@@ -66,15 +64,29 @@ unsigned CollectedData::getLineCount() const {
     return positions.size();
 }
 
-const BoundedArray<Position>& CollectedData::getPositions() const {
+float CollectedData::getLastForce() const {
+    if (positions.size()) {
+        return forces[forces.size()-1];
+    }
+    return 0.0;
+}
+
+float CollectedData::getLastTemp() const {
+    if (positions.size()) {
+        return temperatures[temperatures.size()-1];
+    }
+    return 0.0;
+}
+
+const BoundedArray<float>& CollectedData::getPositions() const {
     return positions;
 }
 
-const BoundedArray<Force>& CollectedData::getForces() const {
+const BoundedArray<float>& CollectedData::getForces() const {
     return forces;
 }
 
-const BoundedArray<Temperature>& CollectedData::getTemperatures() const {
+const BoundedArray<float>& CollectedData::getTemperatures() const {
     return temperatures;
 }
 
@@ -82,7 +94,7 @@ void CollectedData::save(SDL_IOStream* _stream) {
     // Writing data
     for (int i=0; i < positions.size(); ++i) {
         // Writing data
-        SDL_IOprintf(_stream, "%d; %f; %d\n", positions[i], forces[i], temperatures[i]);
+        SDL_IOprintf(_stream, "%.1f; %.3f; %.1f\n", positions[i], forces[i], temperatures[i]);
     }
     // Updating flag
     saved = false;

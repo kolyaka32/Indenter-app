@@ -14,7 +14,8 @@ GetPosNode::GetPosNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Save position", "Запомнить точку"},
     Height::Main, WHITE, GUI::Aligment::Left),
-posSubNode(_window, _X+0.05, _Y, counter, this) {
+posSubNode(_window, _X + (LanguagedText::getLanguage()==Language::Russian ? 0.05 : 0.03),
+    _Y, counter, this) {
     counter++;
 }
 
@@ -64,8 +65,8 @@ void GetPosNode::reset() {
 }
 
 Node* GetPosNode::use() {
-    // Send message to get position
     device.sendGetPos();
+    logger.additional("> Ask current position");
     return this;
 }
 
@@ -73,6 +74,7 @@ Node* GetPosNode::handleGetPos(int _pos) {
     // Save getted position
     position = _pos;
     legimate = true;
+    logger.additional("> Been at position %d", _pos);
     return nextNode;
 }
 

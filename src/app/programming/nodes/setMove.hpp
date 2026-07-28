@@ -11,15 +11,15 @@
 // Node for set movement in selected [direction] with selected [speed]
 class SetMoveNode : public Node {
 private:
-    bool moveUp;
-    bool moveIdle;
+    Uint16 speed;  // Speeds: slow=1, normal=2, fast=3
+    bool direction;  // false for down and true for up
 
     GUI::StaticText text;
-    SDL_FRect directionRect;
     SDL_FRect speedRect;
+    SDL_FRect directionRect;
 
 public:
-    SetMoveNode(const Window& window, float X, float Y, char moveUp = '0', char moveIdle = '0');
+    SetMoveNode(const Window& window, float X, float Y, char speed = '1', char direction = '0');
 
     GUI::Code click(const Mouse mouse) override;
     Node* copy() override;

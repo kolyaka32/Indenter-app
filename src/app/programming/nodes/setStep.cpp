@@ -7,11 +7,27 @@
 #include "../../device.hpp"
 
 
-SetStepNode::SetStepNode(const Window& _window, float _X, float _Y, const char* _val)
-: Node(_window, _X, _Y, Textures::BlockAction),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Steping           mm", "Шагать           мм"},
+SetStepNode::SetStepNode(const Window& _window, float _X, float _Y, char _speed, const char* _val)
+: Node(_window, _X, _Y, Textures::BlockLongAction),
+text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y,
+    {"Steping                µm", "Шагать                 мкм"},
     Height::Main, WHITE, GUI::Aligment::Left),
-distanceTyper(_window, _X+0.002, _Y, _val, Height::Medium, GUI::Aligment::Left) {}
+speed(_speed - '0'),
+speedRect{(_X-0.017f)*window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0},
+distanceTyper(_window, _X+0.004, _Y-0.002, _val, Height::Medium, GUI::Aligment::Left) {}
+
+Node* SetStepNode::copy() {
+    return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),
+        (rect.y+rect.h/2)/window.getHeight(), char(speed + '0'), distanceTyper.getString()};
+}
+
+void SetStepNode::move(float _X, float _Y) {
+    Node::move(_X, _Y);
+    text.move(_X, _Y);
+    speedRect.x += _X * window.getWidth();
+    speedRect.y += _Y * window.getHeight();
+    distanceTyper.move(_X, _Y);
+}
 
 void SetStepNode::checkOff(const Mouse _mouse) {
     distanceTyper.checkOff(_mouse);
@@ -19,8 +35,12 @@ void SetStepNode::checkOff(const Mouse _mouse) {
 
 GUI::Code SetStepNode::click(const Mouse _mouse) {
     if (in(_mouse)){
-        if (distanceTyper.click(_mouse)) {
+        if (_mouse.in(speedRect)) {
+            speed = (speed) % 3 + 1;
             return GUI::Button1;
+        }
+        if (distanceTyper.click(_mouse)) {
+            return GUI::Button2;
         }
         disconnectPrevious();
         return GUI::Some;
@@ -44,44 +64,45 @@ void SetStepNode::update(float _mouseX) {
     distanceTyper.update(_mouseX);
 }
 
-Node* SetStepNode::copy() {
-    return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),
-        (rect.y+rect.h/2)/window.getHeight(), distanceTyper.getString()};
-}
-
-void SetStepNode::move(float _X, float _Y) {
-    Node::move(_X, _Y);
-    text.move(_X, _Y);
-    distanceTyper.move(_X, _Y);
-}
-
 void SetStepNode::blit() const {
     Node::blit();
     text.blit();
     distanceTyper.blit();
+    // Speed
+    switch (speed) {
+    case 1:
+        window.blit(window.getTexture(Textures::SlowUpButton), 90.0, speedRect);
+        break;
+
+    case 2:
+        window.blit(window.getTexture(Textures::NormalUpButton), 90.0, speedRect);
+        break;
+
+    case 3:
+        window.blit(window.getTexture(Textures::FastUpButton), 90.0, speedRect);
+        break;
+
+    default:
+        break;
+    }
 }
 
 Node* SetStepNode::use() {
-    // Get distance
-    float distance = 0.0;
-    try {
-        float distance = std::stof(distanceTyper.getString());
-    } catch (const char* text) {
-        return nullptr;
-    }
+    float distance = SDL_atof(distanceTyper.getString());
     if (distance > 0) {
-        device.sendStepDown(distance);
+        device.sendStepUp(speed, distance);
     } else {
-        device.sendStepUp(-distance);
+        device.sendStepDown(speed, -distance);
     }
-    // Wait until finish
+    logger.additional("> Set step by %f", distance);
     return this;
 }
 
 Node* SetStepNode::handlReachPos() const {
+    logger.additional("> Get to target (step node)");
     return nextNode;
 }
 
 void SetStepNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "e%s\n", distanceTyper.getString());
+    SDL_IOprintf(_fout, "e%c%s\n", speed+'0', distanceTyper.getString());
 }

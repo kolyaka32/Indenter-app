@@ -40,11 +40,11 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     }
     // Setting timeouts
     COMMTIMEOUTS timeouts = {0};
-    timeouts.ReadIntervalTimeout =         50;
-    timeouts.ReadTotalTimeoutConstant =    50;
-    timeouts.ReadTotalTimeoutMultiplier =  10;
-    timeouts.WriteTotalTimeoutConstant =   50;
-    timeouts.WriteTotalTimeoutMultiplier = 10;
+    timeouts.ReadIntervalTimeout =         3;
+    timeouts.ReadTotalTimeoutConstant =    3;
+    timeouts.ReadTotalTimeoutMultiplier =  1;
+    timeouts.WriteTotalTimeoutConstant =   3;
+    timeouts.WriteTotalTimeoutMultiplier = 1;
     if (!SetCommTimeouts(handle, &timeouts)) {
         logger.important("Can't set timeouts: %d", GetLastError());
         return false;
@@ -61,14 +61,12 @@ void Serial::reset() {
     logger.additional("Closed serial port");
 }
 
-const void* Serial::readData() {
-    //
-    DWORD length = 20;
+const void* Serial::readData(unsigned long* _length) {
     static char buffer[100];
 
-    if (ReadFile(handle, buffer, sizeof(buffer), &length, nullptr) && length) {
+    if (ReadFile(handle, buffer, sizeof(buffer), _length, nullptr) && *_length) {
         static int i=0;  // Counter
-        logger.additional("%4d Read from serial: %d", i, length);
+        logger.additional("%4d Read from serial: %d %d", i, *_length, buffer[0]);
         i++;
         return buffer;
     }

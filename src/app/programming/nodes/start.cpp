@@ -16,6 +16,7 @@ void StartNode::move(float _X, float _Y) {
 }
 
 void StartNode::disconnect(const Node* _node) {
+    // Can't delete - should check disconnect
     if (nextNode == _node) {
         nextNode = nullptr;
     }
@@ -24,6 +25,11 @@ void StartNode::disconnect(const Node* _node) {
 void StartNode::blit() const {
     Node::blit();
     text.blit();
+}
+
+Node* StartNode::use() {
+    logger.additional("> Start program execution");
+    return nextNode;
 }
 
 void StartNode::save(SDL_IOStream* _fout) {
