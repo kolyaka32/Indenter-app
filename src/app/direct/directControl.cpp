@@ -17,7 +17,7 @@ serialPort(_window, _X, _Y-0.3*_H, 0.15, 0.04, 2.0),
 stateText(_window, _X, _Y-_H*0.14, {"Current state:", "Текущее состояние:"}, 2),
 stateBackplate(_window, _X, _Y-_H*0.1, 0.16, 0.04, 2.0, WHITE),
 notConnectedText(_window, _X, _Y-_H*0.1, {"Not connected", "Нет подключения"}, Height::Main, BLACK),
-notRespondingText(_window, _X, _Y-_H*0.1, {"Not responding", "Нет отвечает"}, Height::Main, BLACK),
+notRespondingText(_window, _X, _Y-_H*0.1, {"Not responding", "Не отвечает"}, Height::Main, BLACK),
 waitingText(_window, _X, _Y-_H*0.1, {"Wait", "Ожидает"}, Height::Main, BLACK),
 workingText(_window, _X, _Y-_H*0.1, {"Running", "Работает"}, Height::Main, BLACK),
 activatableBox(_window, _X, _Y-_H*0.05, {"Not connected", "Не подключён"}, 800),
@@ -39,21 +39,21 @@ bool DirectControl::click(const Mouse _mouse) {
     }
     if (slowUpButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendMoveUp(1);
+            device.sendMoveDown(1);
         } else {
             activatableBox.reset();
         }
     }
     if (normalUpButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendMoveUp(2);
+            device.sendMoveDown(2);
         } else {
             activatableBox.reset();
         }
     }
     if (fastUpButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendMoveUp(3);
+            device.sendMoveDown(3);
         } else {
             activatableBox.reset();
         }
@@ -67,21 +67,21 @@ bool DirectControl::click(const Mouse _mouse) {
     }
     if (slowDownButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendMoveDown(1);
+            device.sendMoveUp(1);
         } else {
             activatableBox.reset();
         }
     }
     if (normalDownButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendMoveDown(2);
+            device.sendMoveUp(2);
         } else {
             activatableBox.reset();
         }
     }
     if (fastDownButton.in(_mouse)) {
         if (device.isConnected()) {
-            device.sendMoveDown(3);
+            device.sendMoveUp(3);
         } else {
             activatableBox.reset();
         }

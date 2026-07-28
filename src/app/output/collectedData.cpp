@@ -12,9 +12,9 @@ CollectedData collectedData{};
 
 CollectedData::CollectedData()
 : saved(false),
-positions(1.0, 0.0),
-forces(50.0, 50.0),
-temperatures(25.0, 15.0) {}
+positions(),
+forces(),
+temperatures() {}
 
 void CollectedData::reset() {
     saved = false;
@@ -48,10 +48,10 @@ CollectedData::~CollectedData() {
     }
 }
 
-void CollectedData::addFrame(float _position, float _force, float _temp) {
+void CollectedData::addFrame(float _position, float _force, Uint16 _temp) {
     positions.add(_position);
     forces.add(_force);
-    temperatures.add(_temp);
+    temperatures.add(_temp/10.0);
     // Set that changed
     saved = true;
 }
@@ -62,6 +62,20 @@ bool CollectedData::isUpdated() const {
 
 unsigned CollectedData::getLineCount() const {
     return positions.size();
+}
+
+float CollectedData::getLastForce() const {
+    if (positions.size()) {
+        return forces[forces.size()-1];
+    }
+    return 0.0;
+}
+
+float CollectedData::getLastTemp() const {
+    if (positions.size()) {
+        return temperatures[temperatures.size()-1];
+    }
+    return 0.0;
 }
 
 const BoundedArray<float>& CollectedData::getPositions() const {

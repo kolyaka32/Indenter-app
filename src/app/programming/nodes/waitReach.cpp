@@ -71,7 +71,7 @@ Node* WaitReachNode::use() {
 }
 
 Node* WaitReachNode::handleReachForce() const {
-    logger.additional("> Forced was exceeded");
+    logger.additional("> Force was exceeded");
     return nextNode;
 }
 

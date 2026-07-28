@@ -3,7 +3,6 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include <mutex>
 #include "programMenu.hpp"
 #include "../device.hpp"
 #include "../../data/cycleTemplate.hpp"
@@ -12,7 +11,8 @@
 std::vector<Node*> ProgramMenu::nodes{};
 Node* ProgramMenu::currentNode{};
 Node* ProgramMenu::previousNode{};
-static std::mutex saveMutex;
+const char* ProgramMenu::saveName = nullptr;
+const char* ProgramMenu::loadName = nullptr;
 
 ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
@@ -107,11 +107,11 @@ bool ProgramMenu::click(const Mouse _mouse) {
         return true;
     }
     if (saveButton.in(_mouse)) {
-        window.showSaveFileDialog(save, &filter, 1, saveLocation, this);
+        window.showSaveFileDialog(save, &filter, 1, saveLocation);
         return true;
     }
     if (loadButton.in(_mouse)) {
-        window.showOpenFileDialog(load, &filter, 1, saveLocation, false, this);
+        window.showOpenFileDialog(load, &filter, 1, saveLocation, false);
         return true;
     }
     // Check, if start movement of node
@@ -212,7 +212,6 @@ void ProgramMenu::writeString(const char* _str) {
 
 void ProgramMenu::update(const Mouse _mouse) {
     // Update info boxes
-    saveMutex.lock();
     netConnectedInfo.update();
     stoppedInfo.update();
     selector.update(_mouse);
@@ -259,7 +258,15 @@ void ProgramMenu::update(const Mouse _mouse) {
             // ! Could add check for too much time for resend
         }
     }
-    saveMutex.unlock();
+    // Check on save
+    if (saveName) {
+        save(saveName);
+    }
+
+    // Check on loading
+    if (loadName) {
+        load(loadName);
+    }
 }
 
 void ProgramMenu::handlePos(int _pos) {
@@ -314,7 +321,13 @@ void ProgramMenu::blit() const {
     }
 }
 
-void ProgramMenu::save(SDL_IOStream* fout) const {
+void ProgramMenu::save(const char* _fileName) const {
+    // Getting file
+    SDL_IOStream* fout = SDL_IOFromFile(_fileName, "w");
+    if (fout == nullptr) {
+        return;
+    }
+
     // Writing main nodes linked-list to it
     Node* node = nodes[0];
     while (node) {
@@ -323,9 +336,19 @@ void ProgramMenu::save(SDL_IOStream* fout) const {
         // Get next
         node = node->getNext();
     }
+
+    // LClose file
+    SDL_CloseIO(fout);
+    logger.additional("Program saved to %s", _fileName);
 }
 
-void ProgramMenu::load(SDL_IOStream* fin) {
+void ProgramMenu::load(const char* _fileName) {
+    // Getting file
+    SDL_IOStream* fin = SDL_IOFromFile(_fileName, "r");
+    if (fin == nullptr) {
+        return;
+    }
+
     // Clearing previous
     reset();
 
@@ -436,6 +459,9 @@ void ProgramMenu::load(SDL_IOStream* fin) {
             }
         }
     }
+    // Close file
+    SDL_CloseIO(fin);
+    logger.additional("Program loaded from %s", _fileName);
 }
 
 void ProgramMenu::save(void* _userdata, const char* const* _filelist, int _filter) {
@@ -443,20 +469,8 @@ void ProgramMenu::save(void* _userdata, const char* const* _filelist, int _filte
     if (_filelist == nullptr || _filter < 0) {
         return;
     }
-    // Getting file
-    SDL_IOStream* fout = SDL_IOFromFile(*_filelist, "w");
-    if (fout == nullptr) {
-        return;
-    }
-    // Locking, while saving
-    saveMutex.lock();
-
-    ProgramMenu* menu = (ProgramMenu*)_userdata;
-    menu->save(fout);
-
-    saveMutex.unlock();
-    SDL_CloseIO(fout);
-    logger.additional("Program saved to %s", *_filelist);
+    // Save in main cycle
+    saveName = *_filelist;
 }
 
 void ProgramMenu::load(void* _userdata, const char* const* _filelist, int _filter) {
@@ -464,18 +478,5 @@ void ProgramMenu::load(void* _userdata, const char* const* _filelist, int _filte
     if (_filelist == nullptr || _filter < 0) {
         return;
     }
-    // Getting file
-    SDL_IOStream* fin = SDL_IOFromFile(*_filelist, "r");
-    if (fin == nullptr) {
-        return;
-    }
-    // Locking, while saving
-    saveMutex.lock();
-
-    ProgramMenu* menu = (ProgramMenu*)_userdata;
-    menu->load(fin);
-
-    saveMutex.unlock();
-    SDL_CloseIO(fin);
-    logger.additional("Program loaded from %s", *_filelist);
+    loadName = *_filelist;
 }

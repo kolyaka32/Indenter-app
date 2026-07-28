@@ -14,7 +14,7 @@ class Chart : GUI::Template {
 private:
     // Drawing value
     const BoundedArray<xAxis>& pos;
-    const BoundedArray<yAxis>& value;
+    const BoundedArray<yAxis>& val;
 
     // Graphic part
     const SDL_FRect drawRect;

@@ -22,7 +22,7 @@ class CollectedData {
     CollectedData();
     ~CollectedData();
     void reset();
-    void addFrame(float position, float force, float temp);
+    void addFrame(float position, float force, Uint16 temp);
 
     const BoundedArray<float>& getPositions() const;
     const BoundedArray<float>& getForces() const;
@@ -31,6 +31,8 @@ class CollectedData {
     // Interacting with files
     bool isUpdated() const;  // Return true, if updated since last save
     unsigned getLineCount() const;  // Return current number of lines
+    float getLastForce() const;
+    float getLastTemp() const;
     void save(SDL_IOStream* stream);  // Save data to selected stream
 };
 

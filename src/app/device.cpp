@@ -88,7 +88,7 @@ void Device::parseMessage(const char* _data, unsigned _length) {
                 Uint16 temperature;
             };
             collectedData.addFrame(((DataPacket*)_data)->position, 
-                ((DataPacket*)_data)->force, ((DataPacket*)_data)->temperature/10.0);
+                ((DataPacket*)_data)->force, ((DataPacket*)_data)->temperature);
             i += sizeof(DataPacket);
             break;
 
@@ -193,11 +193,12 @@ void Device::sendMoveToPos(Uint16 _speed, int _pos) {
 void Device::sendReachForce(float _force) {
     struct Packet {
         Type type;
-        Uint16 unsued;
+        Uint16 unused;
         float force;
     };
     Packet packet;
     packet.type = Type(Send::ReachForce);
+    packet.unused = 0;
     packet.force = _force;
     serial.writeData((char*)&packet, sizeof(packet));
 }
@@ -210,6 +211,7 @@ void Device::sendLoseForce(float _force) {
     };
     Packet packet;
     packet.type = Type(Send::LowerForce);
+    packet.unused = 0;
     packet.force = _force;
     serial.writeData((char*)&packet, sizeof(packet));
 }

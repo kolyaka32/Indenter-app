@@ -21,6 +21,8 @@ private:
     SubNode* holdingSubNode;  // Special node, refer as argument for other nodes
     SDL_FPoint lastPos;       // Position, where it was holded last time
     // Save/load
+    static const char* saveName;
+    static const char* loadName;
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection program file
     char saveLocation[100];    // Location with directory for save/load programs
@@ -55,8 +57,8 @@ public:
     void writeString(const char* str);
     void blit() const override;
 
-    void save(SDL_IOStream* fout) const;
-    void load(SDL_IOStream* fin);
+    void save(const char* fileName) const;
+    void load(const char* fileName);
 
     // Proceed action from get messages, start executing next command
     static void handlePos(int pos);

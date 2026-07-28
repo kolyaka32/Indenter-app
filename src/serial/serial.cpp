@@ -40,12 +40,11 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     }
     // Setting timeouts
     COMMTIMEOUTS timeouts = {0};
-    // ! Set up timings properly
-    timeouts.ReadIntervalTimeout =         20;
-    timeouts.ReadTotalTimeoutConstant =    20;
-    timeouts.ReadTotalTimeoutMultiplier =  2;
-    timeouts.WriteTotalTimeoutConstant =   20;
-    timeouts.WriteTotalTimeoutMultiplier = 2;
+    timeouts.ReadIntervalTimeout =         3;
+    timeouts.ReadTotalTimeoutConstant =    3;
+    timeouts.ReadTotalTimeoutMultiplier =  1;
+    timeouts.WriteTotalTimeoutConstant =   3;
+    timeouts.WriteTotalTimeoutMultiplier = 1;
     if (!SetCommTimeouts(handle, &timeouts)) {
         logger.important("Can't set timeouts: %d", GetLastError());
         return false;
@@ -67,7 +66,7 @@ const void* Serial::readData(unsigned long* _length) {
 
     if (ReadFile(handle, buffer, sizeof(buffer), _length, nullptr) && *_length) {
         static int i=0;  // Counter
-        logger.additional("%4d Read from serial: %d", i, *_length);
+        logger.additional("%4d Read from serial: %d %d", i, *_length, buffer[0]);
         i++;
         return buffer;
     }

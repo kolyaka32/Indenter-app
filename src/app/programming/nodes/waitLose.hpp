@@ -12,10 +12,10 @@
 class WaitLoseNode : public Node {
 private:
     GUI::StaticText text;
-    GUI::TypeBox<4> forceTyper;
+    GUI::TypeBox<6> forceTyper;
 
 public:
-    WaitLoseNode(const Window& window, float X, float Y, const char* text = "55");
+    WaitLoseNode(const Window& window, float X, float Y, const char* text = "5");
 
     // Programming
     Node* copy() override;

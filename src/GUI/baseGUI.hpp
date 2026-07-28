@@ -211,7 +211,7 @@ namespace GUI {
         void setValues(Args&& ...args) {
             // Checking for all chars
             char buffer[100];
-            std::snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
+            SDL_snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
 
             // Clearing previous
             window.destroy(texture);

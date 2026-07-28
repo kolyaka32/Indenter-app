@@ -12,10 +12,10 @@
 class WaitReachNode : public Node {
 private:
     GUI::StaticText text;
-    GUI::TypeBox<4> forceTyper;
+    GUI::TypeBox<6> forceTyper;
 
 public:
-    WaitReachNode(const Window& window, float X, float Y, const char* force = "60");
+    WaitReachNode(const Window& window, float X, float Y, const char* force = "10");
 
     // Programming
     Node* copy() override;

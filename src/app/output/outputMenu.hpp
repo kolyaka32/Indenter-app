@@ -22,6 +22,8 @@ private:
     // Getted graphs
     Chart<float, float> forceChart;
     Chart<float, float> tempertureChart;
+    GUI::DynamicText forceText;
+    GUI::DynamicText tempText;
     // Save function
     GUI::DynamicText counterText;
     GUI::HighlightedStaticText notSavedText;

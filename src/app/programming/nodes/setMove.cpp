@@ -71,9 +71,9 @@ void SetMoveNode::blit() const {
     }
     // Direction
     if (direction) {
-        window.blit(window.getTexture(Textures::SlowUpButton), directionRect);
-    } else {
         window.blit(window.getTexture(Textures::SlowDownButton), directionRect);
+    } else {
+        window.blit(window.getTexture(Textures::SlowUpButton), directionRect);
     }
 }
 
