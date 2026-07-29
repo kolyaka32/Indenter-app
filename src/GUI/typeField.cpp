@@ -11,10 +11,9 @@
 #include <algorithm>
 
 
-// Type field class
 template <unsigned bufferSize>
 GUI::TypeField<bufferSize>::TypeField(const Window& _window, float _X, float _Y, const char* _startText,
-    float _height, Aligment _aligment, Color _textColor, Color _backColor)
+    Aligment _aligment, float _height, Color _textColor, Color _backColor) noexcept
 : TextureTemplate(_window),
 posX(window.getWidth()*_X),
 aligment(_aligment),

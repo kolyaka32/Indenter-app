@@ -10,11 +10,10 @@
 SetStepNode::SetStepNode(const Window& _window, float _X, float _Y, char _speed, const char* _val)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y,
-    {"Steping                µm", "Шагать                 мкм"},
-    Height::Main, WHITE, GUI::Aligment::Left),
+    {"Steping                µm", "Шагать                 мкм"}, GUI::Aligment::Left),
 speed(_speed - '0'),
 speedRect{(_X-0.017f)*window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0},
-distanceTyper(_window, _X+0.004, _Y-0.002, _val, Height::Medium, GUI::Aligment::Left) {}
+distanceTyper(_window, _X+0.004, _Y-0.002, _val, GUI::Aligment::Left) {}
 
 Node* SetStepNode::copy() {
     return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),

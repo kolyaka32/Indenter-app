@@ -9,10 +9,10 @@
 
 
 GUI::TwoOptionBox::TwoOptionBox(const Window& _window, float _X, float _Y, float _W, float _H,
-    const LanguagedText&& _title,
-    const LanguagedText&& _button1, const LanguagedText&& _button2)
+    const LanguagedText&& _title, const LanguagedText&& _button1,
+    const LanguagedText&& _button2) noexcept
 : SubWindow(_window, _X, _Y, _W, _H),
-title(_window, _X,   _Y - _H*0.3, std::move(_title), 1, Height::SubTitle),
+title(_window, _X,   _Y - _H*0.3, std::move(_title), 1, GUI::Aligment::Midle, Height::SubTitle),
 button1(_window, _X, _Y + _H*0.08, std::move(_button1)),
 button2(_window, _X, _Y + _H*0.32, std::move(_button2)) {}
 
@@ -34,6 +34,13 @@ GUI::Code GUI::TwoOptionBox::click(const Mouse _mouse) {
         return Some;
     }
     return None;
+}
+
+void GUI::TwoOptionBox::move(float _X, float _Y) {
+    SubWindow::move(_X, _Y);
+    title.move(_X, _Y);
+    button1.move(_X, _Y);
+    button2.move(_X, _Y);
 }
 
 void GUI::TwoOptionBox::blit() const {

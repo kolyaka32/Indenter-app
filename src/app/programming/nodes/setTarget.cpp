@@ -11,8 +11,8 @@ SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y, char _sp
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 positionNode(nullptr),
 speed(_speed - '0'),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move       to", "Двигаться       к"},
-    Height::Main, WHITE, GUI::Aligment::Left),
+text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y,
+    {"Move       to", "Двигаться       к"}, GUI::Aligment::Left),
 speedRect{(_X + (LanguagedText::getLanguage()==Language::Russian ? -0.002f : -0.027f))*window.getWidth(),
     _Y*window.getHeight()-18.0f, 32.0, 32.0},
 connectTarget(_window, _X + (LanguagedText::getLanguage()==Language::Russian ? 0.039f : 0.019f), _Y) {}

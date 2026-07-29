@@ -8,8 +8,7 @@
 
 HaltNode::HaltNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockStop, true, false),
-text(_window, _X-rect.w/(2*window.getWidth())+0.03, _Y-0.005, {"Stop", "Стоп"},
-    Height::Main, WHITE, GUI::Aligment::Left) {}
+text(_window, _X-rect.w/(2*window.getWidth())+0.03, _Y-0.005, {"Stop", "Стоп"}, GUI::Aligment::Left) {}
 
 Node* HaltNode::copy() {
     return new HaltNode{window, (rect.x+rect.w/2)/window.getWidth(),

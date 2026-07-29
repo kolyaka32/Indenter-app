@@ -13,11 +13,11 @@ int CurrentPort::selected = 0;
 CurrentPort::CurrentPort(const Window& _window, float _X, float _Y, float _W, float _H, float _thickness)
 : Template(_window),
 texts {
-    {_window, _X-_W/2+arrow, _Y,    {"Not selected", "Не выбран"}, 1, Height::Main, WHITE, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[0].getName()},       1, Height::Main, WHITE, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[1].getName()},       1, Height::Main, WHITE, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[2].getName()},       1, Height::Main, WHITE, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[3].getName()},       1, Height::Main, WHITE, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y,    {"Not selected", "Не выбран"}, 1, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[0].getName()},       1, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[1].getName()},       1, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[2].getName()},       1, GUI::Aligment::Left},
+    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[3].getName()},       1, GUI::Aligment::Left},
 },
 height(_H) {
     background = {_window.getWidth()*(_X-_W/2), _window.getHeight()*(_Y-_H/2),

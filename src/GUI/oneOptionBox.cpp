@@ -9,9 +9,9 @@
 
 
 GUI::OneOptionBox::OneOptionBox(const Window& _window, float _X, float _Y, float _W, float _H,
-    const LanguagedText&& _title, const LanguagedText&& _button)
+    const LanguagedText&& _title, const LanguagedText&& _button) noexcept
 : SubWindow(_window, _X, _Y, _W, _H),
-title(_window, _X, _Y - _H/4, std::move(_title), 1, Height::SubTitle),
+title(_window, _X, _Y - _H/4, std::move(_title), 1, GUI::Aligment::Left, Height::SubTitle),
 button(_window, _X, _Y + _H/4, std::move(_button)) {}
 
 GUI::OneOptionBox::OneOptionBox(OneOptionBox&& _object) noexcept
@@ -28,6 +28,12 @@ GUI::Code GUI::OneOptionBox::click(const Mouse _mouse) {
         return Some;
     }
     return None;
+}
+
+void GUI::OneOptionBox::move(float _X, float _Y) {
+    SubWindow::move(_X, _Y);
+    title.move(_X, _Y);
+    button.move(_X, _Y);
 }
 
 void GUI::OneOptionBox::blit() const {

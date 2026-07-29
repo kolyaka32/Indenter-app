@@ -17,7 +17,8 @@ char* ProgramMenu::loadName = nullptr;
 ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
 background(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
-title(_window, _X, _Y-_H*0.45, {"Programming", "Программирование"}, 2, Height::Info),
+title(_window, _X, _Y-_H*0.45, {"Programming", "Программирование"},
+    2, GUI::Aligment::Midle, Height::Info),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
 startButton(_window, _X+_W*0.37, _Y-_H*0.45, 0.03, Textures::ResumePauseButton),
 haltButton(_window,  _X+_W*0.45, _Y-_H*0.45, 0.03, Textures::HaltButton),
