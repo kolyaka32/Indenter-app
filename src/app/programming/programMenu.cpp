@@ -11,8 +11,8 @@
 std::vector<Node*> ProgramMenu::nodes{};
 Node* ProgramMenu::currentNode{};
 Node* ProgramMenu::previousNode{};
-const char* ProgramMenu::saveName = nullptr;
-const char* ProgramMenu::loadName = nullptr;
+char* ProgramMenu::saveName = nullptr;
+char* ProgramMenu::loadName = nullptr;
 
 ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
@@ -261,11 +261,15 @@ void ProgramMenu::update(const Mouse _mouse) {
     // Check on save
     if (saveName) {
         save(saveName);
+        saveName = nullptr;
+        SDL_free(saveName);
     }
 
     // Check on loading
     if (loadName) {
         load(loadName);
+        loadName = nullptr;
+        SDL_free(saveName);
     }
 }
 
@@ -469,8 +473,8 @@ void ProgramMenu::save(void* _userdata, const char* const* _filelist, int _filte
     if (_filelist == nullptr || _filter < 0) {
         return;
     }
-    // Save in main cycle
-    saveName = *_filelist;
+    // Write getted name
+    SDL_asprintf(&saveName, "%s", *_filelist);
 }
 
 void ProgramMenu::load(void* _userdata, const char* const* _filelist, int _filter) {
@@ -478,5 +482,6 @@ void ProgramMenu::load(void* _userdata, const char* const* _filelist, int _filte
     if (_filelist == nullptr || _filter < 0) {
         return;
     }
-    loadName = *_filelist;
+    // Write getted name
+    SDL_asprintf(&loadName, "%s", *_filelist);
 }

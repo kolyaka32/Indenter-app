@@ -21,8 +21,8 @@ private:
     SubNode* holdingSubNode;  // Special node, refer as argument for other nodes
     SDL_FPoint lastPos;       // Position, where it was holded last time
     // Save/load
-    static const char* saveName;
-    static const char* loadName;
+    static char* saveName;
+    static char* loadName;
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection program file
     char saveLocation[100];    // Location with directory for save/load programs
