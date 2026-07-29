@@ -15,6 +15,7 @@ private:
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection data file
     char saveLocation[100];    // Location with directory for save/load datas
+    static char* saveName;
 
     GUI::RoundedBackplate mainBackplate;
     GUI::HighlightedStaticText title;
@@ -35,6 +36,7 @@ public:
 
     bool click(const Mouse mouse);
     void update();
+    // ! move
     void blit() const override;
 
     static SDLCALL void save(void* userdata, const char* const* filelist, int filter);

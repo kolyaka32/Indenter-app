@@ -3,9 +3,10 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include <mutex>
 #include "outputMenu.hpp"
 
+
+char* OutputMenu::saveName = nullptr;
 
 OutputMenu::OutputMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
@@ -50,6 +51,13 @@ void OutputMenu::update() {
     tempertureChart.update();
     forceText.setValues(collectedData.getLastForce());
     tempText.setValues(collectedData.getLastTemp());
+    // Check on saving
+    if (saveName) {
+        // Writing data itself
+        collectedData.save(saveName);
+        SDL_free(saveName);
+        saveName = nullptr;
+    }
 }
 
 void OutputMenu::blit() const {
@@ -74,19 +82,5 @@ void OutputMenu::save(void* _userdata, const char* const* _filelist, int _filter
     if (_filelist == nullptr || _filter < 0) {
         return;
     }
-    // Getting file
-    SDL_IOStream* fout = SDL_IOFromFile(*_filelist, "w");
-    if (fout == nullptr) {
-        return;
-    }
-    // Locking, while saving
-    static std::mutex saveMutex;
-    saveMutex.lock();
-
-    // Writing data itself
-    collectedData.save(fout);
-
-    saveMutex.unlock();
-    SDL_CloseIO(fout);
-    logger.additional("Program saved to %s", *_filelist);
+    SDL_asprintf(&saveName, "%s", *_filelist);
 }

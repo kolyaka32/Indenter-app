@@ -318,7 +318,7 @@ namespace GUI {
 
 
     // Object for selecting variants from list
-    class SwitchBox : GUI::Template {
+    class SwitchBox : Template {
      private:
         unsigned selected = 0;
         bool opened = false;

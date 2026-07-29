@@ -48,6 +48,8 @@ protected:
 public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);
     void reset();
+    void save(const char* fileName) const;
+    void load(const char* fileName);
 
     // Interaction
     bool click(const Mouse mouse);
@@ -55,10 +57,8 @@ public:
     void update(const Mouse mouse);
     void type(SDL_Keycode code);
     void writeString(const char* str);
+    // ! move
     void blit() const override;
-
-    void save(const char* fileName) const;
-    void load(const char* fileName);
 
     // Proceed action from get messages, start executing next command
     static void handlePos(int pos);
@@ -67,7 +67,7 @@ public:
     // Return, if currently run any programs
     static bool isExecuting();
     static void stop();
-    
+
     // Callback functions for save from dialog window
     static void SDLCALL save(void* userdata, const char* const* filelist, int filter);
     static void SDLCALL load(void* userdata, const char* const* filelist, int filter);

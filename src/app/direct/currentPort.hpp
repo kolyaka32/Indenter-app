@@ -34,11 +34,12 @@ class CurrentPort : GUI::Template {
     void moveSelectedDown();  // Move selected text back to it postion (openning)
 
  public:
-    CurrentPort(const Window& window, float X, float Y, float W, float H, float frameThickness);
+    CurrentPort(const Window& window, float X, float Y, float W, float H, float frameThickness) noexcept;
     void reset();
 
-    void update();
     bool click(const Mouse mouse);
     bool press(SDL_Keycode key);
+    void update();
+    // ! move
     void blit() const override;
 };

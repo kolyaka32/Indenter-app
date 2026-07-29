@@ -31,18 +31,18 @@ private:
     void addNode(float X, float Y, float H);
 
 public:
-    NodeSelector(const Window& window, float X, float Y, float W, float H);
-    ~NodeSelector();
-
-    bool in(const Mouse mouse) const;
+    NodeSelector(const Window& window, float X, float Y, float W, float H) noexcept;
+    ~NodeSelector() noexcept;
 
     // Interaction
+    bool in(const Mouse mouse) const;
     void checkOff(const Mouse mouse);
     Node* click(const Mouse mouse);  // return new node or nullptr, if don't
     void unclick();
     void type(SDL_Keycode code);
     void writeString(const char* str);
     void update(const Mouse mouse);
+    // ! move
     void blit() const override;
 };
 
