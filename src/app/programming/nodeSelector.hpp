@@ -42,7 +42,6 @@ public:
     void type(SDL_Keycode code);
     void writeString(const char* str);
     void update(const Mouse mouse);
-    // ! move
     void blit() const override;
 };
 

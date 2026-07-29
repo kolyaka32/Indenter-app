@@ -40,10 +40,8 @@ private:
     GUI::InfoBox stoppedInfo;
 
 protected:
-    // Delete node with all connected
+    // Delete node with all it connections
     void deleteNode(Node* node);
-    // Start current program execution
-    void start();
 
 public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);
@@ -54,10 +52,9 @@ public:
     // Interaction
     bool click(const Mouse mouse);
     void unclick(const Mouse mouse);
-    void update(const Mouse mouse);
     void type(SDL_Keycode code);
     void writeString(const char* str);
-    // ! move
+    void update(const Mouse mouse);
     void blit() const override;
 
     // Proceed action from get messages, start executing next command
@@ -66,6 +63,9 @@ public:
     static void handleReachForce();
     // Return, if currently run any programs
     static bool isExecuting();
+    // Start current program execution
+    static void start();
+    // Stop current current program execution
     static void stop();
 
     // Callback functions for save from dialog window

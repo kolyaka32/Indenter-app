@@ -28,6 +28,5 @@ public:
         const BoundedArray<yAxis>& value, const LanguagedText&& title, SDL_Color color = BLACK);
 
     void update();
-    // ! move
     void blit() const;
 };

@@ -10,7 +10,7 @@
 bool CurrentPort::openned = false;
 int CurrentPort::selected = 0;
 
-CurrentPort::CurrentPort(const Window& _window, float _X, float _Y, float _W, float _H, float _thickness)
+CurrentPort::CurrentPort(const Window& _window, float _X, float _Y, float _W, float _H, float _thickness) noexcept
 : Template(_window),
 texts {
     {_window, _X-_W/2+arrow, _Y,    {"Not selected", "Не выбран"}, 1, GUI::Aligment::Left},

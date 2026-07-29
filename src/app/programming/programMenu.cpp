@@ -76,15 +76,6 @@ void ProgramMenu::deleteNode(Node* _node) {
     }
 }
 
-void ProgramMenu::start() {
-    // Resetting all nodes
-    for (int i=0; i < nodes.size(); ++i) {
-        nodes[i]->reset();
-    }
-    // Always start from first node (start, can't be changed)
-    currentNode = nodes[0];
-}
-
 bool ProgramMenu::click(const Mouse _mouse) {
     // Check on stop interaction
     selector.checkOff(_mouse);
@@ -274,32 +265,6 @@ void ProgramMenu::update(const Mouse _mouse) {
     }
 }
 
-void ProgramMenu::handlePos(int _pos) {
-    if (currentNode) {
-        currentNode = currentNode->handleGetPos(_pos);
-    }
-}
-
-void ProgramMenu::handleReachPos() {
-    if (currentNode) {
-        currentNode = currentNode->handlReachPos();
-    }
-}
-
-void ProgramMenu::handleReachForce() {
-    if (currentNode) {
-        currentNode = currentNode->handleReachForce();
-    }
-}
-
-bool ProgramMenu::isExecuting() {
-    return currentNode != nullptr;
-}
-
-void ProgramMenu::stop() {
-    currentNode = nullptr;
-}
-
 void ProgramMenu::blit() const {
     background.blit();
     title.blit();
@@ -467,6 +432,41 @@ void ProgramMenu::load(const char* _fileName) {
     // Close file
     SDL_CloseIO(fin);
     logger.additional("Program loaded from %s", _fileName);
+}
+
+void ProgramMenu::handlePos(int _pos) {
+    if (currentNode) {
+        currentNode = currentNode->handleGetPos(_pos);
+    }
+}
+
+void ProgramMenu::handleReachPos() {
+    if (currentNode) {
+        currentNode = currentNode->handlReachPos();
+    }
+}
+
+void ProgramMenu::handleReachForce() {
+    if (currentNode) {
+        currentNode = currentNode->handleReachForce();
+    }
+}
+
+bool ProgramMenu::isExecuting() {
+    return currentNode != nullptr;
+}
+
+void ProgramMenu::start() {
+    // Resetting all nodes
+    for (int i=0; i < nodes.size(); ++i) {
+        nodes[i]->reset();
+    }
+    // Always start from first node (start, can't be changed)
+    currentNode = nodes[0];
+}
+
+void ProgramMenu::stop() {
+    currentNode = nullptr;
 }
 
 void ProgramMenu::save(void* _userdata, const char* const* _filelist, int _filter) {

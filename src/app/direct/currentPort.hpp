@@ -40,6 +40,5 @@ class CurrentPort : GUI::Template {
     bool click(const Mouse mouse);
     bool press(SDL_Keycode key);
     void update();
-    // ! move
     void blit() const override;
 };

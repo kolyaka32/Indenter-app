@@ -36,7 +36,6 @@ public:
 
     bool click(const Mouse mouse);
     void update();
-    // ! move
     void blit() const override;
 
     static SDLCALL void save(void* userdata, const char* const* filelist, int filter);

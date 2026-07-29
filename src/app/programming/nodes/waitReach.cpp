@@ -10,7 +10,7 @@
 WaitReachNode::WaitReachNode(const Window& _window, float _X, float _Y, const char* _text)
 : Node(_window, _X, _Y, Textures::BlockLongWait),
 text(_window, _X-rect.w/2/window.getWidth()+0.005, _Y, 
-    {"Wait F >           N", "Ждать F >            Н"}, GUI::Aligment::Left),
+    {"Wait F >", "Ждать F >"}, GUI::Aligment::Left),
 forceTyper(_window, _X + (LanguagedText::getLanguage()==Language::Russian ? 0.002 : -0.01),
     _Y-0.002, _text, GUI::Aligment::Left, Height::Medium) {}
 
