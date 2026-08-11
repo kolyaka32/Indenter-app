@@ -5,16 +5,7 @@
 
 #pragma once
 
-#include "nodes/start.hpp"
-#include "nodes/setStop.hpp"
-#include "nodes/setMove.hpp"
-#include "nodes/setStep.hpp"
-#include "nodes/setTarget.hpp"
-#include "nodes/getPos.hpp"
-#include "nodes/waitReach.hpp"
-#include "nodes/waitLose.hpp"
-#include "nodes/halt.hpp"
-// ! more
+#include "program.hpp"
 
 
 // Object to select new component

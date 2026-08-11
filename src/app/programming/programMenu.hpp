@@ -12,10 +12,6 @@
 // Menu for create and edit of programs on own sratch-like visual language
 class ProgramMenu : GUI::Template {
 private:
-    // Current executing programm
-    static std::vector<Node*> nodes;  // List with all nodes for draw/interaction/execution
-    static Node* currentNode;   // Current executing node to check
-    static Node* previousNode;  // Node, that was current in previous cycle
     // Runtime part
     Node* holdingNode;        // Node, that is holding by mouse or nullptr if don't
     SubNode* holdingSubNode;  // Special node, refer as argument for other nodes
@@ -26,6 +22,7 @@ private:
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection program file
     char saveLocation[100];    // Location with directory for save/load programs
+    char autosaveFile[100];    // File for auto save/load
 
     // Graphic part
     GUI::RoundedBackplate background;
@@ -39,15 +36,10 @@ private:
     GUI::InfoBox netConnectedInfo;
     GUI::InfoBox stoppedInfo;
 
-protected:
-    // Delete node with all it connections
-    void deleteNode(Node* node);
-
 public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);
+    ~ProgramMenu();
     void reset();
-    void save(const char* fileName) const;
-    void load(const char* fileName);
 
     // Interaction
     bool click(const Mouse mouse);
@@ -57,16 +49,8 @@ public:
     void update(const Mouse mouse);
     void blit() const override;
 
-    // Proceed action from get messages, start executing next command
-    static void handlePos(int pos);
-    static void handleReachPos();
-    static void handleReachForce();
-    // Return, if currently run any programs
-    static bool isExecuting();
-    // Start current program execution
-    static void start();
-    // Stop current current program execution
-    static void stop();
+    // Current executing programm
+    static Program program;
 
     // Callback functions for save from dialog window
     static void SDLCALL save(void* userdata, const char* const* filelist, int filter);

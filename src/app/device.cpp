@@ -28,7 +28,7 @@ void Device::disconnect() {
         // Apply connection itself
         serial.reset();
         // Stop any executing program
-        ProgramMenu::stop();
+        ProgramMenu::program.stop();
     }
     state = NotConnected;
 }
@@ -98,17 +98,17 @@ void Device::parseMessage(const char* _data, unsigned _length) {
                 Uint16 unused;
                 int pos;
             };
-            ProgramMenu::handlePos(((PosPacket*)_data)->pos);
+            ProgramMenu::program.handlePos(((PosPacket*)_data)->pos);
             i += sizeof(PosPacket);
             break;
 
         case Get::ReachPos:
-            ProgramMenu::handleReachPos();
+            ProgramMenu::program.handleReachPos();
             i += sizeof(Type);
             break;
 
         case Get::ReachForce:
-            ProgramMenu::handleReachForce();
+            ProgramMenu::program.handleReachForce();
             i += sizeof(Type);
             break;
 
