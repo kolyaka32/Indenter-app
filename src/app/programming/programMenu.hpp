@@ -29,10 +29,11 @@ private:
     GUI::HighlightedStaticText title;
     SDL_FRect separateRect;
     NodeSelector selector;
-    GUI::ImageButton startButton;
-    GUI::ImageButton haltButton;
+    GUI::ImageButton newButton;
     GUI::ImageButton saveButton;
     GUI::ImageButton loadButton;
+    GUI::ImageButton startButton;
+    GUI::ImageButton haltButton;
     GUI::InfoBox netConnectedInfo;
     GUI::InfoBox stoppedInfo;
 

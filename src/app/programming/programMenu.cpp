@@ -18,10 +18,11 @@ background(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, _X, _Y-_H*0.45, {"Programming", "Программирование"},
     2, GUI::Aligment::Midle, Height::Info),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
+newButton(_window,   _X-_W*0.45, _Y-_H*0.45, 0.03, Textures::NewButton),
+saveButton(_window,  _X-_W*0.37, _Y-_H*0.45, 0.03, Textures::SaveButton),
+loadButton(_window,  _X-_W*0.29, _Y-_H*0.45, 0.03, Textures::LoadButton),
 startButton(_window, _X+_W*0.37, _Y-_H*0.45, 0.03, Textures::ResumePauseButton),
 haltButton(_window,  _X+_W*0.45, _Y-_H*0.45, 0.03, Textures::HaltButton),
-saveButton(_window,  _X-_W*0.45, _Y-_H*0.45, 0.03, Textures::SaveButton),
-loadButton(_window,  _X-_W*0.37, _Y-_H*0.45, 0.03, Textures::LoadButton),
 stoppedInfo(_window, _X+_W*0.16, _Y-_H*0.38, {"Program stopped", "Программа остановлена"}, 1000),
 netConnectedInfo(_window, _X+_W*0.16, _Y-_H*0.38, {"Not connected", "Не подключён"}, 1000),
 selector(_window, _X-_W/3, _Y+_H*0.05, _W/3, _H*0.9),
@@ -60,6 +61,18 @@ bool ProgramMenu::click(const Mouse _mouse) {
     selector.checkOff(_mouse);
     program.checkOff(_mouse);
     // Check on buttons press
+    if (newButton.in(_mouse)) {
+        program.reset(window);
+        return true;
+    }
+    if (saveButton.in(_mouse)) {
+        window.showSaveFileDialog(save, &filter, 1, saveLocation);
+        return true;
+    }
+    if (loadButton.in(_mouse)) {
+        window.showOpenFileDialog(load, &filter, 1, saveLocation, false);
+        return true;
+    }
     if (startButton.in(_mouse)) {
         if (device.isConnected()) {
             program.start();
@@ -70,14 +83,6 @@ bool ProgramMenu::click(const Mouse _mouse) {
     }
     if (haltButton.in(_mouse)) {
         program.stop();
-        return true;
-    }
-    if (saveButton.in(_mouse)) {
-        window.showSaveFileDialog(save, &filter, 1, saveLocation);
-        return true;
-    }
-    if (loadButton.in(_mouse)) {
-        window.showOpenFileDialog(load, &filter, 1, saveLocation, false);
         return true;
     }
     // Check, if start movement of node
@@ -209,10 +214,11 @@ void ProgramMenu::blit() const {
     window.setDrawColor(BLACK);
     window.drawRect(separateRect);
     selector.blit();
-    startButton.blit();
-    haltButton.blit();
+    newButton.blit();
     saveButton.blit();
     loadButton.blit();
+    startButton.blit();
+    haltButton.blit();
     netConnectedInfo.blit();
     stoppedInfo.blit();
 

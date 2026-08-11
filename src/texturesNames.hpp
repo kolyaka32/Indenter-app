@@ -19,6 +19,7 @@ enum class Textures : unsigned {
     QuitButton,
     MenuButton,
     SettingsButton,
+    NewButton,
     SaveButton,
     LoadButton,
     ReloadButton,
