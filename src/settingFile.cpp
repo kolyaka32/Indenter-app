@@ -12,8 +12,7 @@
 
 // Files to setup
 #include "data/languages.hpp"
-#include "game/gameField.hpp"
-#include "game/gameMenu/savedFields.hpp"
+#include "app/programming/programMenu.hpp"
 #include "menu/targetConnect.hpp"
 
 
@@ -35,22 +34,16 @@ void InitFile::loadSettings() {
                 LanguagedText::setLanguage(Language::English);
             } else if (lang == "russian") {
                 LanguagedText::setLanguage(Language::Russian);
-            } else if (lang == "german") {
+            } /*else if (lang == "german") {
                 LanguagedText::setLanguage(Language::German);
             } else if (lang == "belarusian") {
                 LanguagedText::setLanguage(Language::Bellarusian);
-            }
-        } else if (parameter == "music") {
+            }*/
+        } /*else if (parameter == "music") {
             audio.music.setVolume(getValue(currentLine) / 100.0f);
         } else if (parameter == "sounds") {
             audio.sounds.setVolume(getValue(currentLine) / 100.0f);
-        } else if (parameter == "IP") {
-            TargetConnect::writeBaseIP(getText(currentLine).c_str());
-        } else if (parameter == "port") {
-            TargetConnect::writeBasePort(getText(currentLine).c_str());
-        } else if (parameter == "save") {
-            SavedFields::addField(getText(currentLine));
-        }
+        }*/
     }
     // Closing reading file
     inSettings.close();
@@ -62,7 +55,7 @@ void InitFile::saveSettings() {
     std::ofstream outSettings(SETTING_FILE);
 
     // Writing data with comments to file
-    outSettings << "# Settings of chess game:\n";
+    outSettings << "# Settings of indenter app:\n";
 
     // Writing language
     outSettings << "language = ";
@@ -75,30 +68,21 @@ void InitFile::saveSettings() {
         outSettings << "russian\n";
         break;
 
-    case Language::German:
+    /*case Language::German:
         outSettings << "german\n";
         break;
 
     case Language::Bellarusian:
         outSettings << "belarusian\n";
-        break;
+        break;*/
 
     default:
         break;
     }
 
     // Writing music and sounds volumes
-    outSettings << "music = " << int(audio.music.getVolume()*100) << "\n";
-    outSettings << "sounds = " << int(audio.sounds.getVolume()*100) << "\n";
-
-    // Writing internet connection data
-    outSettings << "\n# Internet base parameters:\n";
-    outSettings << "IP = " << TargetConnect::getBaseIP() << "\n";
-    outSettings << "port = " << TargetConnect::getBasePort() << "\n";
-
-    // Saving fields
-    outSettings << "\n# Saves:\n";
-    SavedFields::saveFields(outSettings);
+    //outSettings << "music = " << int(audio.music.getVolume()*100) << "\n";
+    //outSettings << "sounds = " << int(audio.sounds.getVolume()*100) << "\n";
 }
 
 #endif  // (USE_SETTING_FILE)

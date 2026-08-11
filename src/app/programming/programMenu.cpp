@@ -34,9 +34,15 @@ filter{filterText.getString().c_str(), "prg"} {
     SDL_CreateDirectory("scripts");
     snprintf(saveLocation, sizeof(saveLocation), "%sscripts\\script.prg", directory);
     SDL_free(directory);
-    // On first entarance
     if (!CycleTemplate::isRestarted()) {
+        // On first entarance
         reset();
+    } else {
+        // ! Remake all nodes
+        /*for (int i=0; i < nodes.size(); ++i) {
+            nodes[i]->getNext();
+        }
+        Node* node = ;*/
     }
 }
 
@@ -253,15 +259,15 @@ void ProgramMenu::update(const Mouse _mouse) {
     // Check on save
     if (saveName) {
         save(saveName);
-        saveName = nullptr;
         SDL_free(saveName);
+        saveName = nullptr;
     }
 
     // Check on loading
     if (loadName) {
         load(loadName);
+        SDL_free(loadName);
         loadName = nullptr;
-        SDL_free(saveName);
     }
 }
 
