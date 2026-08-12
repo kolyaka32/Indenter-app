@@ -17,7 +17,7 @@
 class InitFile {
  private:
     const std::string getText(const std::string line) const;
-    const unsigned getValue(const std::string line) const;
+    unsigned getValue(const std::string line) const;
 
  public:
     InitFile();

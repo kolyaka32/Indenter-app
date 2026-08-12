@@ -9,6 +9,7 @@
 
 
 Program ProgramMenu::program{};
+unsigned ProgramMenu::autosaveCount = 0;
 char* ProgramMenu::saveName = nullptr;
 char* ProgramMenu::loadName = nullptr;
 
@@ -32,29 +33,38 @@ filter{filterText.getString().c_str(), "prg"} {
     // Getting location
     char* directory = SDL_GetCurrentDirectory();
     SDL_CreateDirectory("scripts");
-    snprintf(saveLocation, sizeof(saveLocation), "%sscripts\\script.prg", directory);
-    snprintf(autosaveFile, sizeof(autosaveFile), "%sscripts\\autosave.prg", directory);
+    SDL_snprintf(saveLocation, sizeof(saveLocation), "%sscripts\\script.prg", directory);
     SDL_free(directory);
 
-    // Check, if previous save exsist
+    // Check, if previous save exist
     SDL_PathInfo info;
+    char autosaveFile[100];
+    SDL_snprintf(autosaveFile, sizeof(autosaveFile), "scripts\\autosave%d.prg",
+        (autosaveCount + autosaveMaxCount - 1) % autosaveMaxCount);
     if (SDL_GetPathInfo(autosaveFile, &info)) {
-        // Load from this file
         program.load(window, autosaveFile);
     } else {
         reset();
     }
-    // ! Add reset button
 }
 
 ProgramMenu::~ProgramMenu() {
-    // Save as temporary prgram for load after
-    program.save(autosaveFile);
+    // Save as temporary program for load in next seccion
+    autosave();
 }
 
 void ProgramMenu::reset() {
     holdingNode = nullptr;
     holdingSubNode = nullptr;
+}
+
+void ProgramMenu::autosave() {
+    // Get new name
+    char autosaveFile[100];
+    SDL_snprintf(autosaveFile, sizeof(autosaveFile), "scripts\\autosave%d.prg", autosaveCount);
+    program.save(autosaveFile);
+    // Update counter
+    autosaveCount = (autosaveCount + 1) % autosaveMaxCount;
 }
 
 bool ProgramMenu::click(const Mouse _mouse) {
@@ -64,9 +74,9 @@ bool ProgramMenu::click(const Mouse _mouse) {
     // Check option box
     if (GUI::Code code = clearOption.click(_mouse)) {
         if (code == GUI::Button1) {
-            // Clear program
             // Additional save before clearing
-            program.save(autosaveFile);
+            autosave();
+            // Clear program
             program.reset(window);
             clearOption.close();
         } else if (code == GUI::Button2) {

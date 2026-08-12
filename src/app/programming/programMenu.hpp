@@ -19,10 +19,11 @@ private:
     // Save/load
     static char* saveName;
     static char* loadName;
+    // Count of saves across which will cycle
+    const unsigned autosaveMaxCount = 3;
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection program file
     char saveLocation[100];    // Location with directory for save/load programs
-    char autosaveFile[100];    // File for auto save/load
 
     // Graphic part
     GUI::RoundedBackplate background;
@@ -42,6 +43,7 @@ public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);
     ~ProgramMenu();
     void reset();
+    void autosave();
 
     // Interaction
     bool click(const Mouse mouse);
@@ -53,6 +55,8 @@ public:
 
     // Current executing programm
     static Program program;
+    // Counter for autosave for spread to different files
+    static unsigned autosaveCount;
 
     // Callback functions for save from dialog window
     static void SDLCALL save(void* userdata, const char* const* filelist, int filter);
