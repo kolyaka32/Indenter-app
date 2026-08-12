@@ -75,5 +75,6 @@ Node* WaitLoseNode::handleReachForce() const {
 }
 
 void WaitLoseNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "d%s\n", forceTyper.getString());
+    saveMain(_fout, 'd');
+    SDL_IOprintf(_fout, " %s", forceTyper.getString());
 }

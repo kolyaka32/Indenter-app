@@ -78,7 +78,7 @@ Node* GetPosNode::handleGetPos(int _pos) {
 }
 
 void GetPosNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "p%d\n", posSubNode.getNumber());
+    saveMain(_fout, 'p');
 }
 
 void GetPosNode::resetCounter() {

@@ -33,5 +33,5 @@ Node* StartNode::use() {
 }
 
 void StartNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "i\n");
+    saveMain(_fout, 'i');
 }

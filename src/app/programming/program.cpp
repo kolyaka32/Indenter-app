@@ -14,18 +14,30 @@ void Program::save(const char* _fileName) const {
         return;
     }
 
-    // Writing main nodes linked-list to it
-    Node* node = nodes[0];
-    while (node) {
-        // Save node
-        node->save(fout);
-        // Get next
-        node = node->getNext();
+    // Writing all nodes
+    for (int i=0; i < nodes.size(); ++i) {
+        // Save node data
+        nodes[i]->save(fout);
+        // Write string end
+        SDL_IOprintf(fout, "\n");
     }
 
-    // LClose file
+    // Close file
     SDL_CloseIO(fout);
     logger.additional("Program saved to %s", _fileName);
+}
+
+int Program::getArgument(char** c) const {
+    // Getting argument
+    int argument = 0;
+    for (; (**c >= '0') && (**c <= '9'); ++(*c)) {
+        argument = argument*10 + **c - '0';
+    }
+    return argument;
+}
+
+void Program::skip(char** c) const {
+    while (**c && (**c != '\n')) {(*c)++;}
 }
 
 void Program::load(const Window& _window, const char* _fileName) {
@@ -36,114 +48,149 @@ void Program::load(const Window& _window, const char* _fileName) {
     }
 
     // Clearing previous
-    reset(_window);
+    nodes.clear();
+    currentNode = nullptr;
+    GetPosNode::resetCounter();
 
     // Loading data to buffer
     char buffer[2000];
-    SDL_ReadIO(fin, buffer, sizeof(buffer));
+    size_t length = SDL_ReadIO(fin, buffer, sizeof(buffer));
+    buffer[length] = '\0';
 
     // Struct for save nodes with corresponding subNode argument
     struct NodeLoad {
-        char type;
+        char type;  // Not using, for better comparison
         Node* node;
-        int number;
+        unsigned next;
+        unsigned subNode;
     };
-    // Array with all loaded getPosition node for connection
-    std::vector<NodeLoad> positionLoad;
-    // Array with all loaded setTarget node for connection
-    std::vector<NodeLoad> targetLoads;
-    // Argument for use in switch
-    int argument = 0;
-    Node* node = nullptr;
-    Node* previousNode = nodes[0];
+    // Array with all loaded nodes for connection
+    std::vector<NodeLoad> connections;
+
     // Read all getted data
     for (char* c = buffer; *c; ++c) {
+        // Get type
+        char type = *c;
+        c++;
+        if (*c == '\0') {
+            break;
+        }
+        // Get x position
+        c++;  // Skip space
+        float x = getArgument(&c) / 100.0;
+        if (*c == '\0') {
+            break;
+        }
+        // Get y position
+        c++;  // Skip space
+        float y = getArgument(&c) / 100.0;
+        if (*c == '\0') {
+            break;
+        }
+        // Get next
+        c++;  // Skip space
+        unsigned next = getArgument(&c);
+        if (*c == '\0') {
+            break;
+        }
+        // Subnode
+        unsigned subNode = 0;
+
+        // Data for switch
+        Node* node = nullptr;
         // Create node by text description
-        switch (*c) {
+        switch (type) {
         case 'i':
-            // Start node
-            // Ignore
-            continue;
+            node = new StartNode{_window, x, y};
+            break;
 
         case 's':
-            nodes.emplace_back(new SetStopNode{_window, 0.0, 0.0});
+            node = new SetStopNode{_window, x, y};
             break;
 
         case 'm':
-            nodes.emplace_back(new SetMoveNode{_window, 0.0, 0.0, *(c+1), *(c+2)});
+            c++;
+            if (c[0] == '\0' || c[1] == '\0' || c[2] == '\0') {
+                break;
+            }
+            node = new SetMoveNode{_window, x, y, *c, *(c+2)};
+            c += 3;
             break;
 
         case 'e':
-            nodes.emplace_back(new SetStepNode{_window, 0.0, 0.0, *(c+1), c+2});
+            c++;
+            if (c[0] == '\0' || c[1] == '\0' || c[2] == '\0') {
+                break;
+            }
+            node = new SetStepNode{_window, x, y, *c, c+2};
+            c += 2;
+            skip(&c);
             break;
 
         case 't':
-            node = new SetTargetNode{_window, 0.0, 0.0, *(++c)};
-            // Getting argument
-            argument = 0;
-            for (c++; (*c >= '0') && (*c <= '9'); ++c) {
-                argument = argument*10 + *c - '0';
+            c++;
+            if (*c == '\0') {
+                break;
             }
-            // Check, if required to connect
-            if (argument) {
-                // Saving node for future argument set
-                targetLoads.emplace_back(NodeLoad{'t', node, argument});
+            node = new SetTargetNode{_window, x, y, *c};
+            c++;
+            if (*c == '\0') {
+                break;
             }
-            nodes.emplace_back(node);
+            c++;
+            subNode = getArgument(&c);
             break;
 
         case 'p':
-            node = new GetPosNode{_window, 0.0, 0.0};
-            // Getting argument
-            argument = 0;
-            for (c++; (*c >= '0') && (*c <= '9'); ++c) {
-                argument = argument*10 + *c - '0';
-            }
-            // Check, if required to connect
-            if (argument) {
-                // Saving node for future use as argument
-                positionLoad.emplace_back(NodeLoad{'p', node, argument});
-            }
-            nodes.emplace_back(node);
+            node = new GetPosNode{_window, x, y};
             break;
 
         case 'r':
-            nodes.emplace_back(new WaitReachNode{_window, 0.0, 0.0, c+1});
+            c++;
+            node = new WaitReachNode{_window, x, y, c};
+            skip(&c);
             break;
 
         case 'd':
-            nodes.emplace_back(new WaitLoseNode{_window, 0.0, 0.0, c+1});
+            c++;
+            node = new WaitLoseNode{_window, x, y, c};
+            skip(&c);
             break;
 
         case 'h':
-            nodes.emplace_back(new HaltNode{_window, 0.0, 0.0});
+            node = new HaltNode{_window, x, y};
             break;
         // ! Finish adding all nodes
 
         default:
             continue;
         }
-        nodes.back()->connectTopTo(previousNode);
-        previousNode = nodes.back();
+        if (node) {
+            // Add node to main list
+            nodes.emplace_back(node);
+            // Add to connection list
+            connections.emplace_back(NodeLoad{type, node, next, subNode});
+        }
     }
-    // SubNodes connection
-    for (int load=0; load < targetLoads.size(); ++load) {
-        // Find corresponding getPos
-        Node* sourceNode = nullptr;
-        for (int i=0; i < positionLoad.size(); ++i) {
-            if (positionLoad[i].number == targetLoads[load].number) {
-                sourceNode = positionLoad[i].node;
-                break;
-            }
+    // Nodes and subnodes connection
+    for (int i=0; i < connections.size(); ++i) {
+        // Connect next node
+        if (connections[i].next && connections[i].next <= nodes.size()) {
+            nodes[connections[i].next-1]->connectTopTo(connections[i].node);
         }
-        // Connect node as source and this as target
-        if (sourceNode) {
-            SubNode* sourceSubNode = sourceNode->takeSubNode();
+        // Connect subNode
+        if (connections[i].subNode && connections[i].subNode < nodes.size()) {
+            // Try take node
+            SubNode* sourceSubNode = nodes[connections[i].subNode-1]->takeSubNode();
+            // Place it
             if (sourceSubNode) {
-                targetLoads[load].node->connectSubNode(sourceSubNode);
-                continue;
+                connections[i].node->connectSubNode(sourceSubNode);
             }
         }
+    }
+    // Additional check, if enough nodes
+    if (nodes.size() == 0) {
+        reset(_window);
     }
     // Close file
     SDL_CloseIO(fin);

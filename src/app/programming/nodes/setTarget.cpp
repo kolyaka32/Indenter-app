@@ -5,6 +5,7 @@
 
 #include "setTarget.hpp"
 #include "../../device.hpp"
+#include "../programMenu.hpp"
 
 
 SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y, char _speed)
@@ -144,9 +145,13 @@ Node* SetTargetNode::handlReachPos() const {
 }
 
 void SetTargetNode::save(SDL_IOStream* _fout) {
+    saveMain(_fout, 't');
+
+    // Find subNode source
+    unsigned pos = 0;
     if (positionNode) {
-        SDL_IOprintf(_fout, "t%c%d\n", speed+'0', positionNode->getNumber());
-    } else {
-        SDL_IOprintf(_fout, "t%c0\n", speed+'0');
+        pos = ProgramMenu::program.getNodePos(positionNode->getSource());
     }
+    // Write speed and pos
+    SDL_IOprintf(_fout, " %c %d", speed+'0', pos);
 }

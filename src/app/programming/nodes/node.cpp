@@ -4,6 +4,7 @@
  */
 
 #include "node.hpp"
+#include "../programMenu.hpp"
 
 
 Node::Node(const Window& _window, float _X, float _Y, Textures _texture,
@@ -206,6 +207,18 @@ Node* Node::handleReachForce() const {
     return (Node*)this;
 }
 
+void Node::saveMain(SDL_IOStream* _fout, char _type) {
+    // Find position
+    int x = (rect.x + rect.w/2)/window.getWidth() * 100;
+    int y = (rect.y + rect.h/2)/window.getHeight() * 100;
+
+    // Find next node
+    unsigned next = ProgramMenu::program.getNodePos(nextNode);
+
+    // Write all data
+    SDL_IOprintf(_fout, "%c %02d %02d %03u", _type, x, y, next);
+}
+
 void Node::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "n\n");
+    saveMain(_fout, 'n');
 }

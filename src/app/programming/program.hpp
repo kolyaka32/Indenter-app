@@ -25,6 +25,10 @@ private:
     Node* currentNode;   // Current executing node
     Node* previousNode;  // Node, that was current in previous cycle
 
+protected:
+    int getArgument(char** c) const;
+    void skip(char** c) const;
+
 public:
     Program();
     void save(const char* fileName) const;
