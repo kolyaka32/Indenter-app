@@ -176,6 +176,18 @@ void Program::deleteNode(Node* _node) {
     }
 }
 
+unsigned Program::getNodePos(const Node* _node) const {
+    if (_node == nullptr) {
+        return 0;
+    }
+    for (int i=0; i < nodes.size(); ++i) {
+        if (nodes[i] == _node) {
+            return i+1;
+        }
+    }
+    return 0;
+}
+
 void Program::reset(const Window& _window) {
     nodes.clear();
     currentNode = nullptr;

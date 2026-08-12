@@ -50,6 +50,8 @@ public:
     void add(Node* node);
     // Delete node with all it connections
     void deleteNode(Node* node);
+    // Get position of current node
+    unsigned getNodePos(const Node* node) const;
 
     void checkOff(const Mouse mouse);
     GUI::Code click(const Mouse mouse, Node** node);

@@ -36,6 +36,10 @@ filter{filterText.getString().c_str(), "prg"} {
     SDL_snprintf(saveLocation, sizeof(saveLocation), "%sscripts\\script.prg", directory);
     SDL_free(directory);
 
+    // Check autosave count
+    if (autosaveCount >= autosaveMaxCount) {
+        autosaveCount = autosaveMaxCount - 1;
+    }
     // Check, if previous save exist
     SDL_PathInfo info;
     char autosaveFile[100];
