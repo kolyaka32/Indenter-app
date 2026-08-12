@@ -30,6 +30,7 @@ private:
     SDL_FRect separateRect;
     NodeSelector selector;
     GUI::ImageButton newButton;
+    GUI::TwoOptionBox clearOption;
     GUI::ImageButton saveButton;
     GUI::ImageButton loadButton;
     GUI::ImageButton startButton;

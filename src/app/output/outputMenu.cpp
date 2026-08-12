@@ -13,7 +13,7 @@ OutputMenu::OutputMenu(const Window& _window, float _X, float _Y, float _W, floa
 mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, _X, _Y-_H*0.45, {"Getted data", "Полученные данные"}, 2, GUI::Aligment::Midle, Height::Info),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
-forceChart(_window, _X+0.015, _Y-0.2*_H, _W*0.85, _H*0.25,
+forceChart(_window, _X+0.015, _Y-0.22*_H, _W*0.85, _H*0.25,
     collectedData.getPositions(), collectedData.getForces(), {"Force", "Сила"}, RED),
 tempertureChart(_window, _X+0.015, _Y+0.1*_H, _W*0.85, _H*0.25,
     collectedData.getPositions(), collectedData.getTemperatures(), {"Temperature", "Температура"}, BLUE),

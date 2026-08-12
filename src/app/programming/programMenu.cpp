@@ -19,6 +19,7 @@ title(_window, _X, _Y-_H*0.45, {"Programming", "Программирование
     2, GUI::Aligment::Midle, Height::Info),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
 newButton(_window,   _X-_W*0.45, _Y-_H*0.45, 0.03, Textures::NewButton),
+clearOption(_window, 0.5, 0.5, 0.2, 0.2, {"Clear program?", "Очистить программу?"}, {"Yes", "Да"}, {"No", "Нет"}),
 saveButton(_window,  _X-_W*0.37, _Y-_H*0.45, 0.03, Textures::SaveButton),
 loadButton(_window,  _X-_W*0.29, _Y-_H*0.45, 0.03, Textures::LoadButton),
 startButton(_window, _X+_W*0.37, _Y-_H*0.45, 0.03, Textures::ResumePauseButton),
@@ -60,9 +61,23 @@ bool ProgramMenu::click(const Mouse _mouse) {
     // Check on stop interaction
     selector.checkOff(_mouse);
     program.checkOff(_mouse);
+    // Check option box
+    if (GUI::Code code = clearOption.click(_mouse)) {
+        if (code == GUI::Button1) {
+            // Clear program
+            // Additional save before clearing
+            program.save(autosaveFile);
+            program.reset(window);
+            clearOption.close();
+        } else if (code == GUI::Button2) {
+            // Close this menu
+            clearOption.close();
+        }
+        return true;
+    }
     // Check on buttons press
     if (newButton.in(_mouse)) {
-        program.reset(window);
+        clearOption.open();
         return true;
     }
     if (saveButton.in(_mouse)) {
@@ -226,6 +241,8 @@ void ProgramMenu::blit() const {
     if (holdingSubNode) {
         holdingSubNode->blit();
     }
+    // Top
+    clearOption.blit();
 }
 
 void ProgramMenu::save(void* _userdata, const char* const* _filelist, int _filter) {
