@@ -36,18 +36,21 @@ namespace GUI {
     typedef int Code;
 
 
-    // Object, that will be drawn at screen
+    // Object, that can be drawn at screen
     class Template {
      protected:
         const Window& window;
 
      public:
-        Template(const Window& window);
+        Template(const Window& window) noexcept;
+        // Move whole object, in part of screen
+        virtual void move(float X, float Y);
+        // Draw this object at screen
         virtual void blit() const;
     };
 
 
-    // Object with texture, that will be drawn
+    // Object with texture, that can be drawn
     class TextureTemplate : public Template {
      protected:
         SDL_Texture* texture;
@@ -57,7 +60,7 @@ namespace GUI {
         TextureTemplate(const Window& window, SDL_Texture* texture = nullptr);
         TextureTemplate(const Window& window, SDL_FRect rect, SDL_Texture* texture = nullptr);
         TextureTemplate(TextureTemplate&& object) noexcept;
-        virtual void move(float X, float Y);
+        void move(float X, float Y) override;
         void blit() const override;
         virtual bool in(const Mouse mouse) const;
     };
@@ -67,9 +70,9 @@ namespace GUI {
     class RoundedBackplate : public TextureTemplate {
      public:
         RoundedBackplate(const Window& window, float centerX, float centerY, float width, float height,
-            int radius, int border, Color frontColor = GREY, Color backColor = BLACK);
+            int radius, int border, Color frontColor = GREY, Color backColor = BLACK) noexcept;
         RoundedBackplate(const Window& window, const SDL_FRect& rect, int radius, int border,
-            Color frontColor = GREY, Color backColor = BLACK);
+            Color frontColor = GREY, Color backColor = BLACK) noexcept;
         RoundedBackplate(RoundedBackplate&& object) noexcept;
         ~RoundedBackplate() noexcept;
     };
@@ -79,9 +82,9 @@ namespace GUI {
     class RectBackplate : public TextureTemplate {
      public:
         RectBackplate(const Window& window, float centerX, float centerY, float width, float height,
-            float border, Color frontColor = GREY, Color backColor = BLACK);
+            float border, Color frontColor = GREY, Color backColor = BLACK) noexcept;
         RectBackplate(const Window& window, const SDL_FRect& rect,
-            float border, Color frontColor = GREY, Color backColor = BLACK);
+            float border, Color frontColor = GREY, Color backColor = BLACK) noexcept;
         RectBackplate(const RectBackplate& copyObject) noexcept;
         RectBackplate(RectBackplate&& moveObject) noexcept;
         ~RectBackplate() noexcept;
@@ -97,7 +100,7 @@ namespace GUI {
         GUI::RoundedBackplate background;
 
      public:
-        SubWindow(const Window& window, float X, float Y, float W, float H);
+        SubWindow(const Window& window, float X, float Y, float W, float H) noexcept;
         SubWindow(SubWindow&& object) noexcept;
         void open();
         void close();
@@ -105,6 +108,7 @@ namespace GUI {
         bool isOpen() const;
         virtual void reset();
         virtual bool escape();
+        void move(float X, float Y) override;
         void blit() const override;
     };
 
@@ -114,7 +118,7 @@ namespace GUI {
     // Class of slider bar with point on it to control need parameter
     class Slider : public TextureTemplate {
      private:
-        SDL_Texture *buttonTexture;  // Texture of line (upper part of slider)
+        SDL_Texture* buttonTexture;  // Texture of line (upper part of slider)
         SDL_FRect buttonRect;        // Place for rendering upper part
 
      public:
@@ -124,14 +128,15 @@ namespace GUI {
         Slider(Slider&& object) noexcept;
         float setValue(float mouseX);  // Setting new state from mouse position
         float scroll(float wheelY);    // Checking mouse wheel action
-        void blit() const override;    // Drawing slider with need button position
+        void move(float X, float Y) override;
+        void blit() const override;
     };
 
 
     // Class of buttons with image on it
     class ImageButton : public TextureTemplate {
      public:
-        ImageButton(const Window& window, float X, float Y, float width, Textures name);
+        ImageButton(const Window& window, float X, float Y, float width, Textures name) noexcept;
         ImageButton(ImageButton&& object) noexcept;
     };
     #endif
@@ -162,8 +167,9 @@ namespace GUI {
     class StaticText : public TextureTemplate {
      public:
         template <typename ...Args>
-        StaticText(const Window& window, float X, float Y, const LanguagedText&& texts, float height = Height::Main,
-            Color color = WHITE, Aligment aligment = Aligment::Midle, const Args... args)
+        StaticText(const Window& window, float X, float Y, const LanguagedText&& texts,
+            Aligment aligment = Aligment::Midle, float height = Height::Main,
+            Color color = WHITE, const Args... args) noexcept
         : TextureTemplate(window) {
                 // Checking for all chars
                 char buffer[100];
@@ -183,11 +189,12 @@ namespace GUI {
     };
 
 
-    // Static text on screen
+    // Static text with back highlighting (for better contrast)
     class HighlightedStaticText : public TextureTemplate {
      public:
-        HighlightedStaticText(const Window& window, float X, float Y, const LanguagedText&& texts, int frameThickness,
-            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
+        HighlightedStaticText(const Window& window, float X, float Y, const LanguagedText&& texts,
+            int frameThickness, Aligment aligment = Aligment::Midle, float height = Height::Main,
+            Color color = WHITE);
         HighlightedStaticText(HighlightedStaticText&& object) noexcept;
         ~HighlightedStaticText() noexcept;
     };
@@ -204,7 +211,7 @@ namespace GUI {
 
      public:
         DynamicText(const Window& window, float X, float Y, LanguagedText&& texts,
-            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
+            Aligment aligment = Aligment::Midle, float height = Height::Main, Color color = WHITE) noexcept;
         DynamicText(DynamicText&& object) noexcept;
         ~DynamicText() noexcept;
         template <typename ...Args>
@@ -260,9 +267,9 @@ namespace GUI {
         void copyToClipboard();       // Writing selected text to clipboard
 
      public:
-        TypeField(const Window& window, float posX, float posY, const char *startText = "",
-            float height = Height::TypeBox, Aligment aligment = Aligment::Midle,
-            Color textColor = BLACK, Color backColor = WHITE);
+        TypeField(const Window& window, float X, float Y, const char *startText = "",
+            Aligment aligment = Aligment::Midle, float height = Height::TypeBox, 
+            Color textColor = BLACK, Color backColor = WHITE) noexcept;
         TypeField(TypeField<bufferSize>&& object) noexcept;
         ~TypeField() noexcept;
         const char* getString();             // Return typed string
@@ -279,19 +286,20 @@ namespace GUI {
     };
 
 
-    // Object for typying in text with backplate for visability
+    // Object for type text with backplate for visability
     template <unsigned bufferSize = 16>
     class TypeBox : public TypeField<bufferSize> {
      private:
         GUI::RectBackplate backplate;
 
      public:
-        TypeBox(const Window& window, float posX, float posY, const char *startText = "", float height = Height::TypeBox,
-            Aligment aligment = Aligment::Midle, unsigned frameWidth = 2, Color textColor = BLACK);
+        TypeBox(const Window& window, float X, float Y, const char* startText = "",
+            Aligment aligment = Aligment::Midle, float height = Height::TypeBox,
+            unsigned frameWidth = 2, Color textColor = BLACK) noexcept;
         TypeBox(TypeBox&& object) noexcept;
-        void move(float X, float Y) override;
-        void blit() const override;  // Function for draw inputting text with backplate
         bool in(const Mouse mouse) const override;
+        void move(float X, float Y) override;
+        void blit() const override;
     };
 
 
@@ -301,35 +309,37 @@ namespace GUI {
         GUI::RoundedBackplate backplate;
 
      public:
-        TextButton(const Window& window, float X, float Y, const LanguagedText&& texts, float size = Height::Main,
-            Color color = WHITE, Aligment aligment = Aligment::Midle);
+        TextButton(const Window& window, float X, float Y, const LanguagedText&& texts,
+            Aligment aligment = Aligment::Midle, float size = Height::Main, Color color = WHITE);
         TextButton(TextButton&& object) noexcept;
+        void move(float X, float Y) override;
         void blit() const override;
     };
 
 
     // Object for selecting variants from list
-    class SwitchBox : GUI::Template {
+    class SwitchBox : Template {
      private:
         unsigned selected = 0;
         bool opened = false;
+
         // Draw options
         const float height;
         SDL_FRect background;
         const SDL_Color backColor;
         std::vector<StaticText> drawnTexts;
-
-        // Static options
         SDL_Texture* arrowTexture;
         SDL_FRect arrowRect;
 
      public:
-        SwitchBox(const Window& window, float X, float Y, float W, std::initializer_list<LanguagedText> texts,
-            unsigned startOption = 0, float size = Height::Main, Color backColor = WHITE, Color frontColor = BLACK);
-        // Getter/setter
+        SwitchBox(const Window& window, float X, float Y, float W,
+            std::initializer_list<LanguagedText> texts, unsigned startOption = 0,
+            float size = Height::Main, Color backColor = WHITE, Color frontColor = BLACK) noexcept;
+        SwitchBox(SwitchBox&& object) noexcept;
         void set(unsigned value);
         unsigned getValue() const;
         Code click(const Mouse mouse);
+        void move(float X, float Y) override;
         void blit() const override;
     };
 
@@ -341,8 +351,9 @@ namespace GUI {
         const timer decayTime;  // Time of full decay
 
      public:
-        InfoBox(const Window& window, float X, float Y, const LanguagedText&& texts, unsigned decayTime = 500,
-            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
+        InfoBox(const Window& window, float X, float Y, const LanguagedText&& texts,
+            unsigned decayTime = 500, Aligment aligment = Aligment::Midle,
+            float height = Height::Main, Color color = WHITE) noexcept;
         InfoBox(InfoBox&& object) noexcept;
         void update();
         void reset();
@@ -357,9 +368,10 @@ namespace GUI {
 
      public:
         OneOptionBox(const Window& window, float X, float Y, float W, float H,
-            const LanguagedText&& titleText, const LanguagedText&& buttonText);
+            const LanguagedText&& titleText, const LanguagedText&& buttonText) noexcept;
         OneOptionBox(OneOptionBox&& object) noexcept;
         Code click(const Mouse mouse);
+        void move(float X, float Y) override;
         void blit() const override;
     };
 
@@ -372,10 +384,11 @@ namespace GUI {
 
      public:
         TwoOptionBox(const Window& window, float X, float Y, float W, float H,
-            const LanguagedText&& titleText,
-            const LanguagedText&& button1Text, const LanguagedText&& button2Text);
+            const LanguagedText&& titleText, const LanguagedText&& button1Text,
+            const LanguagedText&& button2Text) noexcept;
         TwoOptionBox(TwoOptionBox&& object) noexcept;
         Code click(const Mouse mouse);
+        void move(float X, float Y) override;
         void blit() const override;
     };
 
@@ -400,7 +413,7 @@ namespace GUI {
 
         // Slider for showing position
         SDL_FRect sliderRect;
-        const SDL_FRect sliderBackRect;
+        SDL_FRect sliderBackRect;
         bool holding = false;
         float holdPosition;
 
@@ -409,20 +422,22 @@ namespace GUI {
         void placeItem(int pos, const SourceItem& item);
 
      public:
-        // Create menu for scrolling objects, placed at center with (posX, posY) and size.
+        // Create menu for scrolling objects, placed at center with (X, Y) and size.
         // Shows "maxShowedItems" items at a time
-        ScrollBox(const Window& window, float posX, float posY, float width, float height, int maxShowedItems,
-            const LanguagedText&& emptyItemsText);
-        ScrollBox(const Window& window, float posX, float posY, float width, float height, int maxShowedItems,
-            std::vector<SourceItem> items, const LanguagedText&& emptyItemsText);
+        ScrollBox(const Window& window, float X, float Y, float width, float height,
+            int maxShowedItems, const LanguagedText&& emptyItemsText) noexcept;
+        ScrollBox(const Window& window, float X, float Y, float width, float height,
+            int maxShowedItems, std::vector<SourceItem> items, const LanguagedText&& emptyItemsText) noexcept;
         ScrollBox(ScrollBox&& object) noexcept;
         ~ScrollBox() noexcept;
         void addItem(const SourceItem& field);
         void clear();
+        // Interaction
         Code click(const Mouse mouse);
         void unclick();
         void update(const Mouse mouse);
         bool scroll(const Mouse mouse, float wheelY);
+        void move(float X, float Y) override;
         void blit() const override;
     };
 

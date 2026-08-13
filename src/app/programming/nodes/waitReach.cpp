@@ -10,10 +10,9 @@
 WaitReachNode::WaitReachNode(const Window& _window, float _X, float _Y, const char* _text)
 : Node(_window, _X, _Y, Textures::BlockLongWait),
 text(_window, _X-rect.w/2/window.getWidth()+0.005, _Y, 
-    {"Wait F >           N", "Ждать F >            Н"},
-    Height::Main, WHITE, GUI::Aligment::Left),
+    {"Wait F >", "Ждать F >"}, GUI::Aligment::Left),
 forceTyper(_window, _X + (LanguagedText::getLanguage()==Language::Russian ? 0.002 : -0.01),
-    _Y-0.002, _text, Height::Medium, GUI::Aligment::Left) {}
+    _Y-0.002, _text, GUI::Aligment::Left, Height::Medium) {}
 
 Node* WaitReachNode::copy() {
     return new WaitReachNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -76,5 +75,6 @@ Node* WaitReachNode::handleReachForce() const {
 }
 
 void WaitReachNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "r%s\n", forceTyper.getString());
+    saveMain(_fout, 'r');
+    SDL_IOprintf(_fout, " %s", forceTyper.getString());
 }

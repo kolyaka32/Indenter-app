@@ -9,12 +9,12 @@
 
 
 GUI::HighlightedStaticText::HighlightedStaticText(const Window& _window, float _X, float _Y,
-    const LanguagedText&& _texts, int _frame, float _height, Color _color, Aligment _aligment)
+    const LanguagedText&& _texts, int _thickness, Aligment _aligment, float _height, Color _color)
 : TextureTemplate(_window) {
     // Creating texture of text
     TTF_Font* font = window.getFont(Fonts::Main);
     TTF_SetFontSize(font, _height);
-    TTF_SetFontOutline(font, _frame);
+    TTF_SetFontOutline(font, _thickness);
 
     // Creating surface
     SDL_Surface* surface = TTF_RenderText_Solid(font, _texts.getString().c_str(), 0, {1, 0, 0, 255});

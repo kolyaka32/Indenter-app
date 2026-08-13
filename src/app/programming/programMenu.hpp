@@ -12,17 +12,15 @@
 // Menu for create and edit of programs on own sratch-like visual language
 class ProgramMenu : GUI::Template {
 private:
-    // Current executing programm
-    static std::vector<Node*> nodes;  // List with all nodes for draw/interaction/execution
-    static Node* currentNode;   // Current executing node to check
-    static Node* previousNode;  // Node, that was current in previous cycle
     // Runtime part
     Node* holdingNode;        // Node, that is holding by mouse or nullptr if don't
     SubNode* holdingSubNode;  // Special node, refer as argument for other nodes
     SDL_FPoint lastPos;       // Position, where it was holded last time
     // Save/load
-    static const char* saveName;
-    static const char* loadName;
+    static char* saveName;
+    static char* loadName;
+    // Count of saves across which will cycle
+    const unsigned autosaveMaxCount = 3;
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection program file
     char saveLocation[100];    // Location with directory for save/load programs
@@ -32,42 +30,34 @@ private:
     GUI::HighlightedStaticText title;
     SDL_FRect separateRect;
     NodeSelector selector;
-    GUI::ImageButton startButton;
-    GUI::ImageButton haltButton;
+    GUI::ImageButton newButton;
+    GUI::TwoOptionBox clearOption;
     GUI::ImageButton saveButton;
     GUI::ImageButton loadButton;
+    GUI::ImageButton startButton;
+    GUI::ImageButton haltButton;
     GUI::InfoBox netConnectedInfo;
     GUI::InfoBox stoppedInfo;
 
-protected:
-    // Delete node with all connected
-    void deleteNode(Node* node);
-    // Start current program execution
-    void start();
-
 public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);
+    ~ProgramMenu();
     void reset();
+    void autosave();
 
     // Interaction
     bool click(const Mouse mouse);
     void unclick(const Mouse mouse);
-    void update(const Mouse mouse);
     void type(SDL_Keycode code);
     void writeString(const char* str);
+    void update(const Mouse mouse);
     void blit() const override;
 
-    void save(const char* fileName) const;
-    void load(const char* fileName);
+    // Current executing programm
+    static Program program;
+    // Counter for autosave for spread to different files
+    static unsigned autosaveCount;
 
-    // Proceed action from get messages, start executing next command
-    static void handlePos(int pos);
-    static void handleReachPos();
-    static void handleReachForce();
-    // Return, if currently run any programs
-    static bool isExecuting();
-    static void stop();
-    
     // Callback functions for save from dialog window
     static void SDLCALL save(void* userdata, const char* const* filelist, int filter);
     static void SDLCALL load(void* userdata, const char* const* filelist, int filter);

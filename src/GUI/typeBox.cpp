@@ -9,11 +9,11 @@
 
 
 template <unsigned bufferSize>
-GUI::TypeBox<bufferSize>::TypeBox(const Window& _window, float _posX, float _posY, const char *_startText,
-    float _height, Aligment _aligment, unsigned _frameWidth, Color _textColor)
-: TypeField<bufferSize>(_window, _posX, _posY, _startText, _height, _aligment, _textColor),
-backplate(_window, {_posX*_window.getWidth()-(13*bufferSize-2)*(int)_aligment/2-4,
-    _posY*_window.getHeight()-_height*0.85f, 13.0f * bufferSize+4, _height * 1.8f}, 2, WHITE, BLACK) {}
+GUI::TypeBox<bufferSize>::TypeBox(const Window& _window, float _X, float _Y, const char *_startText,
+    Aligment _aligment, float _height, unsigned _frameWidth, Color _textColor) noexcept
+: TypeField<bufferSize>(_window, _X, _Y, _startText, _aligment, _height, _textColor),
+backplate(_window, {_X*_window.getWidth()-(13*bufferSize-2)*(int)_aligment/2-4,
+    _Y*_window.getHeight()-_height*0.85f, 13.0f * bufferSize+4, _height * 1.8f}, 2, WHITE, BLACK) {}
 
 template <unsigned bufferSize>
 GUI::TypeBox<bufferSize>::TypeBox(TypeBox&& _object) noexcept

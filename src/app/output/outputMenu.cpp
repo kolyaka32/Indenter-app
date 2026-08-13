@@ -3,21 +3,24 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include <mutex>
 #include "outputMenu.hpp"
 
+
+char* OutputMenu::saveName = nullptr;
 
 OutputMenu::OutputMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
 mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
-title(_window, _X, _Y-_H*0.45, {"Getted data", "Полученные данные"}, 2, Height::Info),
+title(_window, _X, _Y-_H*0.45, {"Getted data", "Полученные данные"}, 2, GUI::Aligment::Midle, Height::Info),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
-forceChart(_window, _X+0.015, _Y-0.2*_H, _W*0.85, _H*0.25,
+forceChart(_window, _X+0.015, _Y-0.22*_H, _W*0.85, _H*0.25,
     collectedData.getPositions(), collectedData.getForces(), {"Force", "Сила"}, RED),
 tempertureChart(_window, _X+0.015, _Y+0.1*_H, _W*0.85, _H*0.25,
     collectedData.getPositions(), collectedData.getTemperatures(), {"Temperature", "Температура"}, BLUE),
-forceText(_window, _X-0.08, _Y+_H*0.25, {"Last force: %.1f", "Последние усилие: %.1f"}, Height::Main, WHITE, GUI::Aligment::Left),
-tempText(_window, _X-0.08, _Y+_H*0.30, {"Last temperature: %.1f", "Последняя температура: %.1f"}, Height::Main, WHITE, GUI::Aligment::Left),
+forceText(_window, _X-0.06, _Y+_H*0.25, {"Last force: %.1f", "Последние усилие: %.1f"},
+    GUI::Aligment::Left),
+tempText(_window, _X-0.08, _Y+_H*0.30, {"Last temperature: %.1f", "Последняя температура: %.1f"},
+    GUI::Aligment::Left),
 counterText(_window, _X, _Y+_H*0.35, {"Packets getted: %d", "Пакетов получено: %d"}),
 notSavedText(_window, _X, _Y+_H*0.4, {"Not saved", "Не сохранено"}, 1),
 saveButton(_window, _X, _Y+_H*0.45, {"Save", "Сохранить"}),
@@ -50,6 +53,13 @@ void OutputMenu::update() {
     tempertureChart.update();
     forceText.setValues(collectedData.getLastForce());
     tempText.setValues(collectedData.getLastTemp());
+    // Check on saving
+    if (saveName) {
+        // Writing data itself
+        collectedData.save(saveName);
+        SDL_free(saveName);
+        saveName = nullptr;
+    }
 }
 
 void OutputMenu::blit() const {
@@ -74,19 +84,5 @@ void OutputMenu::save(void* _userdata, const char* const* _filelist, int _filter
     if (_filelist == nullptr || _filter < 0) {
         return;
     }
-    // Getting file
-    SDL_IOStream* fout = SDL_IOFromFile(*_filelist, "w");
-    if (fout == nullptr) {
-        return;
-    }
-    // Locking, while saving
-    static std::mutex saveMutex;
-    saveMutex.lock();
-
-    // Writing data itself
-    collectedData.save(fout);
-
-    saveMutex.unlock();
-    SDL_CloseIO(fout);
-    logger.additional("Program saved to %s", *_filelist);
+    SDL_asprintf(&saveName, "%s", *_filelist);
 }

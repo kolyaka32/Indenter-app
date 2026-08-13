@@ -9,7 +9,7 @@
 
 
 GUI::DynamicText::DynamicText(const Window& _window, float _X, float _Y,
-    LanguagedText&& _texts, float _height, Color _color, Aligment _aligment)
+    LanguagedText&& _texts, Aligment _aligment, float _height, Color _color) noexcept
 : TextureTemplate(_window),
 texts(std::move(_texts)),
 posX(_X),

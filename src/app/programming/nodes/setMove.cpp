@@ -9,8 +9,7 @@
 
 SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, char _speed, char _direction)
 : Node(_window, _X, _Y, Textures::BlockAction),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move", "Двигаться"},
-    Height::Main, WHITE, GUI::Aligment::Left),
+text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y, {"Move", "Двигаться"}, GUI::Aligment::Left),
 speed(_speed - '0'),
 direction(_direction - '0') {
     speedRect = {(_X + (LanguagedText::getLanguage()==Language::Russian ? 0.014f : -0.011f))*
@@ -89,5 +88,6 @@ Node* SetMoveNode::use() {
 }
 
 void SetMoveNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "m%c%c\n", speed+'0', direction+'0');
+    saveMain(_fout, 'm');
+    SDL_IOprintf(_fout, " %c %c", speed+'0', direction+'0');
 }

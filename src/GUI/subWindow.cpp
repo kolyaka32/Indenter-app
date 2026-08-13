@@ -6,7 +6,7 @@
 #include "baseGUI.hpp"
 
 
-GUI::SubWindow::SubWindow(const Window& _window, float _X, float _Y, float _W, float _H)
+GUI::SubWindow::SubWindow(const Window& _window, float _X, float _Y, float _W, float _H) noexcept
 : Template(_window),
 active(false),
 background(_window, _X, _Y, _W, _H, (_H+_W)*_window.getHeight()/16, 2.0) {}
@@ -42,6 +42,10 @@ bool GUI::SubWindow::escape() {
 
 void GUI::SubWindow::toggle() {
     active ^= true;
+}
+
+void GUI::SubWindow::move(float _X, float _Y) {
+    background.move(_X, _Y);
 }
 
 void GUI::SubWindow::blit() const {

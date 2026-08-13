@@ -8,7 +8,7 @@
 
 StartNode::StartNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockStart, false, true, false),
-text(_window, _X-0.02, _Y, {"Start", "Старт"}, Height::Main, WHITE, GUI::Aligment::Left) {}
+text(_window, _X-0.02, _Y, {"Start", "Старт"}, GUI::Aligment::Left) {}
 
 void StartNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
@@ -33,5 +33,5 @@ Node* StartNode::use() {
 }
 
 void StartNode::save(SDL_IOStream* _fout) {
-    SDL_IOprintf(_fout, "i\n");
+    saveMain(_fout, 'i');
 }

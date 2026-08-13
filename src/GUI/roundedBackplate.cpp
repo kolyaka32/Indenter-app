@@ -6,13 +6,15 @@
 #include "baseGUI.hpp"
 
 
-GUI::RoundedBackplate::RoundedBackplate(const Window& _window, float _centerX, float _centerY, float _width, float _height,
-    int _rad, int _bor, Color _frontColor, Color _backColor)
-: RoundedBackplate(_window, {_window.getWidth() * (_centerX - _width/2), _window.getHeight() * (_centerY - _height/2),
+GUI::RoundedBackplate::RoundedBackplate(const Window& _window, float _X, float _Y,
+    float _width, float _height, int _rad, int _bor,
+    Color _frontColor, Color _backColor) noexcept
+: RoundedBackplate(_window, {_window.getWidth() * (_X - _width/2), _window.getHeight() * (_Y - _height/2),
     _window.getWidth() * _width, _window.getHeight() * _height}, _rad, _bor, _frontColor, _backColor) {}
 
 
-GUI::RoundedBackplate::RoundedBackplate(const Window& _window, const SDL_FRect& _rect, int _rad, int _bor, Color _frontColor, Color _backColor)
+GUI::RoundedBackplate::RoundedBackplate(const Window& _window, const SDL_FRect& _rect,
+    int _rad, int _bor, Color _frontColor, Color _backColor) noexcept
 : TextureTemplate(_window, _rect, _window.createTexture(_rect.w, _rect.h)) {
     // Setting render target to this texture
     window.setRenderTarget(texture);

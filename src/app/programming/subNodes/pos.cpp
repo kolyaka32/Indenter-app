@@ -8,7 +8,7 @@
 
 PosSubNode::PosSubNode(const Window& _window, float _X, float _Y, int _number, Node* _srcNode)
 : SubNode(_window, _X, _Y, _srcNode, Textures::SubBlock),
-text(_window, _X-0.007, _Y, {"p%d", "p%d"}, Height::Main, BLACK, GUI::Aligment::Left, _number),
+text(_window, _X-0.007, _Y, {"p%d", "p%d"}, GUI::Aligment::Left, Height::Main, BLACK, _number),
 number(_number) {}
 
 SubNode* PosSubNode::copy() {

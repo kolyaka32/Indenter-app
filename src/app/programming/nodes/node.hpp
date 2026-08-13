@@ -59,6 +59,8 @@ protected:
     // Return connection pins positions
     SDL_FPoint getBottomPin() const;
     SDL_FPoint getUpperPin() const;
+    // Save all basic parameters
+    void saveMain(SDL_IOStream* ofstream, char type);
 
 public:
     Node(const Window& window, float X, float Y, Textures texture,

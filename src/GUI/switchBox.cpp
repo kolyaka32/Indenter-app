@@ -9,9 +9,10 @@
 
 
 GUI::SwitchBox::SwitchBox(const Window& _window, float _X, float _Y, float _W,
-    std::initializer_list<LanguagedText> _texts, unsigned _startOption, float _size, Color _backColor, Color _frontColor)
+    std::initializer_list<LanguagedText> _texts, unsigned _startOption,
+    float _height, Color _backColor, Color _frontColor) noexcept
 : Template(_window),
-height(_size*1.2f / _window.getHeight()),
+height(_height*1.2f / _window.getHeight()),
 backColor(_backColor) {
     // Setting background
     background = {(_X-_W/2)*window.getWidth(), (_Y - height/2)*window.getHeight(),
@@ -20,7 +21,7 @@ backColor(_backColor) {
     // Placing select options
     int i=0;
     for (const LanguagedText* text=_texts.begin(); text != _texts.end(); ++text) {
-        drawnTexts.emplace_back(_window, (_X-_W/2+0.022), _Y, std::move(*text), _size, _frontColor, GUI::Aligment::Left);
+        drawnTexts.emplace_back(_window, (_X-_W/2+0.022), _Y, std::move(*text), GUI::Aligment::Left, _height, _frontColor);
         // Placing text
         drawnTexts[i].move(0.0, height*i);
         i++;
@@ -50,6 +51,17 @@ backColor(_backColor) {
     window.drawGeometry(vertex, 3);
     window.resetRenderTarget();
 }
+
+GUI::SwitchBox::SwitchBox(SwitchBox&& _object) noexcept
+: Template(std::move(_object)),
+selected(_object.selected),
+opened(_object.opened),
+height(_object.height),
+backColor(_object.backColor),
+background(std::move(_object.background)),
+drawnTexts(std::move(_object.drawnTexts)),
+arrowTexture(_object.arrowTexture),
+arrowRect(_object.arrowRect) {}
 
 void GUI::SwitchBox::set(unsigned _value) {
     if (opened) {
@@ -97,6 +109,16 @@ GUI::Code GUI::SwitchBox::click(const Mouse _mouse) {
         }
     }
     return None;
+}
+
+void GUI::SwitchBox::move(float _X, float _Y) {
+    background.x += _X*window.getWidth();
+    background.y += _Y*window.getHeight();
+    for (int i=0; i < drawnTexts.size(); ++i) {
+        drawnTexts[i].move(_X, _Y);
+    }
+    arrowRect.x += _X*window.getWidth();
+    arrowRect.y += _Y*window.getHeight();
 }
 
 void GUI::SwitchBox::blit() const {

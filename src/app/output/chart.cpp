@@ -16,15 +16,15 @@ drawRect({(_X-_W/2)*_window.getWidth(), (_Y-_H/2)*_window.getHeight(), _W*_windo
 color(_color),
 title(_window, _X, _Y-0.018-_H/2, std::move(_title), 1),
 yMarks {
-    {_window, _X-0.005f-_W/2, _Y-_H/2,  {"%.2f"}, Height::Medium, BLACK, GUI::Aligment::Right},
-    {_window, _X-0.005f-_W/2, _Y-_H/4,  {"%.2f"}, Height::Medium, BLACK, GUI::Aligment::Right},
-    {_window, _X-0.005f-_W/2, _Y,       {"%.2f"}, Height::Medium, BLACK, GUI::Aligment::Right},
-    {_window, _X-0.005f-_W/2, _Y+_H/4,  {"%.2f"}, Height::Medium, BLACK, GUI::Aligment::Right},
-    {_window, _X-0.005f-_W/2, _Y+_H/2,  {"%.2f"}, Height::Medium, BLACK, GUI::Aligment::Right},
+    {_window, _X-0.005f-_W/2, _Y-_H/2,  {"%.2f"}, GUI::Aligment::Right, Height::Medium, BLACK},
+    {_window, _X-0.005f-_W/2, _Y-_H/4,  {"%.2f"}, GUI::Aligment::Right, Height::Medium, BLACK},
+    {_window, _X-0.005f-_W/2, _Y,       {"%.2f"}, GUI::Aligment::Right, Height::Medium, BLACK},
+    {_window, _X-0.005f-_W/2, _Y+_H/4,  {"%.2f"}, GUI::Aligment::Right, Height::Medium, BLACK},
+    {_window, _X-0.005f-_W/2, _Y+_H/2,  {"%.2f"}, GUI::Aligment::Right, Height::Medium, BLACK},
 },
 xMarks {
-    {_window, _X-_W/2, _Y+_H/2+0.02f,  {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Left},
-    {_window, _X+_W/2, _Y+_H/2+0.02f,  {"%.1f"}, Height::Medium, BLACK, GUI::Aligment::Right},
+    {_window, _X-_W/2, _Y+_H/2+0.02f,  {"%.1f"}, GUI::Aligment::Left, Height::Medium, BLACK},
+    {_window, _X+_W/2, _Y+_H/2+0.02f,  {"%.1f"}, GUI::Aligment::Right, Height::Medium, BLACK},
 } {
     update();
 }

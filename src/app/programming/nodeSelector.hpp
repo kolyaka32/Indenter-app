@@ -5,16 +5,7 @@
 
 #pragma once
 
-#include "nodes/start.hpp"
-#include "nodes/setStop.hpp"
-#include "nodes/setMove.hpp"
-#include "nodes/setStep.hpp"
-#include "nodes/setTarget.hpp"
-#include "nodes/getPos.hpp"
-#include "nodes/waitReach.hpp"
-#include "nodes/waitLose.hpp"
-#include "nodes/halt.hpp"
-// ! more
+#include "program.hpp"
 
 
 // Object to select new component
@@ -31,12 +22,11 @@ private:
     void addNode(float X, float Y, float H);
 
 public:
-    NodeSelector(const Window& window, float X, float Y, float W, float H);
-    ~NodeSelector();
-
-    bool in(const Mouse mouse) const;
+    NodeSelector(const Window& window, float X, float Y, float W, float H) noexcept;
+    ~NodeSelector() noexcept;
 
     // Interaction
+    bool in(const Mouse mouse) const;
     void checkOff(const Mouse mouse);
     Node* click(const Mouse mouse);  // return new node or nullptr, if don't
     void unclick();

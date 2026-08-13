@@ -33,7 +33,7 @@ class CollectedData {
     unsigned getLineCount() const;  // Return current number of lines
     float getLastForce() const;
     float getLastTemp() const;
-    void save(SDL_IOStream* stream);  // Save data to selected stream
+    void save(const char* name);
 };
 
 // Main data-storing object

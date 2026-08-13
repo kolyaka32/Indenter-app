@@ -11,8 +11,10 @@
 SettingsMenu::SettingsMenu(const Window& _window)
 : SubWindow(_window, 0.5, 0.5, 0.42, 0.75),
 settingButton{window, 0.97, 0.045, 0.04, Textures::SettingsButton},
-//titleText{window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, Height::Info},
-titleText{window, 0.5, 0.16, {"Pause", "Пауза"}, 2, Height::Title},
+//titleText{window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"},
+//    2, GUI::Aligment::Midle, Height::Info},
+titleText{window, 0.5, 0.16, {"Pause", "Пауза"},
+    2, GUI::Aligment::Midle, Height::Title},
 flags {
     {window, 0.4, 0.3, 0.16, Textures::FlagUSA},
     {window, 0.6, 0.3, 0.16, Textures::FlagRUS},

@@ -7,18 +7,18 @@
 
 
 template <class Item, class SourceItem>
-GUI::ScrollBox<Item, SourceItem>::ScrollBox(const Window& _window, float _posX, float _posY, float _width, float _height,
-    int _maxItems, const LanguagedText&& _emptyItemsText)
+GUI::ScrollBox<Item, SourceItem>::ScrollBox(const Window& _window, float _X, float _Y,
+    float _width, float _height, int _maxItems, const LanguagedText&& _emptyItemsText) noexcept
 : Template(_window),
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
-emptySavesText(_window, _posX, _posY - _height/4, std::move(_emptyItemsText), 1),
+emptySavesText(_window, _X, _Y - _height/4, std::move(_emptyItemsText), 1),
 #endif
 maxItems(_maxItems),
 startField(0),
 endField(0),
-blockPos(_posY - _height/2),
+blockPos(_Y - _height/2),
 blockHeight(_height/_maxItems),
-sliderBackRect({(_posX+_width/2-0.04f)*_window.getWidth(), (_posY - _height/2)*_window.getHeight(),
+sliderBackRect({(_X+_width/2-0.04f)*_window.getWidth(), (_Y - _height/2)*_window.getHeight(),
     0.03f * _window.getWidth(), _height*_window.getHeight()}) {
     // Side slider
     sliderRect.x = sliderBackRect.x + sliderBackRect.w * 0.15f;
@@ -29,9 +29,10 @@ sliderBackRect({(_posX+_width/2-0.04f)*_window.getWidth(), (_posY - _height/2)*_
 }
 
 template <class Item, class SourceItem>
-GUI::ScrollBox<Item, SourceItem>::ScrollBox(const Window& _window, float _posX, float _posY, float _width, float _height,
-    int _maxItems, std::vector<SourceItem> _startItems, const LanguagedText&& _emptyItemsText)
-: ScrollBox(_window, _posX, _posY, _width, _height, _maxItems, std::move(_emptyItemsText)) {
+GUI::ScrollBox<Item, SourceItem>::ScrollBox(const Window& _window, float _X, float _Y,
+    float _width, float _height, int _maxItems, std::vector<SourceItem> _startItems,
+    const LanguagedText&& _emptyItemsText) noexcept
+: ScrollBox(_window, _X, _Y, _width, _height, _maxItems, std::move(_emptyItemsText)) {
     // Creating options to start
     items.reserve(_startItems.size());
     for (int i=0; i < _startItems.size(); ++i) {
@@ -203,6 +204,20 @@ bool GUI::ScrollBox<Item, SourceItem>::scroll(const Mouse _mouse, float _wheelY)
         return true;
     }
     return false;
+}
+
+template <class Item, class SourceItem>
+void GUI::ScrollBox<Item, SourceItem>::move(float _X, float _Y) {
+    // All objects
+    for (int i=0; i < items.size(); ++i) {
+        items[i].move(_X, _Y);
+    }
+    emptySavesText.move(_X, _Y);
+    // Sliders
+    sliderRect.x += _X*window.getWidth();
+    sliderRect.y += _Y*window.getHeight();
+    sliderBackRect.x += _X*window.getWidth();
+    sliderBackRect.y += _Y*window.getHeight();
 }
 
 template <class Item, class SourceItem>

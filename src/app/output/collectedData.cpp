@@ -39,12 +39,8 @@ CollectedData::~CollectedData() {
 
             // Checking, file already exist
         } while (SDL_GetPathInfo(buffer, &info));
-        // Openning file
-        SDL_IOStream* fout = SDL_IOFromFile(buffer, "w");
         // Saving to file
-        save(fout);
-        // Closing file
-        SDL_CloseIO(fout);
+        save(buffer);
     }
 }
 
@@ -90,12 +86,22 @@ const BoundedArray<float>& CollectedData::getTemperatures() const {
     return temperatures;
 }
 
-void CollectedData::save(SDL_IOStream* _stream) {
+void CollectedData::save(const char* _fileName) {
+    // Getting file
+    SDL_IOStream* fout = SDL_IOFromFile(_fileName, "w");
+    if (fout == nullptr) {
+        return;
+    }
+
     // Writing data
     for (int i=0; i < positions.size(); ++i) {
         // Writing data
-        SDL_IOprintf(_stream, "%.1f; %.3f; %.1f\n", positions[i], forces[i], temperatures[i]);
+        SDL_IOprintf(fout, "%.1f; %.3f; %.1f\n", positions[i], forces[i], temperatures[i]);
     }
     // Updating flag
     saved = false;
+
+    // Closing file
+    SDL_CloseIO(fout);
+    logger.additional("Program saved to %s", _fileName);
 }
