@@ -15,10 +15,10 @@ class SettingsMenu : public GUI::SubWindow {
     int holdingSlider = 0;  // Index of holded slider
 
     // Button for enter and quit settings menu
-    const GUI::ImageButton settingButton;
+    GUI::ImageButton settingButton;
     // Main part
     GUI::HighlightedStaticText titleText;
-    const GUI::ImageButton flags[(unsigned)Language::Count];
+    GUI::ImageButton flags[(unsigned)Language::Count];
     // Sliders for music (if need)
     #if (PRELOAD_MUSIC)
     GUI::HighlightedStaticText musicText;
@@ -29,6 +29,14 @@ class SettingsMenu : public GUI::SubWindow {
     GUI::HighlightedStaticText soundText;
     GUI::Slider soundSlider;
     #endif
+    // Credits
+    GUI::HighlightedStaticText creditTitle;
+    GUI::HighlightedStaticText creditText;
+    GUI::HighlightedStaticText creditLicense;
+    GUI::HighlightedStaticText creditCathedra;
+    GUI::HighlightedStaticText creditCopyright;
+
+    // Reset buttons
     GUI::TextButton resetButton;
     GUI::TextButton exitButton;
     GUI::TextButton closeButton;

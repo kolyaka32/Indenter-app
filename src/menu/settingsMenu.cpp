@@ -10,29 +10,36 @@
 
 SettingsMenu::SettingsMenu(const Window& _window)
 : SubWindow(_window, 0.5, 0.5, 0.42, 0.75),
-settingButton{window, 0.97, 0.045, 0.04, Textures::SettingsButton},
+settingButton{_window, 0.97, 0.045, 0.04, Textures::SettingsButton},
 //titleText{window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"},
 //    2, GUI::Aligment::Midle, Height::Info},
-titleText{window, 0.5, 0.16, {"Pause", "Пауза"},
+titleText{_window, 0.5, 0.16, {"Pause", "Пауза"},
     2, GUI::Aligment::Midle, Height::Title},
 flags {
-    {window, 0.4, 0.3, 0.16, Textures::FlagUSA},
-    {window, 0.6, 0.3, 0.16, Textures::FlagRUS},
-    //{window, 0.35, 0.45, 0.25, Textures::FlagGER},
-    //{window, 0.65, 0.45, 0.25, Textures::FlagBEL},
+    {_window, 0.4, 0.3, 0.16, Textures::FlagUSA},
+    {_window, 0.6, 0.3, 0.16, Textures::FlagRUS},
+    //{_window, 0.35, 0.45, 0.25, Textures::FlagGER},
+    //{_window, 0.65, 0.45, 0.25, Textures::FlagBEL},
 },
 #if (PRELOAD_MUSIC)
-musicText{window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1},
-musicSlider{window, 0.5, 0.64, 0.5, audio.music.getVolume()},
+musicText{_window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1},
+musicSlider{_window, 0.5, 0.64, 0.5, audio.music.getVolume()},
 #endif
 #if (PRELOAD_SOUNDS)
-soundText{window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1},
-soundSlider{window, 0.5, 0.76, 0.5, audio.sounds.getVolume()},
+soundText{_window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1},
+soundSlider{_window, 0.5, 0.76, 0.5, audio.sounds.getVolume()},
 #endif
-//exitButton{window, 0.5, 0.82, {"Close", "Закрыть", "Ausfahrt", "Выхад"}}
-resetButton(_window, 0.5, 0.72, {"Reset", "Сбросить"}),
-exitButton{window, 0.5, 0.78, {"Exit from app", "Выйти из приложения"}},
-closeButton{window, 0.5, 0.84, {"Close", "Закрыть"}}
+creditTitle(_window, 0.5, 0.48, {"About", "О приложении"}, 2, GUI::Aligment::Midle, Height::Info),
+creditText(_window, 0.5, 0.52, {"\"Indenter\" app", "Приложение \"индентер\""}, 1, GUI::Aligment::Midle, Height::SubTitle),
+creditLicense(_window, 0.5, 0.55, {"Distributed under a license GNU GPL v3.0",
+    "Распространяется по лицензии GNU GPL v3.0"}, 1),
+creditCopyright(_window, 0.5, 0.58, {"© 2026. BMSTU,", "© 2026. МГТУ им. Баумана,"}, 1),
+creditCathedra(_window, 0.5, 0.61, {"department \"Robotics and integrated automation\"",
+    "кафедра \"Робототехника и комплексная автоматизация\""}, 1),
+//exitButton{_window, 0.5, 0.82, {"Close", "Закрыть", "Ausfahrt", "Выхад"}}
+resetButton(_window, 0.5, 0.72, {"Reset data", "Очистить данные"}),
+exitButton{_window, 0.5, 0.78, {"Exit from app", "Выйти из приложения"}},
+closeButton{_window, 0.5, 0.84, {"Close", "Закрыть"}}
 {}
 
 bool SettingsMenu::click(const Mouse _mouse) {
@@ -173,6 +180,12 @@ void SettingsMenu::blit() const {
         soundSlider.blit();
         soundText.blit();
         #endif
+        // Credits
+        creditTitle.blit();
+        creditText.blit();
+        creditLicense.blit();
+        creditCathedra.blit();
+        creditCopyright.blit();
         // Additional buttons
         resetButton.blit();
         exitButton.blit();
