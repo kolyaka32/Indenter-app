@@ -26,8 +26,10 @@ private:
     Node* previousNode;  // Node, that was current in previous cycle
 
 protected:
-    int getArgument(char** c) const;
-    void skip(char** c) const;
+    int getInt(char* &c) const;
+    char getChar(char* &c) const;
+    char* getString(char* &c) const;
+    //void skip(char* &c) const;
 
 public:
     Program();
