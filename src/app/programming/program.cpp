@@ -27,17 +27,52 @@ void Program::save(const char* _fileName) const {
     logger.additional("Program saved to %s", _fileName);
 }
 
-int Program::getArgument(char** c) const {
-    // Getting argument
+int Program::getInt(char* &c) const {
+    // Skip space
+    if (c == nullptr) {
+        return 0;
+    }
+    c++;
+    // Get argument
     int argument = 0;
-    for (; (**c >= '0') && (**c <= '9'); ++(*c)) {
-        argument = argument*10 + **c - '0';
+    for (; (*c >= '0') && (*c <= '9'); ++c) {
+        argument = argument*10 + *c - '0';
     }
     return argument;
 }
 
-void Program::skip(char** c) const {
-    while (**c && (**c != '\n')) {(*c)++;}
+char Program::getChar(char* &c) const {
+    // Skip space
+    if (c == nullptr) {
+        return 0;
+    }
+    c++;
+    // Get value
+    if (c == nullptr) {
+        return 0;
+    }
+    char value = *c;
+    // Skip rest string
+    c++;
+    return value;
+}
+
+char* Program::getString(char* &c) const {
+    // Skip space
+    if (c == nullptr) {
+        return nullptr;
+    }
+    c++;
+    // Get string
+    if (c == nullptr) {
+        return nullptr;
+    }
+    char* text = c;
+    // Skip rest string
+    while (*c && (*c != '\n')) {
+        c++;
+    }
+    return text;
 }
 
 void Program::load(const Window& _window, const char* _fileName) {
@@ -72,29 +107,17 @@ void Program::load(const Window& _window, const char* _fileName) {
         // Get type
         char type = *c;
         c++;
-        if (*c == '\0') {
-            break;
-        }
         // Get x position
-        c++;  // Skip space
-        float x = getArgument(&c) / 100.0;
-        if (*c == '\0') {
-            break;
-        }
+        float x = getInt(c) / 100.0;
         // Get y position
-        c++;  // Skip space
-        float y = getArgument(&c) / 100.0;
-        if (*c == '\0') {
-            break;
-        }
+        float y = getInt(c) / 100.0;
         // Get next
-        c++;  // Skip space
-        unsigned next = getArgument(&c);
-        if (*c == '\0') {
-            break;
-        }
-        // Subnode
+        unsigned next = getInt(c);
+        // Arguments
         unsigned subNode = 0;
+        char speed = 0;
+        char direction = 0;
+        char* text = nullptr;
 
         // Data for switch
         Node* node = nullptr;
@@ -109,36 +132,23 @@ void Program::load(const Window& _window, const char* _fileName) {
             break;
 
         case 'm':
-            c++;
-            if (c[0] == '\0' || c[1] == '\0' || c[2] == '\0') {
-                break;
-            }
-            node = new SetMoveNode{_window, x, y, *c, *(c+2)};
-            c += 3;
+            speed = getChar(c);
+            direction = getChar(c);
+            node = new SetMoveNode{_window, x, y, speed, direction};
             break;
 
         case 'e':
-            c++;
-            if (c[0] == '\0' || c[1] == '\0' || c[2] == '\0') {
-                break;
+            speed = getChar(c);
+            text = getString(c);
+            if (text) {
+                node = new SetStepNode{_window, x, y, speed, text};
             }
-            node = new SetStepNode{_window, x, y, *c, c+2};
-            c += 2;
-            skip(&c);
             break;
 
         case 't':
-            c++;
-            if (*c == '\0') {
-                break;
-            }
-            node = new SetTargetNode{_window, x, y, *c};
-            c++;
-            if (*c == '\0') {
-                break;
-            }
-            c++;
-            subNode = getArgument(&c);
+            speed = getChar(c);
+            subNode = getInt(c);
+            node = new SetTargetNode{_window, x, y, speed};
             break;
 
         case 'p':
@@ -146,15 +156,17 @@ void Program::load(const Window& _window, const char* _fileName) {
             break;
 
         case 'r':
-            c++;
-            node = new WaitReachNode{_window, x, y, c};
-            skip(&c);
+            text = getString(c);
+            if (text) {
+                node = new WaitReachNode{_window, x, y, text};
+            }
             break;
 
         case 'd':
-            c++;
-            node = new WaitLoseNode{_window, x, y, c};
-            skip(&c);
+            text = getString(c);
+            if (text) {
+                node = new WaitLoseNode{_window, x, y, text};
+            }
             break;
 
         case 'h':
@@ -172,7 +184,6 @@ void Program::load(const Window& _window, const char* _fileName) {
             connections.emplace_back(NodeLoad{type, node, next, subNode});
         }
     }
-    // Nodes and subnodes connection
     for (int i=0; i < connections.size(); ++i) {
         // Connect next node
         if (connections[i].next && connections[i].next <= nodes.size()) {
@@ -180,9 +191,7 @@ void Program::load(const Window& _window, const char* _fileName) {
         }
         // Connect subNode
         if (connections[i].subNode && connections[i].subNode < nodes.size()) {
-            // Try take node
             SubNode* sourceSubNode = nodes[connections[i].subNode-1]->takeSubNode();
-            // Place it
             if (sourceSubNode) {
                 connections[i].node->connectSubNode(sourceSubNode);
             }

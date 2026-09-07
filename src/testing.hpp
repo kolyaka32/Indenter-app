@@ -9,9 +9,9 @@
 // Debuging modifiers
 #define DEBUG true
 // Logging important information
-#define CHECK_CORRECTION DEBUG
+#define CHECK_CORRECTION true
 // Logging all actions (including minor)
-#define CHECK_ALL DEBUG
+#define CHECK_ALL true
 // Flag to load data from archieve (true) or straight from files (false)
 #define ARCHIEVE_LOADING !(DEBUG)
 
