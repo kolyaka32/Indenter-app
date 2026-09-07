@@ -2,6 +2,7 @@
 [![en](https://img.shields.io/badge/lang-en-green.svg)](https://github.com/kolyaka32/Indenter-app/blob/main/README.md)  [![ru](https://img.shields.io/badge/lang-ru-green.svg)](https://github.com/kolyaka32/Indenter-app/blob/main/README-ru.md)
 
 This codebase implement specialised program for control of own developed "indenter" tool
+Project distributed under [GNU GPL v3](LICENSE.txt)
 
 ![Screenshot of app](/screenshots/main-en.png?raw=true)
 
@@ -22,6 +23,9 @@ This is specialised app for controlling "indenter" tool - special instrument for
 
 ## Launching
 Download archieve from [releases](https://github.com/kolyaka32/Indenter-app/releases), depend on platform, unzip and run 'Indenter.exe'/'Indenter'!
+
+### Prepaired sources
+Sources with all builded libraries can be located at [releases](https://github.com/kolyaka32/Indenter-app/releases) (Development-kit-*).
 
 
 ## Used external libraries:

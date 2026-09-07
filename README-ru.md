@@ -2,6 +2,7 @@
 [![en](https://img.shields.io/badge/lang-en-green.svg)](https://github.com/kolyaka32/Indenter-app/blob/main/README.md)  [![ru](https://img.shields.io/badge/lang-ru-green.svg)](https://github.com/kolyaka32/Indenter-app/blob/main/README-ru.md)
 
 Этот репозиторий содержит специализированное приложение "индентер" для управления соответсвующим прибором
+Проект распространяется по лицензии [GNU GPL v3](LICENSE.txt)
 
 ![Изображение приложения](/screenshots/main-ru.png?raw=true)
 
@@ -15,12 +16,17 @@
 * Русский
 
 
+## Поддержиаемые платформы
+* Windows (7+)
+* Unix (в разработке)
+
+
 ## Запуск
 Скачать нужный в зависимости от системы архив из [релизы](https://github.com/kolyaka32/Indenter-app/releases), распокавать и запустить 'Indenter.exe'/'Indenter'!
 
 
-### Готовые исходники
-Исходные файлы со всеми собранными библиотеками могут быть найден в [релизы](https://github.com/kolyaka32/SDL-net-chess/releases) (Development-kit-unix).
+## Готовые исходники
+Исходные файлы со всеми собранными библиотеками могут быть найден в [релизы](https://github.com/kolyaka32/Indenter-app/releases) (Development-kit-*).
 
 
 ## Использованные внешние зависимости:
