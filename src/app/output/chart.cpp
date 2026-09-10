@@ -16,15 +16,15 @@ drawRect({(_X-_W/2)*_window.getWidth(), (_Y-_H/2)*_window.getHeight(), _W*_windo
 color(_color),
 title(_window, std::move(_title), {_X, _Y-0.018f-_H/2, .frame=1}),
 yMarks {
-    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y-_H/2, .height=Medium, .horAli=GUI::Right, .textColor=BLACK}},
-    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y-_H/4, .height=Medium, .horAli=GUI::Right, .textColor=BLACK}},
-    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y,      .height=Medium, .horAli=GUI::Right, .textColor=BLACK}},
-    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y+_H/4, .height=Medium, .horAli=GUI::Right, .textColor=BLACK}},
-    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y+_H/2, .height=Medium, .horAli=GUI::Right, .textColor=BLACK}},
+    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y-_H/2, .height=GUI::Medium, .horAli=GUI::Right, .textColor=BLACK}},
+    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y-_H/4, .height=GUI::Medium, .horAli=GUI::Right, .textColor=BLACK}},
+    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y,      .height=GUI::Medium, .horAli=GUI::Right, .textColor=BLACK}},
+    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y+_H/4, .height=GUI::Medium, .horAli=GUI::Right, .textColor=BLACK}},
+    {_window, {"%.2f"}, {_X-0.005f-_W/2, _Y+_H/2, .height=GUI::Medium, .horAli=GUI::Right, .textColor=BLACK}},
 },
 xMarks {
-    {_window, {"%.1f"}, {_X-_W/2, _Y+_H/2+0.02f, .height=Medium, .horAli=GUI::Left, .textColor=BLACK}},
-    {_window, {"%.1f"}, {_X+_W/2, _Y+_H/2+0.02f, .height=Medium, .horAli=GUI::Right, .textColor=BLACK}},
+    {_window, {"%.1f"}, {_X-_W/2, _Y+_H/2+0.02f, .height=GUI::Medium, .horAli=GUI::Left,  .textColor=BLACK}},
+    {_window, {"%.1f"}, {_X+_W/2, _Y+_H/2+0.02f, .height=GUI::Medium, .horAli=GUI::Right, .textColor=BLACK}},
 } {
     update();
 }

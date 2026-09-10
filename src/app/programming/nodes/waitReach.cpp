@@ -11,7 +11,7 @@ WaitReachNode::WaitReachNode(const Window& _window, float _X, float _Y, const ch
 : Node(_window, _X, _Y, Textures::BlockLongWait),
 text(_window, {"Wait F >", "Ждать F >"}, {_X-rect.w/2/window.getWidth()+0.005f, _Y, .horAli=GUI::Left}),
 forceTyper(_window, {_X + (LanguagedText::getLanguage()==Language::Russian ? 0.002f : -0.01f),
-    _Y-0.002f, .height=Medium, .horAli=GUI::Left, .textColor=BLACK, .backColor=WHITE}, 6, _text) {}
+    _Y-0.002f, .height=GUI::Medium, .horAli=GUI::Left, .textColor=BLACK, .backColor=WHITE}, 6, _text) {}
 
 Node* WaitReachNode::copy() {
     return new WaitReachNode{window, (rect.x+rect.w/2)/window.getWidth(),

@@ -69,7 +69,8 @@ GUI::TypeField::~TypeField() noexcept {
         // Clearing rest texture
         SDL_DestroyTexture(texture);
         SDL_DestroyTexture(inverseTexture);
-        
+    }
+    if (font) {
         // Clearing font
         TTF_CloseFont(font);
     }

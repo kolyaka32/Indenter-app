@@ -10,7 +10,7 @@
 DirectControl::DirectControl(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
 mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
-title(_window, {"Manual control", "Ручное управление"}, { _X, _Y-_H*0.45f, .frame=2, .height=Info}),
+title(_window, {"Manual control", "Ручное управление"}, { _X, _Y-_H*0.45f, .frame=2, .height=GUI::Info}),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
 portSelectText(_window, {"COM-port:", "COM-порт:"}, {_X, _Y-_H*0.35f, .frame=2}),
 serialPort(_window, _X, _Y-0.3*_H, 0.15, 0.04, 2.0),
@@ -20,7 +20,7 @@ notConnectedText(_window, {"Not connected", "Нет подключения"}, {_
 notRespondingText(_window, {"Not responding", "Не отвечает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 waitingText(_window, {"Wait", "Ожидает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 workingText(_window, {"Running", "Работает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
-activatableBox(_window, {"Not connected", "Не подключён"}, {_X, _Y-_H*0.05f}, 800),
+activatableBox(_window, {"Not connected", "Не подключён"}, {_X, _Y-_H*0.05f, .frame=1}, 800),
 slowUpButton(_window,   _X-0.035, _Y+_H*0.08, 0.03, Textures::SlowUpButton),
 normalUpButton(_window, _X,       _Y+_H*0.08, 0.03, Textures::NormalUpButton),
 fastUpButton(_window,   _X+0.035, _Y+_H*0.08, 0.03, Textures::FastUpButton),

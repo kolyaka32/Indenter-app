@@ -163,6 +163,16 @@ namespace GUI {
 
     // Text part
     #if (USE_SDL_FONT) && (PRELOAD_FONTS)
+    // Heights of text (for uniformity)
+    enum Height : int {
+        Title = 40,     // Intuding title
+        SubTitle = 28,  // Title in subcycles
+        Info = 32,
+        Main = 24,      // Main text
+        Medium = 20,
+        Small = 12,     // Small text
+    };
+
     // Struct for easier store and change arguments for text classes
     struct TextArgument {
         float X, Y;
@@ -180,20 +190,23 @@ namespace GUI {
             // Getting text with arguments
             char buffer[100];
             SDL_snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
-
+            // Creating text itself
+            return createTexture(window, buffer);
+        }
+        SDL_Texture* createTexture(const Window& window, const char* text) const {
             // Getting font
             TTF_Font* fontData = window.getFont(font);
             TTF_SetFontSize(fontData, height);
 
             // Creating hightlighted text
             TTF_SetFontOutline(fontData, 0);
-            SDL_Surface* frontSurface = TTF_RenderText_Solid(fontData, buffer, 0, textColor);
+            SDL_Surface* frontSurface = TTF_RenderText_Solid(fontData, text, 0, textColor);
 
             // Check if has thickness
             if (frame) {
                 // Create outline
                 TTF_SetFontOutline(fontData, frame);
-                SDL_Surface* surface = TTF_RenderText_Solid(fontData, buffer, 0, {1, 0, 0, 255});
+                SDL_Surface* surface = TTF_RenderText_Solid(fontData, text, 0, {1, 0, 0, 255});
 
                 // Merging surfaces
                 SDL_SetSurfaceBlendMode(frontSurface, SDL_BLENDMODE_NONE);
@@ -267,9 +280,9 @@ namespace GUI {
         TextArgument argument;
 
         // Variables
-        TTF_Font* font;               // Font for type text
+        TTF_Font* font;               // Font (mostly for text measurement)
         char buffer[100];             // String, that was typed
-        const size_t maxLength;       // Limitation of
+        const size_t maxLength;       // Maximal size of typing zone (excluding \0)
         size_t length = 0;            // Length of all text
         size_t caret = 0;             // Position of place, where user type
         timer needSwapCaret = 0;      // Time, when next need to change caret

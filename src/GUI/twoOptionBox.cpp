@@ -12,7 +12,7 @@ GUI::TwoOptionBox::TwoOptionBox(const Window& _window, float _X, float _Y, float
     const LanguagedText&& _title, const LanguagedText&& _button1,
     const LanguagedText&& _button2) noexcept
 : SubWindow(_window, _X, _Y, _W, _H),
-title(_window, std::move(_title), {_X, _Y-_H*0.3f, .frame=1, .height=SubTitle}),
+title(_window, std::move(_title), {_X, _Y-_H*0.3f, .frame=1, .height=GUI::SubTitle}),
 button1(_window, std::move(_button1), {_X, _Y+_H*0.08f, .textColor=BLACK}),
 button2(_window, std::move(_button2), {_X, _Y+_H*0.32f, .textColor=BLACK}) {}
 
