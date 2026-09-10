@@ -11,7 +11,7 @@ GUI::ScrollBox<Item, SourceItem>::ScrollBox(const Window& _window, float _X, flo
     float _W, float _H, int _maxItems, const LanguagedText&& _emptyItemsText) noexcept
 : Template(_window),
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
-emptySavesText(_window, {.X=_X, .Y=_Y-_H/4, .texts=std::move(_emptyItemsText), .frame=1}),
+emptySavesText(_window, {_X, _Y-_H/4, .texts=std::move(_emptyItemsText), .frame=1}),
 #endif
 maxItems(_maxItems),
 startField(0),

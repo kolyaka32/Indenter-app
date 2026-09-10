@@ -27,7 +27,7 @@ private:
 
     // Graphic part
     GUI::RoundedBackplate background;
-    GUI::HighlightedStaticText title;
+    GUI::StaticText title;
     SDL_FRect separateRect;
     NodeSelector selector;
     GUI::ImageButton newButton;

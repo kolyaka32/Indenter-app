@@ -13,7 +13,7 @@
 // Namespace of objects for GUI (Graphic User Interface)
 namespace GUI {
     // Text aligment type
-    enum class Aligment : unsigned {
+    enum Aligment : int {
         Left = 0,
         Up = 0,
         Midle = 1,
@@ -167,13 +167,13 @@ namespace GUI {
     struct TextArgument {
         float X, Y;
 
-        Aligment horAli = Aligment::Midle;  // horizontal aligment
-        Aligment verAli = Aligment::Midle;  // vertical aligment
+        int frame = 0;  // 0 if hasn't, value if offset
         Fonts font = Fonts::Main;
         Height height = Height::Main;
+        Aligment horAli = Aligment::Midle;  // horizontal aligment
+        Aligment verAli = Aligment::Midle;  // vertical aligment
         Color textColor = WHITE;
         Color backColor = BLACK;
-        int frame = 0;  // 0 if hasn't, value if offset
 
         template <typename ...Args>
         SDL_Texture* createTexture(const Window& window, const LanguagedText& texts, Args... args) const {
@@ -244,8 +244,8 @@ namespace GUI {
     // Dynamicly updated text
     class DynamicText : public TextureTemplate {
      private:
-        const LanguagedText&& texts;
-        const TextArgument&& argument;
+        const LanguagedText texts;
+        const TextArgument argument;
 
      public:
         DynamicText(const Window& window, const LanguagedText&& texts,

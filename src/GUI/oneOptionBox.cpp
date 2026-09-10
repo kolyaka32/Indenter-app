@@ -11,8 +11,8 @@
 GUI::OneOptionBox::OneOptionBox(const Window& _window, const TextArgument&& _arg, float _W, float _H,
     const LanguagedText&& _title, const LanguagedText&& _button) noexcept
 : SubWindow(_window, _arg.X, _arg.Y, _W, _H),
-title(_window, std::move(_title), {.X=_arg.X, .Y=_arg.Y-_H/4, .horAli=GUI::Aligment::Left, .height=Height::SubTitle, .frame=1}),
-button(_window, std::move(_button), {.X=_arg.X, .Y=_arg.Y+_H/4}) {}
+title(_window, std::move(_title), {_arg.X, _arg.Y-_H/4, .frame=1, .height=SubTitle, .horAli=Left}),
+button(_window, std::move(_button), {_arg.X, _arg.Y+_H/4, .textColor=BLACK}) {}
 
 GUI::OneOptionBox::OneOptionBox(OneOptionBox&& _object) noexcept
 : SubWindow(std::move(_object)),

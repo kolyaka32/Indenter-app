@@ -17,7 +17,7 @@ class SettingsMenu : public GUI::SubWindow {
     // Button for enter and quit settings menu
     GUI::ImageButton settingButton;
     // Main part
-    GUI::HighlightedStaticText titleText;
+    GUI::StaticText titleText;
     GUI::ImageButton flags[(unsigned)Language::Count];
     // Sliders for music (if need)
     #if (PRELOAD_MUSIC)
@@ -30,11 +30,11 @@ class SettingsMenu : public GUI::SubWindow {
     GUI::Slider soundSlider;
     #endif
     // Credits
-    GUI::HighlightedStaticText creditTitle;
-    GUI::HighlightedStaticText creditText;
-    GUI::HighlightedStaticText creditLicense;
-    GUI::HighlightedStaticText creditCathedra;
-    GUI::HighlightedStaticText creditCopyright;
+    GUI::StaticText creditTitle;
+    GUI::StaticText creditText;
+    GUI::StaticText creditLicense;
+    GUI::StaticText creditCathedra;
+    GUI::StaticText creditCopyright;
 
     // Reset buttons
     GUI::TextButton resetButton;
