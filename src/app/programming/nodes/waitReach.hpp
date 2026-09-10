@@ -12,7 +12,7 @@
 class WaitReachNode : public Node {
 private:
     GUI::StaticText text;
-    GUI::TypeBox<6> forceTyper;
+    GUI::TypeBox forceTyper;
 
 public:
     WaitReachNode(const Window& window, float X, float Y, const char* force = "10");

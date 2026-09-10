@@ -8,16 +8,17 @@
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 
-GUI::InfoBox::InfoBox(const Window& _window, float _X, float _Y, const LanguagedText&& _texts,
-    unsigned _decay, Aligment _aligment, float _height, Color _color) noexcept
-: HighlightedStaticText(_window, _X, _Y, std::move(_texts), 2, _aligment, _height, _color),
-decayTime(_decay) {
+GUI::InfoBox::InfoBox(const Window& _window, const LanguagedText&& _texts,
+    const TextArgument&& _arguments, unsigned _decay) noexcept
+: StaticText(_window, std::move(_texts), std::move(_arguments)),
+decayTime(_decay),
+endTime(0) {
     // Resetting transperance
     SDL_SetTextureAlphaMod(texture, 0.0);
 }
 
 GUI::InfoBox::InfoBox(InfoBox&& _object) noexcept
-: HighlightedStaticText(std::move(_object)),
+: StaticText(std::move(_object)),
 decayTime(_object.decayTime),
 endTime(_object.endTime) {
     // First update to correct showing

@@ -7,29 +7,28 @@
 
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
-#include <cstdlib>
-#include <algorithm>
+//#include <cstdlib>
+//#include <algorithm>
 
 
-template <unsigned bufferSize>
-GUI::TypeField<bufferSize>::TypeField(const Window& _window, float _X, float _Y, const char* _startText,
-    Aligment _aligment, float _height, Color _textColor, Color _backColor) noexcept
+GUI::TypeField::TypeField(const Window& _window, const TextArgument&& _arg,
+    size_t _maxLength, const char* _startText) noexcept
 : TextureTemplate(_window),
-posX(window.getWidth()*_X),
-aligment(_aligment),
-textColor(_textColor),
-backColor(_backColor),
-font(window.createFontCopy(Fonts::Main, _height)) {
+argument(std::move(_arg)),
+font(window.createFontCopy(Fonts::Main, _arg.height)),
+maxLength(_maxLength) {
     // Setting rects
-    rect = {0, window.getHeight()*_Y-_height/2, 0, 0};
-    caretRect = {0, window.getHeight()*_Y-_height/2, 2, 0};
-    inversedRectDest.y = window.getHeight()*_Y-_height/2;
+    rect = {0, window.getHeight()*argument.Y-argument.height/2, 0, 0};
+    caretRect = {0, window.getHeight()*argument.Y-argument.height/2, 2, 0};
+    inversedRectDest.y = window.getHeight()*argument.Y-argument.height/2;
     inversedRectSrc.y = 0;
 
     // Copying text to buffer
     length = 0;
     for (; _startText[length] && _startText[length] != '\n'; ++length) {}
-    setMax(length, (size_t)bufferSize);
+    if (length > maxLength) {
+        length = maxLength;
+    }
     memcpy(buffer, _startText, length);
 
     // Creating first texture, if there was any text
@@ -37,21 +36,18 @@ font(window.createFontCopy(Fonts::Main, _height)) {
         updateTexture();
     } else {
         // Create empty texture
-        texture = window.createTexture(font, "1", textColor);
-        inverseTexture = window.createTexture(font, "1", textColor);
+        texture = window.createTexture(font, "1", argument.textColor);
+        inverseTexture = window.createTexture(font, "1", argument.textColor);
     }
     // Setting height of text
     inversedRectDest.h = inversedRectSrc.h = caretRect.h = rect.h = texture->h;
 }
 
-template <unsigned bufferSize>
-GUI::TypeField<bufferSize>::TypeField(TypeField&& _object) noexcept
+GUI::TypeField::TypeField(TypeField&& _object) noexcept
 : TextureTemplate(std::move(_object)),
-posX(_object.posX),
-aligment(_object.aligment),
-textColor(_object.textColor),
-backColor(_object.backColor),
+argument(std::move(_object.argument)),
 font(_object.font),
+maxLength(_object.length),
 length(_object.length),
 caret(_object.caret),
 needSwapCaret(_object.needSwapCaret),
@@ -64,11 +60,10 @@ inverseTexture(_object.inverseTexture),
 pressed(_object.pressed),
 selected(_object.selected) {
     // Copying previous text
-    memcpy(buffer, _object.buffer, bufferSize+1);
+    memcpy(buffer, _object.buffer, maxLength);
 }
 
-template <unsigned bufferSize>
-GUI::TypeField<bufferSize>::~TypeField() noexcept {
+GUI::TypeField::~TypeField() noexcept {
     // Check, if not moved
     if (texture) {
         // Clearing rest texture
@@ -80,8 +75,7 @@ GUI::TypeField<bufferSize>::~TypeField() noexcept {
     }
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::updateTexture() {
+void GUI::TypeField::updateTexture() {
     // Checking, if string exsist
     if (length) {
         // Clearing previous
@@ -91,24 +85,24 @@ void GUI::TypeField<bufferSize>::updateTexture() {
         }
 
         // Creating main text texture
-        SDL_Surface* mainSurface = TTF_RenderText_Shaded(font, buffer, length, textColor, backColor);
+        SDL_Surface* mainSurface = TTF_RenderText_Shaded(font, buffer, length,
+            argument.textColor, argument.backColor);
         texture = window.createTextureAndFree(mainSurface);
 
         // Create inversed text texture
-        SDL_Surface* inversedSurface = TTF_RenderText_Shaded(font, buffer, length, backColor, textColor);
+        SDL_Surface* inversedSurface = TTF_RenderText_Shaded(font, buffer, length,
+            argument.backColor, argument.textColor);
         inverseTexture = window.createTextureAndFree(inversedSurface);
 
         // Resetting place of text with saving aligment
-        rect.w = texture->w;
-        rect.x = SDL_floorf(posX - rect.w * (unsigned)aligment / 2);
+        rect = argument.getRect(window, texture);
         updateSelected();
     } else {
-        caretRect.x = posX - 1;
+        caretRect.x = argument.X*window.getWidth() - 1;
     }
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::updateSelected() {
+void GUI::TypeField::updateSelected() {
     if (length) {
         // Update caret place
         if (caret) {
@@ -143,12 +137,11 @@ void GUI::TypeField<bufferSize>::updateSelected() {
             inversedRectDest.w = inversedRectSrc.w = length;
         }
     } else {
-        caretRect.x = posX - 1;
+        caretRect.x = argument.X*window.getWidth() - 1;
     }
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::writeString(const char* _str) {
+void GUI::TypeField::writeString(const char* _str) {
     if (selected) {
         // Resetting
         pressed = false;
@@ -158,8 +151,8 @@ void GUI::TypeField<bufferSize>::writeString(const char* _str) {
         size_t clipboardSize = strlen(_str);
 
         // Checking, if all clipboard can be placed in buffer
-        if (clipboardSize > bufferSize - length) {
-            clipboardSize = bufferSize - length;
+        if (clipboardSize > maxLength - length - 1) {
+            clipboardSize = maxLength - length - 1;
         }
 
         // Moving part after caret at end
@@ -178,16 +171,14 @@ void GUI::TypeField<bufferSize>::writeString(const char* _str) {
     }
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::writeClipboard() {
+void GUI::TypeField::writeClipboard() {
     // Getting and writing clipboard to caret
     char* clippboard = SDL_GetClipboardText();
     writeString(clippboard);
     SDL_free(clippboard);
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::copyToClipboard() {
+void GUI::TypeField::copyToClipboard() {
     if (selectLength) {
         // Static memory for write clipbpard
         static char clipboardText[100];
@@ -201,8 +192,7 @@ void GUI::TypeField<bufferSize>::copyToClipboard() {
     }
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::deleteSelected() {
+void GUI::TypeField::deleteSelected() {
     if (selectLength) {
         if (selectLength < 0) {
             for (size_t i=caret; i < length; ++i) {
@@ -220,8 +210,7 @@ void GUI::TypeField<bufferSize>::deleteSelected() {
     }
 }
 
-template <unsigned bufferSize>
-GUI::Code GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
+GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
     // Checking, if box selected
     if (!selected) {
         return None;
@@ -404,8 +393,7 @@ GUI::Code GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
     return Some;
 }
 
-template <unsigned bufferSize>
-bool GUI::TypeField<bufferSize>::checkOff(const Mouse _mouse) {
+bool GUI::TypeField::checkOff(const Mouse _mouse) {
     if (selected && !in(_mouse)) {
         // Resetting selection
         selected = false;
@@ -426,8 +414,7 @@ bool GUI::TypeField<bufferSize>::checkOff(const Mouse _mouse) {
     return false;
 }
 
-template <unsigned bufferSize>
-GUI::Code GUI::TypeField<bufferSize>::click(const Mouse _mouse) {
+GUI::Code GUI::TypeField::click(const Mouse _mouse) {
     if (in(_mouse)) {
         // Resetting values
         pressed = true;
@@ -452,23 +439,20 @@ GUI::Code GUI::TypeField<bufferSize>::click(const Mouse _mouse) {
     return None;
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::unclick() {
+void GUI::TypeField::unclick() {
     pressed = false;
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::move(float _X, float _Y) {
+void GUI::TypeField::move(float _X, float _Y) {
     TextureTemplate::move(_X, _Y);
-    posX += _X*window.getWidth();
+    argument.X += _X;
     caretRect.x += _X*window.getWidth();
     caretRect.y += _Y*window.getHeight();
     inversedRectDest.x += _X*window.getWidth();
     inversedRectDest.y += _Y*window.getHeight();
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::update(float _mouseX) {
+void GUI::TypeField::update(float _mouseX) {
     if (pressed) {
         size_t measure;
         if (length) {
@@ -489,8 +473,8 @@ void GUI::TypeField<bufferSize>::update(float _mouseX) {
     }
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::blit() const {
+
+void GUI::TypeField::blit() const {
     // Rendering main text
     if (length) {
         window.blit(texture, rect);
@@ -508,15 +492,18 @@ void GUI::TypeField<bufferSize>::blit() const {
     }
 }
 
-template <unsigned bufferSize>
-const char* GUI::TypeField<bufferSize>::getString() {
+
+const char* GUI::TypeField::getString() {
     buffer[length] = '\0';
     return buffer;
 }
 
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::setString(const char* _newString) {
-    length = min(strlen(_newString), (size_t)bufferSize);
+
+void GUI::TypeField::setString(const char* _newString) {
+    length = strlen(_newString);
+    if (length >= sizeof(buffer)) {
+        length = sizeof(buffer) - 1;
+    }
     memcpy(buffer, _newString, length);
 
     // Resetting

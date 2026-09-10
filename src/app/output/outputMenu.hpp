@@ -18,7 +18,7 @@ private:
     static char* saveName;
 
     GUI::RoundedBackplate mainBackplate;
-    GUI::HighlightedStaticText title;
+    GUI::StaticText title;
     SDL_FRect separateRect;
     // Getted graphs
     Chart<float, float> forceChart;
@@ -27,7 +27,7 @@ private:
     GUI::DynamicText tempText;
     // Save function
     GUI::DynamicText counterText;
-    GUI::HighlightedStaticText notSavedText;
+    GUI::StaticText notSavedText;
     GUI::TextButton saveButton;
 
 public:

@@ -12,7 +12,7 @@
 class WaitLoseNode : public Node {
 private:
     GUI::StaticText text;
-    GUI::TypeBox<6> forceTyper;
+    GUI::TypeBox forceTyper;
 
 public:
     WaitLoseNode(const Window& window, float X, float Y, const char* text = "5");

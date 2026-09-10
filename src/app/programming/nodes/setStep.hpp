@@ -15,7 +15,7 @@ private:
 
     GUI::StaticText text;
     SDL_FRect speedRect;
-    GUI::TypeBox<4> distanceTyper;
+    GUI::TypeBox distanceTyper;
 
 public:
     SetStepNode(const Window& window, float X, float Y, char speed = '1', const char* val = "0");

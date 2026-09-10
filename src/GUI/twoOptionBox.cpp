@@ -12,9 +12,9 @@ GUI::TwoOptionBox::TwoOptionBox(const Window& _window, float _X, float _Y, float
     const LanguagedText&& _title, const LanguagedText&& _button1,
     const LanguagedText&& _button2) noexcept
 : SubWindow(_window, _X, _Y, _W, _H),
-title(_window, _X,   _Y - _H*0.3, std::move(_title), 1, GUI::Aligment::Midle, Height::SubTitle),
-button1(_window, _X, _Y + _H*0.08, std::move(_button1)),
-button2(_window, _X, _Y + _H*0.32, std::move(_button2)) {}
+title(_window, std::move(_title), {.X=_X, .Y=_Y-_H*0.3f, .height=Height::SubTitle, .frame=1}),
+button1(_window, std::move(_button1), {.X=_X, .Y=_Y+_H*0.08f}),
+button2(_window, std::move(_button2), {.X=_X, .Y=_Y+_H*0.32f}) {}
 
 GUI::TwoOptionBox::TwoOptionBox(TwoOptionBox&& _object) noexcept
 : SubWindow(std::move(_object)),

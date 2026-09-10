@@ -234,10 +234,7 @@ SDL_Texture* Window::createTexture(Fonts _font, float _height, const char* _text
     SDL_Surface* surface = TTF_RenderText_Solid(getFont(_font), _text, _length, _color);
 
     // Creating texture from created surface
-    SDL_Texture* texture = createTexture(surface);
-
-    SDL_DestroySurface(surface);
-    return texture;
+    return createTextureAndFree(surface);
 }
 
 SDL_Texture* Window::createTexture(TTF_Font* _font, const char* _text, Color _color) const {
