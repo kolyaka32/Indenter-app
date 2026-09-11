@@ -26,6 +26,7 @@ private:
     GUI::StaticText workingText;
 
     // Buttons for start/stop device
+    GUI::StaticText straightText;
     GUI::InfoBox activatableBox;
     GUI::ImageButton slowUpButton;
     GUI::ImageButton normalUpButton;

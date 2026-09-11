@@ -14,7 +14,8 @@ CollectedData::CollectedData()
 : saved(false),
 positions(),
 forces(),
-temperatures() {}
+temperatures(),
+forceNull(0.0) {}
 
 void CollectedData::reset() {
     saved = false;
@@ -46,7 +47,8 @@ CollectedData::~CollectedData() {
 
 void CollectedData::addFrame(float _position, float _force, Uint16 _temp) {
     positions.add(_position);
-    forces.add(_force);
+    // Adding force with offset
+    forces.add(_force + forceNull);
     temperatures.add(_temp/10.0);
     // Set that changed
     saved = true;
@@ -84,6 +86,25 @@ const BoundedArray<float>& CollectedData::getForces() const {
 
 const BoundedArray<float>& CollectedData::getTemperatures() const {
     return temperatures;
+}
+
+float CollectedData::getForceNull() const {
+    return forceNull;
+}
+
+void CollectedData::setForceNull(float _forceNull) {
+    if (forces.size()) {
+        // ! Should check timings - O(n) complexity
+        forces.offsetBy(_forceNull);
+    }
+    forceNull = _forceNull;
+}
+
+void CollectedData::setForceNullAsLast() {
+    // Getting force null as last element
+    if (forces.size()) {
+        setForceNull(-forces[forces.size() - 1]);
+    }
 }
 
 void CollectedData::save(const char* _fileName) {

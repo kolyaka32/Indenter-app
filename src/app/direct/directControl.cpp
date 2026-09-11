@@ -12,15 +12,16 @@ DirectControl::DirectControl(const Window& _window, float _X, float _Y, float _W
 mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, {"Manual control", "Ручное управление"}, { _X, _Y-_H*0.45f, .frame=2, .height=GUI::Info}),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
-portSelectText(_window, {"COM-port:", "COM-порт:"}, {_X, _Y-_H*0.35f, .frame=2}),
+portSelectText(_window, {"COM-port:", "COM-порт:"}, {_X, _Y-_H*0.35f, .frame=1}),
 serialPort(_window, _X, _Y-0.3*_H, 0.15, 0.04, 2.0),
-stateText(_window, {"Current state:", "Текущее состояние:"}, {_X, _Y-_H*0.14f, .frame=2}),
+stateText(_window, {"Current state:", "Текущее состояние:"}, {_X, _Y-_H*0.14f, .frame=1}),
 stateBackplate(_window, _X, _Y-_H*0.1, 0.16, 0.04, 2.0, WHITE),
 notConnectedText(_window, {"Not connected", "Нет подключения"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 notRespondingText(_window, {"Not responding", "Не отвечает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 waitingText(_window, {"Wait", "Ожидает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 workingText(_window, {"Running", "Работает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 activatableBox(_window, {"Not connected", "Не подключён"}, {_X, _Y-_H*0.05f, .frame=1}, 800),
+straightText(_window, {"Straight control:", "Прямое управление:"}, {_X, _Y+_H*0.01f, .frame=1}),
 slowUpButton(_window,   _X-0.035, _Y+_H*0.08, 0.03, Textures::SlowUpButton),
 normalUpButton(_window, _X,       _Y+_H*0.08, 0.03, Textures::NormalUpButton),
 fastUpButton(_window,   _X+0.035, _Y+_H*0.08, 0.03, Textures::FastUpButton),
@@ -135,6 +136,7 @@ void DirectControl::blit() const {
         break;
     }
     activatableBox.blit();
+    straightText.blit();
     slowUpButton.blit();
     normalUpButton.blit();
     fastUpButton.blit();

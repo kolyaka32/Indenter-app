@@ -29,7 +29,7 @@ soundText{_window, {"Sounds", "Звуки", "Geräusche", "Гук"}, {0.5, 0.7, 
 soundSlider{_window, 0.5, 0.76, 0.5, audio.sounds.getVolume()},
 #endif
 creditTitle(_window, {"About", "О приложении"}, {0.5, 0.48, .frame=2, .height=GUI::Info}),
-creditText(_window, {"\"Indenter\" app", "Приложение \"индентер\""}, {0.5, 0.52, .frame=1, .height=GUI::SubTitle}),
+creditText(_window, {"\"Indenter\" app", "Приложение \"Индентер\""}, {0.5, 0.52, .frame=1, .height=GUI::SubTitle}),
 creditLicense(_window, {"Distributed under a license GNU GPL v3.0",
     "Распространяется по лицензии GNU GPL v3.0"}, {0.5, 0.55, .frame=1}),
 creditCopyright(_window, {"© 2026. BMSTU,", "© 2026. МГТУ им. Баумана,"}, {0.5, 0.58, .frame=1}),

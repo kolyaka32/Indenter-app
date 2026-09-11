@@ -111,6 +111,8 @@ bool ProgramMenu::click(const Mouse _mouse) {
     }
     if (haltButton.in(_mouse)) {
         program.stop();
+        // Additional stop movement
+        device.sendStop();
         return true;
     }
     // Check, if start movement of node

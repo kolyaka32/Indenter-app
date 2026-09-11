@@ -19,8 +19,12 @@ private:
 public:
    BoundedArray();
    ~BoundedArray();
+   // Clear all values
    void reset();
+   // Add new value with update of min/max
    void add(const T object);
+   // Offset all values by offset (including min/max)
+   void offsetBy(const T offset);
 
    // Getters
    const T operator[](unsigned pos) const;

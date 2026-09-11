@@ -14,6 +14,7 @@
 #include "data/languages.hpp"
 #include "app/programming/programMenu.hpp"
 #include "menu/targetConnect.hpp"
+#include "app/output/collectedData.hpp"
 
 
 // Data, load from setting file
@@ -41,6 +42,8 @@ void InitFile::loadSettings() {
             }*/
         } else if (parameter == "autocount") {
             ProgramMenu::autosaveCount = getValue(currentLine);
+        } else if (parameter == "forceOffset") {
+            collectedData.setForceNull(getValue(currentLine));
         } /*else if (parameter == "music") {
             audio.music.setVolume(getValue(currentLine) / 100.0f);
         } else if (parameter == "sounds") {
@@ -83,11 +86,12 @@ void InitFile::saveSettings() {
     }
 
     // Writing music and sounds volumes
-    //outSettings << "music = " << int(audio.music.getVolume()*100) << "\n";
-    //outSettings << "sounds = " << int(audio.sounds.getVolume()*100) << "\n";
+    //outSettings << "music = " << int(audio.music.getVolume()*100) << '\n';
+    //outSettings << "sounds = " << int(audio.sounds.getVolume()*100) << '\n';
 
     // Writing autosave counter (for correct loading)
     outSettings << "autocount = " << ProgramMenu::autosaveCount << '\n';
+    outSettings << "forceOffset = " << collectedData.getForceNull() << '\n';
 }
 
 #endif  // (USE_SETTING_FILE)
