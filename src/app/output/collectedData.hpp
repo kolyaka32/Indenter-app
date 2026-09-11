@@ -39,6 +39,7 @@ class CollectedData {
     void setForceNull(float forceNull);
     // Set offset of all force elements as last get value
     void setForceNullAsLast();
+    void trySave(const char* name);
     void save(const char* name);
 };
 

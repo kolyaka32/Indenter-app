@@ -169,6 +169,24 @@ void Program::load(const Window& _window, const char* _fileName) {
             }
             break;
 
+        case 'u':
+            node = new SetNullNode{_window, x, y};
+            break;
+
+        case 'a':
+            text = getString(c);
+            if (text) {
+                node = new SaveDataNode{_window, x, y, text};
+            }
+            break;
+
+        case 'c':
+            text = getString(c);
+            if (text) {
+                node = new CommentNode{_window, x, y, text};
+            }
+            break;
+
         case 'h':
             node = new HaltNode{_window, x, y};
             break;

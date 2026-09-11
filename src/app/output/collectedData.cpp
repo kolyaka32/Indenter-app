@@ -27,21 +27,7 @@ void CollectedData::reset() {
 CollectedData::~CollectedData() {
     // Check, if not saved
     if (saved) {
-        char buffer[100];
-        int number = 1;
-        SDL_PathInfo info;
-
-        // Finding allowable file name
-        do {
-            // Create new name
-            SDL_snprintf(buffer, sizeof(buffer), "records\\data-%d.csv", number);
-            // Increasing number
-            number++;
-
-            // Checking, file already exist
-        } while (SDL_GetPathInfo(buffer, &info));
-        // Saving to file
-        save(buffer);
+        trySave("data");
     }
 }
 
@@ -107,16 +93,33 @@ void CollectedData::setForceNullAsLast() {
     }
 }
 
+void CollectedData::trySave(const char* _name) {
+    // Find avaliable name
+    char buffer[100];
+    int number = 1;
+    SDL_PathInfo info;
+
+    do {
+        // Create new name
+        SDL_snprintf(buffer, sizeof(buffer), "records\\%s-%d.csv", _name, number);
+        number++;
+
+        // Check if file already exist
+    } while (SDL_GetPathInfo(buffer, &info));
+
+    // Saving to file
+    save(buffer);
+}
+
 void CollectedData::save(const char* _fileName) {
-    // Getting file
+    // Open file
     SDL_IOStream* fout = SDL_IOFromFile(_fileName, "w");
     if (fout == nullptr) {
         return;
     }
 
-    // Writing data
+    // Write data
     for (int i=0; i < positions.size(); ++i) {
-        // Writing data
         SDL_IOprintf(fout, "%.1f; %.3f; %.1f\n", positions[i], forces[i], temperatures[i]);
     }
     // Updating flag

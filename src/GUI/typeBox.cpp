@@ -12,7 +12,7 @@ GUI::TypeBox::TypeBox(const Window& _window, const TextArgument&& _arg,
     size_t _len, const char *_startText) noexcept
 : TypeField(_window, std::move(_arg), _len, _startText),
 backplate(_window, {_arg.X*_window.getWidth()-(13*_len-2)*(int)_arg.horAli/2-4,
-    _arg.Y*_window.getHeight()-_arg.height*0.85f, 13.0f*_len+4, _arg.height*1.8f}, 2, WHITE, BLACK) {}
+    _arg.Y*_window.getHeight()-_arg.height*0.85f, 13.0f*_len+4, _arg.height*1.75f}, 2, WHITE, BLACK) {}
 
 GUI::TypeBox::TypeBox(TypeBox&& _object) noexcept
 : TypeField(std::move(_object)),

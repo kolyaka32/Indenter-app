@@ -14,6 +14,9 @@
 #include "nodes/getPos.hpp"
 #include "nodes/waitReach.hpp"
 #include "nodes/waitLose.hpp"
+#include "nodes/setNull.hpp"
+#include "nodes/saveData.hpp"
+#include "nodes/comment.hpp"
 #include "nodes/halt.hpp"
 // ! more
 
@@ -29,7 +32,6 @@ protected:
     int getInt(char* &c) const;
     char getChar(char* &c) const;
     char* getString(char* &c) const;
-    //void skip(char* &c) const;
 
 public:
     Program();

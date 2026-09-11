@@ -12,7 +12,7 @@ GUI::OneOptionBox::OneOptionBox(const Window& _window, const TextArgument&& _arg
     const LanguagedText&& _title, const LanguagedText&& _button) noexcept
 : SubWindow(_window, _arg.X, _arg.Y, _W, _H),
 title(_window, std::move(_title), {_arg.X, _arg.Y-_H/4, .frame=1, .height=GUI::SubTitle, .horAli=Left}),
-button(_window, std::move(_button), {_arg.X, _arg.Y+_H/4, .textColor=BLACK}) {}
+button(_window, std::move(_button), {_arg.X, _arg.Y+_H/4, .frame=1}) {}
 
 GUI::OneOptionBox::OneOptionBox(OneOptionBox&& _object) noexcept
 : SubWindow(std::move(_object)),
