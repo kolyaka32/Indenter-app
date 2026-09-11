@@ -23,7 +23,8 @@ tempText(_window, {"Last temperature: %.1f", "Последняя темпера�
     {_X-(LanguagedText::getLanguage()==Language::Russian ? 0.075f : 0.06f), _Y+_H*0.33f, .frame=1, .horAli=GUI::Left}),
 counterText(_window, {"Packets getted: %d", "Пакетов получено: %d"}, {_X, _Y+_H*0.37f, .frame=1}),
 notSavedText(_window, {"Not saved", "Не сохранено"}, {_X, _Y+_H*0.41f, .frame=1}),
-saveButton(_window, {"Save", "Сохранить"}, {_X, _Y+_H*0.45f, .frame=1}),
+saveButton(_window, {"Save", "Сохранить"}, {_X-_W*0.15f, _Y+_H*0.45f, .frame=1}),
+folderButton(window, {"Open folder", "Открыть папку"}, {_X+_W*0.15f, _Y+_H*0.45f, .frame=1}),
 filterText{"Table", "Таблица"},
 filter{filterText.getString().c_str(), "csv"} {
     // Getting location
@@ -42,6 +43,14 @@ void OutputMenu::reset() {
 bool OutputMenu::click(const Mouse _mouse) {
     if (saveButton.in(_mouse)) {
         window.showSaveFileDialog(save, &filter, 1, saveLocation);
+        return true;
+    }
+    if (folderButton.in(_mouse)) {
+        char buffer[100];
+        char* directory = SDL_GetCurrentDirectory();
+        SDL_snprintf(buffer, sizeof(buffer), "file:///%srecords/", directory);
+        SDL_free(directory);
+        SDL_OpenURL(buffer);
         return true;
     }
     return false;
@@ -77,6 +86,7 @@ void OutputMenu::blit() const {
         notSavedText.blit();
     }
     saveButton.blit();
+    folderButton.blit();
 }
 
 void OutputMenu::save(void* _userdata, const char* const* _filelist, int _filter) {

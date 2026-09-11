@@ -29,6 +29,7 @@ private:
     GUI::DynamicText counterText;
     GUI::StaticText notSavedText;
     GUI::TextButton saveButton;
+    GUI::TextButton folderButton;
 
 public:
     OutputMenu(const Window& window, float X, float Y, float W, float H);
