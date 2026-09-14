@@ -128,21 +128,26 @@ void GUI::TypeField::writeString(const char* _str) {
         pressed = false;
         deleteSelected();
 
-        // Getting size of text within avaliable place
-        size_t clipboardSize = SDL_strnlen(_str, maxLength-length);
+        // Parsing recieved text
+        for (const char* c = _str; *c;) {
+            // Check codepoint length
+            int len = getNextChar(c);
+            if (len > maxLength-length) {
+                break;
+            }
+            // Moving part after codepoint
+            for (size_t i = length; i > caret; --i) {
+                buffer[i + len - 1] = buffer[i-1];
+            }
 
-        // Moving part after caret at end
-        for (size_t i = length; i > caret; --i) {
-            buffer[i + clipboardSize - 1] = buffer[i-1];
+            // Copying codepoint itself
+            for (size_t i=0; i < len; ++i) {
+                buffer[caret + i] = c[i];
+            }
+            length += len;
+            caret += len;
+            c += len;
         }
-
-        // Coping text itself
-        for (size_t i=0; i < clipboardSize; ++i) {
-            buffer[caret + i] = _str[i];
-        }
-
-        length += clipboardSize;
-        caret += clipboardSize;
         updateTexture();
     }
 }
@@ -206,7 +211,7 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
             if (caret == 0) {
                 return Some;
             }
-            selectLength = -1;
+            selectLength = getPrevChar(buffer+caret);
         }
         deleteSelected();
         break;
@@ -217,7 +222,7 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
             if (caret == length) {
                 return Some;
             }
-            selectLength = 1;
+            selectLength = getNextChar(buffer+caret);
         }
         deleteSelected();
         break;
@@ -225,15 +230,16 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
     case SDLK_LEFT:
         if (keyMods & SDL_KMOD_SHIFT) {
             if (caret > 0) {
-                caret--;
-                selectLength++;
+                int offset = getPrevChar(buffer+caret);
+                caret += offset;
+                selectLength -= offset;
             }
         } else {
             if (caret > 0) {
                 if (selectLength < 0) {
                     caret += selectLength;
                 } else {
-                    caret--;
+                    caret += getPrevChar(buffer+caret);
                 }
             }
             selectLength = 0;
@@ -244,15 +250,16 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
     case SDLK_RIGHT:
         if (keyMods & SDL_KMOD_SHIFT) {
             if (caret < length) {
-                caret++;
-                selectLength--;
+                int offset = getNextChar(buffer+caret);
+                caret += offset;
+                selectLength -= offset;
             }
         } else {
             if (caret < length) {
                 if (selectLength > 0) {
                     caret += selectLength;
                 } else {
-                    caret++;
+                    caret += getNextChar(buffer+caret);
                 }
             }
             selectLength = 0;
@@ -479,6 +486,7 @@ void GUI::TypeField::setString(const char* _newString) {
     selected = false;
     pressed = false;
     showCaret = false;
+    length = 0;
     selectLength = 0;
 
     // Stoping entering any letters
@@ -486,16 +494,64 @@ void GUI::TypeField::setString(const char* _newString) {
 
     // Set new string
     if (_newString == nullptr) {
-        length = 0;
         return;
     }
-    length = SDL_strnlen(_newString, maxLength);
-    if (length == 0) {
-        return;
+    // Parsing new text
+    for (const char* c = _newString; *c;) {
+        // Check codepoint length
+        int len = getNextChar(c);
+        if (len > maxLength-length) {
+            break;
+        }
+        // Copying codepoint
+        memcpy(buffer + length, c, len);
+        length += len;
+        c += len;
     }
-    memcpy(buffer, _newString, length);
 
     updateTexture();
+}
+
+int GUI::TypeField::getNextChar(const char* _str) {
+    // Mask: 0yyyyyyy
+    if ((_str[0] & 0b10000000) == 0b0) {
+        return 1;
+    }
+    // Mask: 110yyyyy 10yyyyyyyy
+    if ((_str[0] & 0b11100000) == 0b11000000) {
+        return 2;
+    }
+    // Mask: 1110yyyy 10yyyyyyyy 10yyyyyyyy
+    if ((_str[0] & 0b11110000) == 0b11100000) {
+        return 3;
+    }
+    // Mask: 11110yyy 10yyyyyyyy 10yyyyyyyy 10yyyyyyyy
+    if ((_str[0] & 0b11111000) == 0b11110000) {
+        return 4;
+    }
+    // In other - error
+    return 1;
+}
+
+int GUI::TypeField::getPrevChar(const char* _str) {
+    // Mask: 0yyyyyyy
+    if ((_str[-1] & 0b10000000) == 0b0) {
+        return -1;
+    }
+    // Mask: 110yyyyy 10yyyyyyyy
+    if ((_str[-2] & 0b11100000) == 0b11000000) {
+        return -2;
+    }
+    // Mask: 1110yyyy 10yyyyyyyy 10yyyyyyyy
+    if ((_str[-3] & 0b11110000) == 0b11100000) {
+        return -3;
+    }
+    // Mask: 11110yyy 10yyyyyyyy 10yyyyyyyy 10yyyyyyyy
+    if ((_str[-4] & 0b11111000) == 0b11110000) {
+        return -4;
+    }
+    // In other - error
+    return -1;
 }
 
 #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

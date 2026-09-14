@@ -264,6 +264,8 @@ namespace GUI {
         void deleteSelected();        // Clearing selected part
         void writeClipboard();        // Write clipboard content after caret
         void copyToClipboard();       // Writing selected text to clipboard
+        int getNextChar(const char* str);  // Return next codepoint length (for utf8)
+        int getPrevChar(const char* str);  // Return previous codepoint length (signed) (for utf8)
 
      public:
         TypeField(const Window& window, const TextArgument&& arguments,
