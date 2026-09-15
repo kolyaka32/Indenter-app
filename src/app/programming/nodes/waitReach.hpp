@@ -23,8 +23,8 @@ public:
     void checkOff(const Mouse mouse) override;
     GUI::Code click(const Mouse mouse) override;
     void unclick() override;
-    void type(SDL_Keycode code) override;
-    void writeString(const char* str) override;
+    bool type(SDL_Keycode code) override;
+    bool writeString(const char* str) override;
     void update(float mouseX) override;
     void blit() const override;
 

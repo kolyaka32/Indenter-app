@@ -43,12 +43,12 @@ void WaitReachNode::unclick() {
     forceTyper.unclick();
 }
 
-void WaitReachNode::type(SDL_Keycode _code) {
-    forceTyper.type(_code);
+bool WaitReachNode::type(SDL_Keycode _code) {
+    return forceTyper.type(_code);
 }
 
-void WaitReachNode::writeString(const char* _str) {
-    forceTyper.writeString(_str);
+bool WaitReachNode::writeString(const char* _str) {
+    return forceTyper.writeString(_str);
 }
 
 void WaitReachNode::update(float _mouseX) {

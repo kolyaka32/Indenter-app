@@ -40,12 +40,12 @@ void CommentNode::unclick() {
     typer.unclick();
 }
 
-void CommentNode::type(SDL_Keycode _code) {
-    typer.type(_code);
+bool CommentNode::type(SDL_Keycode _code) {
+    return typer.type(_code);
 }
 
-void CommentNode::writeString(const char* _str) {
-    typer.writeString(_str);
+bool CommentNode::writeString(const char* _str) {
+    return typer.writeString(_str);
 }
 
 void CommentNode::update(float _mouseX) {

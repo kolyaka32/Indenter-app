@@ -30,8 +30,8 @@ public:
     void checkOff(const Mouse mouse);
     Node* click(const Mouse mouse);  // return new node or nullptr, if don't
     void unclick();
-    void type(SDL_Keycode code);
-    void writeString(const char* str);
+    bool type(SDL_Keycode code);
+    bool writeString(const char* str);
     void update(const Mouse mouse);
     void blit() const override;
 };

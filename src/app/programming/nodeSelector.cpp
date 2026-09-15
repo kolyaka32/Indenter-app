@@ -68,16 +68,22 @@ void NodeSelector::unclick() {
     }
 }
 
-void NodeSelector::type(SDL_Keycode _code) {
+bool NodeSelector::type(SDL_Keycode _code) {
     for (int i=0; i < nodes.size(); ++i) {
-        nodes[i]->type(_code);
+        if (nodes[i]->type(_code)) {
+            return true;
+        }
     }
+    return false;
 }
 
-void NodeSelector::writeString(const char* _str) {
+bool NodeSelector::writeString(const char* _str) {
     for (int i=0; i < nodes.size(); ++i) {
-        nodes[i]->writeString(_str);
+        if (nodes[i]->writeString(_str)) {
+            return true;
+        }
     }
+    return false;
 }
 
 void NodeSelector::update(const Mouse _mouse) {

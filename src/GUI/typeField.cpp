@@ -122,9 +122,9 @@ void GUI::TypeField::updateSelected() {
     }
 }
 
-void GUI::TypeField::writeString(const char* _str) {
+bool GUI::TypeField::writeString(const char* _str) {
     if (!selected) {
-        return;
+        return false;
     }
     // Resetting
     pressed = false;
@@ -141,20 +141,33 @@ void GUI::TypeField::writeString(const char* _str) {
         }
     }
     // Parsing recieved text
-    for (const char* c = _str; *c && (codelen < maxLength);) {
-        // Check codepoint length
-        int len = getNextChar(c);
-        // Moving part after codepoint
-        for (size_t i = length; i > caret; --i) {
-            buffer[i + len - 1] = buffer[i-1];
+    for (const char* c = _str; codelen < maxLength;) {
+        if (*c == 0 || *c == '\n') {
+            break;
         }
-        memcpy(buffer+caret, c, len);
-        length += len;
-        caret += len;
-        c += len;
-        codelen++;
+        // Check codepoint length
+        if (int len = getNextChar(c)) {
+            // Check, if all letters avaliable
+            for (int i=1; i < len; ++i) {
+                if (c[i] == 0 || c[i] == '\n') {
+                    break;
+                }
+            }
+            // Moving all after codepoint
+            for (int i = length; i > caret; --i) {
+                buffer[i + len - 1] = buffer[i-1];
+            }
+            memcpy(buffer+caret, c, len);
+            length += len;
+            caret += len;
+            c += len;
+            codelen++;
+        } else {
+            c++;
+        }
     }
     updateTexture();
+    return true;
 }
 
 void GUI::TypeField::writeClipboard() {
@@ -494,9 +507,15 @@ void GUI::TypeField::setString(const char* _newString) {
     // Counting actual codepoints
     int codeCount = 0;
     // Parsing new text
-    for (const char* c = _newString; *c;) {
+    for (const char* c = _newString; *c && (*c!='\n');) {
         // Check codepoint length
         if (int len = getNextChar(c)) {
+            // Check, if all letters avaliable
+            for (int i=1; i < len; ++i) {
+                if (c[i] == 0 || c[i] == '\n') {
+                    break;
+                }
+            }
             // Copying codepoint
             memcpy(buffer + length, c, len);
             length += len;

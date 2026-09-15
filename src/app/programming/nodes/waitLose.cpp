@@ -43,12 +43,12 @@ void WaitLoseNode::unclick() {
     forceTyper.unclick();
 }
 
-void WaitLoseNode::type(SDL_Keycode _code) {
-    forceTyper.type(_code);
+bool WaitLoseNode::type(SDL_Keycode _code) {
+    return forceTyper.type(_code);
 }
 
-void WaitLoseNode::writeString(const char* _str) {
-    forceTyper.writeString(_str);
+bool WaitLoseNode::writeString(const char* _str) {
+    return forceTyper.writeString(_str);
 }
 
 void WaitLoseNode::update(float _mouseX) {

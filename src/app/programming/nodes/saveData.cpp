@@ -43,12 +43,12 @@ void SaveDataNode::unclick() {
     nameTyper.unclick();
 }
 
-void SaveDataNode::type(SDL_Keycode _code) {
-    nameTyper.type(_code);
+bool SaveDataNode::type(SDL_Keycode _code) {
+    return nameTyper.type(_code);
 }
 
-void SaveDataNode::writeString(const char* _str) {
-    nameTyper.writeString(_str);
+bool SaveDataNode::writeString(const char* _str) {
+    return nameTyper.writeString(_str);
 }
 
 void SaveDataNode::update(float _mouseX) {

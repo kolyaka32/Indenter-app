@@ -48,8 +48,8 @@ public:
     // Interaction
     bool click(const Mouse mouse);
     void unclick(const Mouse mouse);
-    void type(SDL_Keycode code);
-    void writeString(const char* str);
+    bool type(SDL_Keycode code);
+    bool writeString(const char* str);
     void update(const Mouse mouse);
     void blit() const override;
 

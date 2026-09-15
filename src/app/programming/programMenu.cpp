@@ -179,14 +179,24 @@ void ProgramMenu::unclick(const Mouse _mouse) {
     program.unclick();
 }
 
-void ProgramMenu::type(SDL_Keycode _code) {
-    selector.type(_code);
-    program.type(_code);
+bool ProgramMenu::type(SDL_Keycode _code) {
+    if (selector.type(_code)) {
+        return true;
+    }
+    if (program.type(_code)) {
+        return true;
+    }
+    return false;
 }
 
-void ProgramMenu::writeString(const char* _str) {
-    selector.writeString(_str);
-    program.writeString(_str);
+bool ProgramMenu::writeString(const char* _str) {
+    if (selector.writeString(_str)) {
+        return true;
+    }
+    if (program.writeString(_str)) {
+        return true;
+    }
+    return false;
 }
 
 void ProgramMenu::update(const Mouse _mouse) {

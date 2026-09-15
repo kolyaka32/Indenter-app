@@ -79,8 +79,8 @@ public:
     // Try make action in current node (Button1), Activate for take subnode or start moving it (Some)
     virtual GUI::Code click(const Mouse mouse);
     virtual void unclick();
-    virtual void type(SDL_Keycode code);
-    virtual void writeString(const char* str);
+    virtual bool type(SDL_Keycode code);
+    virtual bool writeString(const char* str);
     // Get subNode to hold and place
     virtual SubNode* takeSubNode();
     virtual void update(float mouseX);

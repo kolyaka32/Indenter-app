@@ -52,12 +52,12 @@ void SetStepNode::unclick() {
     distanceTyper.unclick();
 }
 
-void SetStepNode::type(SDL_Keycode _code) {
-    distanceTyper.type(_code);
+bool SetStepNode::type(SDL_Keycode _code) {
+    return distanceTyper.type(_code);
 }
 
-void SetStepNode::writeString(const char* _str) {
-    distanceTyper.writeString(_str);
+bool SetStepNode::writeString(const char* _str) {
+    return distanceTyper.writeString(_str);
 }
 
 void SetStepNode::update(float _mouseX) {

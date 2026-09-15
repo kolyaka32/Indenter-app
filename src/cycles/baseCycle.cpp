@@ -45,11 +45,13 @@ bool BaseCycle::inputKeys(SDL_Keycode _key) {
     if (directControl.press(_key)) {
         return true;
     }
+    if (programMenu.type(_key)) {
+        return true;
+    }
     if (_key == SDLK_ESCAPE) {
         settings.toggle();
         return true;
     }
-    programMenu.type(_key);
     return false;
 }
 
@@ -58,8 +60,7 @@ bool BaseCycle::inputMouseWheel(float _wheelY) {
 }
 
 bool BaseCycle::inputText(const char* _text) {
-    programMenu.writeString(_text);
-    return false;
+    return programMenu.writeString(_text);
 }
 
 void BaseCycle::update() {

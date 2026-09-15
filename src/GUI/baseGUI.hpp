@@ -275,7 +275,7 @@ namespace GUI {
         const char* getString();             // Return typed string
         void setString(const char* string);  // Replace text with new string
         // Main cycle
-        void writeString(const char* str);   // Write string to buffer at caret position
+        bool writeString(const char* str);   // Write string to buffer at caret position
         Code type(SDL_Keycode code);         // Processing special keycodes (like arrows, home, CTRL-C...)   
         void update(float mouseX);           // Highlated area of typing
         bool checkOff(const Mouse mouse);    // Check if click in other place, true if end entering

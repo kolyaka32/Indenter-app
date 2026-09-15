@@ -384,17 +384,22 @@ void Program::unclick() {
     }
 }
 
-void Program::type(SDL_Keycode _code) {
-    // ! update to bool
+bool Program::type(SDL_Keycode _code) {
     for (int i=0; i < nodes.size(); ++i) {
-        nodes[i]->type(_code);
+        if (nodes[i]->type(_code)) {
+            return true;
+        }
     }
+    return false;
 }
 
-void Program::writeString(const char* _str) {
+bool Program::writeString(const char* _str) {
     for (int i=0; i < nodes.size(); ++i) {
-        nodes[i]->writeString(_str);
+        if (nodes[i]->writeString(_str)) {
+            return true;
+        }
     }
+    return false;
 }
 
 void Program::update(const Mouse _mouse) {
