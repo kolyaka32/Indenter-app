@@ -246,7 +246,7 @@ namespace GUI {
         TTF_Font* font;               // Font (mostly for text measurement)
         char buffer[100];             // String, that was typed
         const size_t maxLength;       // Maximal size of typing zone (excluding \0)
-        size_t length = 0;            // Length of all text
+        size_t length = 0;            // Length of buffer text (in bytes)
         size_t caret = 0;             // Position of place, where user type
         timer needSwapCaret = 0;      // Time, when next need to change caret
         int selectLength = 0;         // Length of selected box

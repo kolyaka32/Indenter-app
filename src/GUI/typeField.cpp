@@ -128,25 +128,29 @@ void GUI::TypeField::writeString(const char* _str) {
         pressed = false;
         deleteSelected();
 
+        // Counting codepoints
+        int codelen = 0;
+        for (int i=0; i < length;) {
+            if (int len = getNextChar(buffer+i)) {
+                codelen++;
+                i += len;
+            } else {
+                i++;
+            }
+        }
         // Parsing recieved text
-        for (const char* c = _str; *c;) {
+        for (const char* c = _str; *c && (codelen < maxLength);) {
             // Check codepoint length
             int len = getNextChar(c);
-            if (len > maxLength-length) {
-                break;
-            }
             // Moving part after codepoint
             for (size_t i = length; i > caret; --i) {
                 buffer[i + len - 1] = buffer[i-1];
             }
-
-            // Copying codepoint itself
-            for (size_t i=0; i < len; ++i) {
-                buffer[caret + i] = c[i];
-            }
+            memcpy(buffer+caret, c, len);
             length += len;
             caret += len;
             c += len;
+            codelen++;
         }
         updateTexture();
     }
@@ -482,33 +486,38 @@ const char* GUI::TypeField::getString() {
 }
 
 void GUI::TypeField::setString(const char* _newString) {
-    // Clearing caret
+    // resetting flags
     selected = false;
     pressed = false;
     showCaret = false;
     length = 0;
     selectLength = 0;
 
-    // Stoping entering any letters
     window.stopTextInput();
 
-    // Set new string
     if (_newString == nullptr) {
         return;
     }
+
+    // Counting actual codepoints
+    int codeCount = 0;
     // Parsing new text
     for (const char* c = _newString; *c;) {
         // Check codepoint length
-        int len = getNextChar(c);
-        if (len > maxLength-length) {
-            break;
+        if (int len = getNextChar(c)) {
+            // Copying codepoint
+            memcpy(buffer + length, c, len);
+            length += len;
+            c += len;
+            // Check on max length
+            codeCount++;
+            if (codeCount == maxLength) {
+                break;
+            }
+        } else {
+            c++;
         }
-        // Copying codepoint
-        memcpy(buffer + length, c, len);
-        length += len;
-        c += len;
     }
-
     updateTexture();
 }
 
@@ -530,7 +539,7 @@ int GUI::TypeField::getNextChar(const char* _str) {
         return 4;
     }
     // In other - error
-    return 1;
+    return 0;
 }
 
 int GUI::TypeField::getPrevChar(const char* _str) {
@@ -551,7 +560,7 @@ int GUI::TypeField::getPrevChar(const char* _str) {
         return -4;
     }
     // In other - error
-    return -1;
+    return 0;
 }
 
 #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)
