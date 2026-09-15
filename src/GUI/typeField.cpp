@@ -220,6 +220,68 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
     // Additional actions for control commands
     if (keyMods & SDL_KMOD_CTRL) {
         switch (_code) {
+        case SDLK_BACKSPACE:
+            // Coping after caret
+            if (selectLength == 0) {
+                if (caret == 0) {
+                    return Some;
+                }
+                selectLength = getPrevBlock(buffer+caret, -caret);
+            }
+            deleteSelected();
+            break;
+
+        case SDLK_DELETE:
+            // Coping after caret
+            if (selectLength == 0) {
+                if (caret == length) {
+                    return Some;
+                }
+                selectLength = getNextBlock(buffer+caret, length-caret);
+            }
+            deleteSelected();
+            break;
+
+        case SDLK_LEFT:
+            if (keyMods & SDL_KMOD_SHIFT) {
+                if (caret > 0) {
+                    int offset = getPrevBlock(buffer+caret, -caret);
+                    caret += offset;
+                    selectLength -= offset;
+                }
+            } else {
+                if (selectLength) {
+                    if (selectLength < 0) {
+                        caret += selectLength;
+                    }
+                    selectLength = 0;
+                } else if (caret > 0) {
+                    caret += getPrevBlock(buffer+caret, -caret);
+                }
+            }
+            updateSelected();
+            return Some;
+
+        case SDLK_RIGHT:
+            if (keyMods & SDL_KMOD_SHIFT) {
+                if (caret < length) {
+                    int offset = getNextBlock(buffer+caret, length-caret);
+                    caret += offset;
+                    selectLength -= offset;
+                }
+            } else {
+                if (selectLength) {
+                    if (selectLength > 0) {
+                        caret += selectLength;
+                    }
+                    selectLength = 0;
+                } else if (caret < length) {
+                    caret += getNextBlock(buffer+caret, length-caret);
+                }
+            }
+            updateSelected();
+            return Some;
+
         case SDLK_V:
             writeClipboard();
             break;
@@ -248,9 +310,7 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
     }
     // Normal switching for extra inputs
     switch (_code) {
-    // Functions for deleting text
     case SDLK_BACKSPACE:
-        // Coping after caret
         if (selectLength == 0) {
             if (caret == 0) {
                 return Some;
@@ -261,7 +321,6 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
         break;
 
     case SDLK_DELETE:
-        // Coping after caret
         if (selectLength == 0) {
             if (caret == length) {
                 return Some;
@@ -311,7 +370,6 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
         updateSelected();
         return Some;
 
-    // Special keys for faster caret move
     case SDLK_END:
     case SDLK_PAGEDOWN:
         if (keyMods & SDL_KMOD_SHIFT) {
@@ -334,7 +392,6 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
         updateSelected();
         return Some;
 
-    // Clipboard
     case SDLK_PASTE:
         writeClipboard();
         break;
@@ -532,7 +589,7 @@ void GUI::TypeField::setString(const char* _newString) {
     updateTexture();
 }
 
-int GUI::TypeField::getNextChar(const char* _str) {
+int GUI::TypeField::getNextChar(const char* _str) const {
     // Mask: 0yyyyyyy
     if ((_str[0] & 0b10000000) == 0b0) {
         return 1;
@@ -553,7 +610,7 @@ int GUI::TypeField::getNextChar(const char* _str) {
     return 0;
 }
 
-int GUI::TypeField::getPrevChar(const char* _str) {
+int GUI::TypeField::getPrevChar(const char* _str) const {
     // Mask: 0yyyyyyy
     if ((_str[-1] & 0b10000000) == 0b0) {
         return -1;
@@ -572,6 +629,34 @@ int GUI::TypeField::getPrevChar(const char* _str) {
     }
     // In other - error
     return 0;
+}
+
+bool GUI::TypeField::isSpec(char _c) const {
+    return (_c==' ') || (_c==',') || (_c=='.') || (_c=='/') || (_c=='\\');
+}
+
+int GUI::TypeField::getNextBlock(const char* _str, int _len) const {
+    int i=0;
+    if (isSpec(_str[0])) {
+        // Move by spaces
+        for (;isSpec(_str[i])&&(i<_len);++i) {}
+    } else {
+        // Move by charachters
+        for (;!isSpec(_str[i])&&(i<_len);++i) {}
+    }
+    return i;
+}
+
+int GUI::TypeField::getPrevBlock(const char* _str, int _len) const {
+    int i=0;
+    if (isSpec(_str[-1])) {
+        // Move by spaces
+        for (;isSpec(_str[i-1])&&(i>_len);--i) {}
+    } else {
+        // Move by charachters
+        for (;!isSpec(_str[i-1])&&(i>_len);--i) {}
+    }
+    return i;
 }
 
 #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

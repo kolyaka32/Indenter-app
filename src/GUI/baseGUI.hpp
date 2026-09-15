@@ -264,8 +264,11 @@ namespace GUI {
         void deleteSelected();        // Clearing selected part
         void writeClipboard();        // Write clipboard content after caret
         void copyToClipboard();       // Writing selected text to clipboard
-        int getNextChar(const char* str);  // Return next codepoint length (for utf8)
-        int getPrevChar(const char* str);  // Return previous codepoint length (signed) (for utf8)
+        bool isSpec(char c) const;    // Return if special character ( ,./\*-+)
+        int getNextChar(const char* str) const;  // Return next utf8 codepoint length
+        int getPrevChar(const char* str) const;  // Return previous utf8 codepoint length (signed)
+        int getNextBlock(const char* str, int length) const;  // Return length of next block (of chars/spaces)
+        int getPrevBlock(const char* str, int length) const;  // Return length of previous block (of chars/spaces)
 
      public:
         TypeField(const Window& window, const TextArgument&& arguments,
