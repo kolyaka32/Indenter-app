@@ -123,37 +123,38 @@ void GUI::TypeField::updateSelected() {
 }
 
 void GUI::TypeField::writeString(const char* _str) {
-    if (selected) {
-        // Resetting
-        pressed = false;
-        deleteSelected();
-
-        // Counting codepoints
-        int codelen = 0;
-        for (int i=0; i < length;) {
-            if (int len = getNextChar(buffer+i)) {
-                codelen++;
-                i += len;
-            } else {
-                i++;
-            }
-        }
-        // Parsing recieved text
-        for (const char* c = _str; *c && (codelen < maxLength);) {
-            // Check codepoint length
-            int len = getNextChar(c);
-            // Moving part after codepoint
-            for (size_t i = length; i > caret; --i) {
-                buffer[i + len - 1] = buffer[i-1];
-            }
-            memcpy(buffer+caret, c, len);
-            length += len;
-            caret += len;
-            c += len;
-            codelen++;
-        }
-        updateTexture();
+    if (!selected) {
+        return;
     }
+    // Resetting
+    pressed = false;
+    deleteSelected();
+
+    // Counting codepoints
+    int codelen = 0;
+    for (int i=0; i < length;) {
+        if (int len = getNextChar(buffer+i)) {
+            codelen++;
+            i += len;
+        } else {
+            i++;
+        }
+    }
+    // Parsing recieved text
+    for (const char* c = _str; *c && (codelen < maxLength);) {
+        // Check codepoint length
+        int len = getNextChar(c);
+        // Moving part after codepoint
+        for (size_t i = length; i > caret; --i) {
+            buffer[i + len - 1] = buffer[i-1];
+        }
+        memcpy(buffer+caret, c, len);
+        length += len;
+        caret += len;
+        c += len;
+        codelen++;
+    }
+    updateTexture();
 }
 
 void GUI::TypeField::writeClipboard() {
@@ -200,13 +201,39 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
     if (!selected) {
         return None;
     }
-
     // Getting current shft and control state
     SDL_Keymod keyMods = SDL_GetModState();
 
-    // ! Separate control commands into own switch
+    // Additional actions for control commands
+    if (keyMods & SDL_KMOD_CTRL) {
+        switch (_code) {
+        case SDLK_V:
+            writeClipboard();
+            break;
 
-    // Switching between extra input options
+        case SDLK_C:
+            copyToClipboard();
+            break;
+
+        case SDLK_X:
+            copyToClipboard();
+            deleteSelected();
+            break;
+
+        case SDLK_A:
+            // Selecing all text
+            caret = length;
+            selectLength = -length;
+            break;
+
+        default:
+            return None;
+        }
+        // Updating texture after modifiying text
+        updateTexture();
+        return Some;
+    }
+    // Normal switching for extra inputs
     switch (_code) {
     // Functions for deleting text
     case SDLK_BACKSPACE:
@@ -239,14 +266,14 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
                 selectLength -= offset;
             }
         } else {
-            if (caret > 0) {
+            if (selectLength) {
                 if (selectLength < 0) {
                     caret += selectLength;
-                } else {
-                    caret += getPrevChar(buffer+caret);
                 }
+                selectLength = 0;
+            } else if (caret > 0) {
+                caret += getPrevChar(buffer+caret);
             }
-            selectLength = 0;
         }
         updateSelected();
         return Some;
@@ -259,14 +286,14 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
                 selectLength -= offset;
             }
         } else {
-            if (caret < length) {
+            if (selectLength) {
                 if (selectLength > 0) {
                     caret += selectLength;
-                } else {
-                    caret += getNextChar(buffer+caret);
                 }
+                selectLength = 0;
+            } else if (caret < length) {
+                caret += getNextChar(buffer+caret);
             }
-            selectLength = 0;
         }
         updateSelected();
         return Some;
@@ -306,41 +333,6 @@ GUI::Code GUI::TypeField::type(SDL_Keycode _code) {
     case SDLK_CUT:
         copyToClipboard();
         deleteSelected();
-        break;
-
-    case SDLK_V:
-        if (keyMods & SDL_KMOD_CTRL) {
-            writeClipboard();
-        } else {
-            return None;
-        }
-        break;
-
-    case SDLK_C:
-        if (keyMods & SDL_KMOD_CTRL) {
-            copyToClipboard();
-        } else {
-            return None;
-        }
-        break;
-
-    case SDLK_X:
-        if (keyMods & SDL_KMOD_CTRL) {
-            copyToClipboard();
-            deleteSelected();
-        } else {
-            return None;
-        }
-        break;
-
-    case SDLK_A:
-        if (keyMods & SDL_KMOD_CTRL) {
-            // Selecing all text
-            caret = length;
-            selectLength = -length;
-        } else {
-            return None;
-        }
         break;
 
     case SDLK_ESCAPE:

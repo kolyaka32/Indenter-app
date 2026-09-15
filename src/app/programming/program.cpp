@@ -385,6 +385,7 @@ void Program::unclick() {
 }
 
 void Program::type(SDL_Keycode _code) {
+    // ! update to bool
     for (int i=0; i < nodes.size(); ++i) {
         nodes[i]->type(_code);
     }
