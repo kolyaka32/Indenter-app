@@ -5,16 +5,28 @@
 
 #include "serial.hpp"
 
+#include <fcntl.h>
+#include <unistd.h>
+
 
 Serial::Serial() {
     // Initialize the DCB structure.
-    SecureZeroMemory(&dcb, sizeof(DCB));
-    dcb.DCBlength = sizeof(DCB);
+    /*SecureZeroMemory(&dcb, sizeof(DCB));
+    dcb.DCBlength = sizeof(DCB);*/
 }
 
 bool Serial::tryConnectTo(const ComPort& _port) {
+    fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY);
+
+    if  (fd == -1) {
+        // Handle the error
+        //logger.important("Can't set state: %d", stderr());
+        perror("Failed to open serial port");
+        return false;
+    }
+
     // Open a handle to the specified com port.
-    handle = CreateFile(_port.getName(),
+    /*handle = CreateFile(_port.getName(),
         GENERIC_READ | GENERIC_WRITE,
         0,      //  must be opened with exclusive-access
         NULL,   //  default security attributes
@@ -48,38 +60,39 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     if (!SetCommTimeouts(handle, &timeouts)) {
         logger.important("Can't set timeouts: %d", GetLastError());
         return false;
-    }
+    }*/
 
     logger.additional("Correctly oppened serial reader at %s", _port.getName());
-    logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
-        dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);
+    /*logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
+        dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);*/
     return true;
 }
 
 void Serial::reset() {
-    CloseHandle(handle);
+    close(fd);
+    /*CloseHandle(handle);*/
     logger.additional("Closed serial port");
 }
 
-const void* Serial::readData(unsigned long* _length) {
+const void* Serial::readData(unsigned* _length) {
     static char buffer[100];
 
-    if (ReadFile(handle, buffer, sizeof(buffer), _length, nullptr) && *_length) {
+    /*if (ReadFile(handle, buffer, sizeof(buffer), _length, nullptr) && *_length) {
         static int i=0;  // Counter
         logger.additional("%4d Read from serial: %d %d", i, *_length, buffer[0]);
         i++;
         return buffer;
-    }
+    }*/
     return nullptr;
 }
 
 void Serial::writeData(const char* _data, int _length) {
-    DWORD length = 0;
+    /*DWORD length = 0;
     if (WriteFile(handle, _data, _length, &length, nullptr)) {
         logger.additional("Send %1d bytes", length);
     } else {
         logger.additional("Can't send data: %d", GetLastError());
-    }
+    }*/
 }
 
 

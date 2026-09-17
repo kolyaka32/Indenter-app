@@ -12,14 +12,16 @@
 class Serial {
  private:
     // Information for interacting by serial-port
-    DCB dcb;
-    HANDLE handle = INVALID_HANDLE_VALUE;
+    /*DCB dcb;
+    HANDLE handle = INVALID_HANDLE_VALUE;*/
+
+    int fd;  // File descriptor for serial port
 
  public:
     Serial();
     bool tryConnectTo(const ComPort& port);  // Trying connect to specified port, return true if sucsesful
     void reset();
-    const void* readData(unsigned long* length);
+    const void* readData(unsigned* length);
     void writeData(const char* data, int length);
 };
 

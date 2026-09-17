@@ -20,7 +20,8 @@ bool ComPort::updateState() {
     bool previousAvaliable = avaliable;
 
     static char lpTargetPath[1000];
-    avaliable = QueryDosDevice(name, lpTargetPath, 100);
+    //avaliable = QueryDosDevice(name, lpTargetPath, 100);
+    avaliable = true;  // ! For test
 
     // Returning true, if changed
     return avaliable != previousAvaliable;
