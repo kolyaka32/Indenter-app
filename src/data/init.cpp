@@ -9,6 +9,7 @@
 #include "preloaded/audio.hpp"
 #include "../internet/internet.hpp"
 #include "initFile.hpp"
+#include "../app/output/collectedData.hpp"
 
 
 // Initialasing global objects in correct order
@@ -17,6 +18,9 @@ Logger logger{};
 
 // All side libries
 Libraries libraries{};
+
+// Main data-storing object
+CollectedData collectedData{};
 
 #if (PRELOAD_DATA)
 const DataLoader dataLoader{};

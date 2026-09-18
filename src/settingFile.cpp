@@ -43,7 +43,7 @@ void InitFile::loadSettings() {
         } else if (parameter == "autocount") {
             ProgramMenu::autosaveCount = getValue(currentLine);
         } else if (parameter == "forceOffset") {
-            collectedData.setForceNull(getValue(currentLine));
+            collectedData.setForceNull(getValue(currentLine) / 100.0f);
         } /*else if (parameter == "music") {
             audio.music.setVolume(getValue(currentLine) / 100.0f);
         } else if (parameter == "sounds") {
@@ -91,7 +91,7 @@ void InitFile::saveSettings() {
 
     // Writing autosave counter (for correct loading)
     outSettings << "autocount = " << ProgramMenu::autosaveCount << '\n';
-    outSettings << "forceOffset = " << collectedData.getForceNull() << '\n';
+    outSettings << "forceOffset = " << int(collectedData.getForceNull()*100) << '\n';
 }
 
 #endif  // (USE_SETTING_FILE)

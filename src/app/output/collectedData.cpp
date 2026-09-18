@@ -7,9 +7,6 @@
 #include "collectedData.hpp"
 
 
-// Main data-storing object
-CollectedData collectedData{};
-
 CollectedData::CollectedData()
 : saved(false),
 positions(),
@@ -83,7 +80,7 @@ void CollectedData::setForceNull(float _forceNull) {
         // ! Should check timings - O(n) complexity
         forces.offsetBy(_forceNull);
     }
-    forceNull = _forceNull;
+    forceNull += _forceNull;
 }
 
 void CollectedData::setForceNullAsLast() {

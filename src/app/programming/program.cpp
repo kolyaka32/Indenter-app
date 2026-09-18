@@ -170,7 +170,9 @@ void Program::load(const Window& _window, const char* _fileName) {
             break;
 
         case 'u':
-            node = new SetNullNode{_window, x, y};
+            // Reinterpret speed as type
+            speed = getChar(c);
+            node = new SetNullNode{_window, x, y, speed};
             break;
 
         case 'a':
