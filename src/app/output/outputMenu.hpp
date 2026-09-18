@@ -20,17 +20,20 @@ private:
     GUI::RoundedBackplate mainBackplate;
     GUI::StaticText title;
     SDL_FRect separateRect;
-    // Getted graphs
+    // Getted data
     Chart<float, float> forceChart;
     Chart<float, float> tempertureChart;
     GUI::DynamicText forceText;
     GUI::DynamicText tempText;
-    // Save function
     GUI::DynamicText counterText;
+    // Set null part
+    GUI::StaticText setNullText;
+    GUI::TextButton setNullAsLastButton;
+    GUI::TextButton setNullAsAvarButton;
+    // Save function
     GUI::StaticText notSavedText;
     GUI::TextButton saveButton;
     GUI::TextButton folderButton;
-    GUI::TextButton setNullButton;
 
 public:
     OutputMenu(const Window& window, float X, float Y, float W, float H);

@@ -93,6 +93,18 @@ void CollectedData::setForceNullAsLast() {
     }
 }
 
+void CollectedData::setForceNullAsAvar() {
+    // Getting force null as last element
+    if (forces.size()) {
+        // Finding avarage
+        float sumForce = 0.0;
+        for (int i=0; i < forces.size(); ++i) {
+            sumForce += forces[i];
+        }
+        setForceNull(-sumForce/forces.size());
+    }
+}
+
 void CollectedData::trySave(const char* _name) {
     // Find avaliable name
     char buffer[100];
