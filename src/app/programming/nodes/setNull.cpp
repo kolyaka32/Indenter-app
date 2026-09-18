@@ -60,7 +60,11 @@ void SetNullNode::blit() const {
 }
 
 Node* SetNullNode::use() {
-    collectedData.setForceNullAsLast();
+    if (type) {
+        collectedData.setForceNullAsAvar();
+    } else {
+        collectedData.setForceNullAsLast();
+    }
     logger.additional("> Set graph null");
     return nextNode;
 }
