@@ -141,18 +141,9 @@ bool GUI::TypeField::writeString(const char* _str) {
         }
     }
     // Parsing recieved text
-    for (const char* c = _str; codelen < maxLength;) {
-        if (*c == 0 || *c == '\n') {
-            break;
-        }
+    for (const char* c = _str; *c && (*c != '\n');) {
         // Check codepoint length
         if (int len = getNextChar(c)) {
-            // Check, if all letters avaliable
-            for (int i=1; i < len; ++i) {
-                if (c[i] == 0 || c[i] == '\n') {
-                    break;
-                }
-            }
             // Moving all after codepoint
             for (int i = length; i > caret; --i) {
                 buffer[i + len - 1] = buffer[i-1];
@@ -162,6 +153,9 @@ bool GUI::TypeField::writeString(const char* _str) {
             caret += len;
             c += len;
             codelen++;
+            if (codelen == maxLength) {
+                break;
+            }
         } else {
             c++;
         }
@@ -564,15 +558,9 @@ void GUI::TypeField::setString(const char* _newString) {
     // Counting actual codepoints
     int codeCount = 0;
     // Parsing new text
-    for (const char* c = _newString; *c && (*c!='\n');) {
+    for (const char* c = _newString; *c && (*c != '\n');) {
         // Check codepoint length
         if (int len = getNextChar(c)) {
-            // Check, if all letters avaliable
-            for (int i=1; i < len; ++i) {
-                if (c[i] == 0 || c[i] == '\n') {
-                    break;
-                }
-            }
             // Copying codepoint
             memcpy(buffer + length, c, len);
             length += len;
@@ -595,14 +583,23 @@ int GUI::TypeField::getNextChar(const char* _str) const {
         return 1;
     }
     // Mask: 110yyyyy 10yyyyyyyy
+    if ((_str[1] & 0b11000000) != 0b10000000) {
+        return 0;
+    }
     if ((_str[0] & 0b11100000) == 0b11000000) {
         return 2;
     }
     // Mask: 1110yyyy 10yyyyyyyy 10yyyyyyyy
+    if ((_str[2] & 0b11000000) != 0b10000000) {
+        return 0;
+    }
     if ((_str[0] & 0b11110000) == 0b11100000) {
         return 3;
     }
     // Mask: 11110yyy 10yyyyyyyy 10yyyyyyyy 10yyyyyyyy
+    if ((_str[3] & 0b11000000) != 0b10000000) {
+        return 0;
+    }
     if ((_str[0] & 0b11111000) == 0b11110000) {
         return 4;
     }
@@ -616,14 +613,23 @@ int GUI::TypeField::getPrevChar(const char* _str) const {
         return -1;
     }
     // Mask: 110yyyyy 10yyyyyyyy
+    if ((_str[-1] & 0b11000000) != 0b10000000) {
+        return 0;
+    }
     if ((_str[-2] & 0b11100000) == 0b11000000) {
         return -2;
     }
     // Mask: 1110yyyy 10yyyyyyyy 10yyyyyyyy
+    if ((_str[-2] & 0b11000000) != 0b10000000) {
+        return 0;
+    }
     if ((_str[-3] & 0b11110000) == 0b11100000) {
         return -3;
     }
     // Mask: 11110yyy 10yyyyyyyy 10yyyyyyyy 10yyyyyyyy
+    if ((_str[-3] & 0b11000000) != 0b10000000) {
+        return 0;
+    }
     if ((_str[-4] & 0b11111000) == 0b11110000) {
         return -4;
     }

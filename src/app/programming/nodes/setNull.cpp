@@ -44,7 +44,9 @@ void SetNullNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
     text.move(_X, _Y);
     avarButton.move(_X, _Y);
+    avarButtonRect.move(_X, _Y);
     lastButton.move(_X, _Y);
+    lastButtonRect.move(_X, _Y);
 }
 
 void SetNullNode::blit() const {
