@@ -46,4 +46,3 @@ extern std::array<ComPort, 4> comPorts;
 // TTY port
 extern std::array<ComPort, 1> comPorts;
 #endif
-

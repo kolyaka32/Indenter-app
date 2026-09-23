@@ -35,8 +35,7 @@ bool ComPort::updateState() {
     avaliable = QueryDosDevice(name, lpTargetPath, 100);
     #endif
     #if (SDL_PLATFORM_UNIX)
-    // ! For test
-    avaliable = true;
+    avaliable = (access(name, F_OK) == F_OK);
     #endif
 
     // Returning true, if changed
