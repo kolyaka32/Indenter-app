@@ -56,13 +56,13 @@ bool Serial::tryConnectTo(const ComPort& _port) {
         dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);
     #endif
     #if (SDL_PLATFORM_UNIX)
-    // Check, if file avaliable for interaction (read and 
-    if (!access(_port.getName(), R_OK | W_OK)) {
+    // Check, if file avaliable for interaction (read and write)
+    if (access(_port.name, R_OK | W_OK) == -1) {
         logger.important("Doesn't have permission to open file");
         return false;
     }
     // Trying openning as file
-    fd = open(_port.getName(), O_RDWR | O_NOCTTY);
+    fd = open(_port.name, O_RDWR | O_NOCTTY);
     if  (fd == -1) {
         logger.important("Can't open file");
         return false;
@@ -86,7 +86,7 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     logger.additional("Serial reader: BaudRate = %d, lflag = %d, cflag = %d",
         portSettings.c_ospeed, portSettings.c_lflag, portSettings.c_cflag);
     #endif
-    logger.additional("Correctly oppened serial reader at %s", _port.getName());
+    logger.additional("Correctly oppened serial reader at %s", _port.name);
     return true;
 }
 

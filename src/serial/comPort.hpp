@@ -23,18 +23,14 @@
 class ComPort {
  private:
     bool avaliable = false;
-    #if (SDL_PLATFORM_WINDOWS)
-    char name[6] = "COM0";
-    #endif
-    #if (SDL_PLATFORM_UNIX)
-    char name[15] = "/dev/ttyACM0";
-    #endif
 
  public:
-    ComPort(int number);
+    ComPort(const char* name);
     bool updateState();  // Update current state of connection and return true, if changed
     bool isAvaliable() const;
-    const char* getName() const;
+    
+    // Name of port 
+    const char* name;
 };
 
 // Array of avaliable com-ports

@@ -7,25 +7,24 @@
 
 
 #if (SDL_PLATFORM_WINDOWS)
-std::array<ComPort, 4> comPorts {
-    {{3}, {4}, {5}, {6}}
-};
+std::array<ComPort, 4> comPorts {{
+    {"COM3"},
+    {"COM4"},
+    {"COM5"},
+    {"COM6"}
+}};
 #endif
 #if (SDL_PLATFORM_UNIX)
 std::array<ComPort, 1> comPorts {
-    {{0}}
+    {{"/dev/ttyACM0"}}
 };
 #endif
 
 
 
-ComPort::ComPort(int _number)
-: avaliable(false) {
-    #if (SDL_PLATFORM_WINDOWS)
-    // Changing number in name to correct
-    name[3] = '0' + _number;
-    #endif
-}
+ComPort::ComPort(const char* _name)
+: avaliable(false),
+name(_name) {}
 
 bool ComPort::updateState() {
     bool previousAvaliable = avaliable;
@@ -44,8 +43,4 @@ bool ComPort::updateState() {
 
 bool ComPort::isAvaliable() const {
     return avaliable;
-}
-
-const char* ComPort::getName() const {
-    return name;
 }
