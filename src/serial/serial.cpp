@@ -5,28 +5,19 @@
 
 #include "serial.hpp"
 
-#include <fcntl.h>
-#include <unistd.h>
-
 
 Serial::Serial() {
+    #if (SDL_PLATFORM_WINDOWS)
     // Initialize the DCB structure.
-    /*SecureZeroMemory(&dcb, sizeof(DCB));
-    dcb.DCBlength = sizeof(DCB);*/
+    SecureZeroMemory(&dcb, sizeof(DCB));
+    dcb.DCBlength = sizeof(DCB);
+    #endif
 }
 
 bool Serial::tryConnectTo(const ComPort& _port) {
-    fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY);
-
-    if  (fd == -1) {
-        // Handle the error
-        //logger.important("Can't set state: %d", stderr());
-        perror("Failed to open serial port");
-        return false;
-    }
-
+    #if (SDL_PLATFORM_WINDOWS)
     // Open a handle to the specified com port.
-    /*handle = CreateFile(_port.getName(),
+    handle = CreateFile(_port.getName(),
         GENERIC_READ | GENERIC_WRITE,
         0,      //  must be opened with exclusive-access
         NULL,   //  default security attributes
@@ -60,12 +51,43 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     if (!SetCommTimeouts(handle, &timeouts)) {
         logger.important("Can't set timeouts: %d", GetLastError());
         return false;
-    }*/
+    }
+    logger.additional("Correctly oppened serial reader at %s", _port.getName());
+    logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
+        dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);
+    return true;
+    #endif
+    #if (SDL_PLATFORM_UNIX)
+    // Trying openning tty port
+    fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY);
+    if  (fd == -1) {
+        // Handle the error
+        // ! Add check on type of error
+        //logger.important("Can't set state: %d", stderr());
+        perror("Failed to open serial port");
+        return false;
+    }
+    // Get current settings
+    tcgetattr(fd, &portSettings);
+    portSettings.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);  // Enable NON CANONICAL Mode for Serial Port Comm
+    portSettings.c_cflag |=  CREAD | CLOCAL;  // Turn ON  the receiver of the serial port (CREAD)
+    portSettings.c_cflag &= ~CRTSCTS;     // Turn OFF Hardware based flow control RTS/CTS
+    // Set 8N1 (8 bits, no parity, 1 stop bit)
+    portSettings.c_cflag &= ~PARENB;      // No parity
+    portSettings.c_cflag &= ~CSTOPB;      // One stop bit
+    portSettings.c_cflag &= ~CSIZE;       
+    portSettings.c_cflag |=  CS8;         // 8 bits
+    cfsetispeed(&portSettings, 57600);
+    cfsetospeed(&portSettings, 57600);
+    // Update new settings to termios structure now
+    tcsetattr(fd, TCSANOW, &portSettings);
 
+    // ! Add tty setup
     logger.additional("Correctly oppened serial reader at %s", _port.getName());
     /*logger.additional("Serial reader: BaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d",
         dcb.BaudRate, dcb.ByteSize, dcb.Parity, dcb.StopBits);*/
     return true;
+    #endif
 }
 
 void Serial::reset() {
