@@ -83,6 +83,9 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     // Update new settings to termios structure now
     tcsetattr(fd, TCSANOW, &portSettings);
 
+    // Setting to non-blocking mode
+    fcntl(fd, F_SETFL, FNDELAY);
+
     logger.additional("Serial reader: BaudRate = %d, lflag = %d, cflag = %d",
         portSettings.c_ospeed, portSettings.c_lflag, portSettings.c_cflag);
     #endif
@@ -102,23 +105,41 @@ void Serial::reset() {
 
 const void* Serial::readData(unsigned* _length) {
     static char buffer[100];
-
-    /*if (ReadFile(handle, buffer, sizeof(buffer), _length, nullptr) && *_length) {
-        static int i=0;  // Counter
-        logger.additional("%4d Read from serial: %d %d", i, *_length, buffer[0]);
-        i++;
+    static unsigned count=0;
+    #if (SDL_PLATFORM_WINDOWS)
+    if (ReadFile(handle, buffer, sizeof(buffer), _length, nullptr) && *_length) {
+        logger.additional("%4u Read from serial: %d %d", count, *_length, buffer[0]);
+        count++;
         return buffer;
-    }*/
+    }
+    #endif
+    #if (SDL_PLATFORM_UNIX)
+    if (int length = read(fd, buffer, sizeof(buffer)) > 0) {
+        logger.additional("%4u Read from serial: %d %d", count, length, buffer[0]);
+        *_length = length;
+        count++;
+        return buffer;
+    }
+    #endif
     return nullptr;
 }
 
 void Serial::writeData(const char* _data, int _length) {
-    /*DWORD length = 0;
+    #if (SDL_PLATFORM_WINDOWS)
+    DWORD length = 0;
     if (WriteFile(handle, _data, _length, &length, nullptr)) {
-        logger.additional("Send %1d bytes", length);
+        logger.additional("Send %2d bytes", length);
     } else {
         logger.additional("Can't send data: %d", GetLastError());
-    }*/
+    }
+    #endif
+    #if (SDL_PLATFORM_UNIX)
+    if (int length = write(fd, _data, _length) > 0) {
+        logger.additional("Send %2d bytes", length);
+    } else {
+        logger.additional("Can't send data");
+    }
+    #endif
 }
 
 
