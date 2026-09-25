@@ -44,7 +44,7 @@ bool Device::connectTo(const ComPort _port) {
 void Device::checkRecieve() {
     if (isConnected()) {
         // Get new messages
-        unsigned length = 0;
+        unsigned long length = 0;
         const void* data = serial.readData(&length);
 
         if (data) {

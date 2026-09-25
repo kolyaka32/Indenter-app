@@ -17,7 +17,7 @@ Serial::Serial() {
 bool Serial::tryConnectTo(const ComPort& _port) {
     #if (SDL_PLATFORM_WINDOWS)
     // Open a handle to the specified com port.
-    handle = CreateFile(_port.getName(),
+    handle = CreateFile(_port.name,
         GENERIC_READ | GENERIC_WRITE,
         0,      //  must be opened with exclusive-access
         NULL,   //  default security attributes
@@ -103,7 +103,7 @@ void Serial::reset() {
     logger.additional("Closed serial port");
 }
 
-const void* Serial::readData(unsigned* _length) {
+const void* Serial::readData(unsigned long* _length) {
     static char buffer[100];
     static unsigned count=0;
     #if (SDL_PLATFORM_WINDOWS)
