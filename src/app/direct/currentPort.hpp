@@ -21,7 +21,7 @@ class CurrentPort : GUI::Template {
     SDL_FRect background;
     SDL_FRect foreground;
     int count;
-    GUI::StaticText texts[5];
+    GUI::StaticText texts[comPorts.size()+1];
 
  protected:
     void showPort(int index);
