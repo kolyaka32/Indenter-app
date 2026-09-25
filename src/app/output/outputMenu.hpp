@@ -18,17 +18,22 @@ private:
     static char* saveName;
 
     GUI::RoundedBackplate mainBackplate;
-    GUI::HighlightedStaticText title;
+    GUI::StaticText title;
     SDL_FRect separateRect;
-    // Getted graphs
+    // Getted data
     Chart<float, float> forceChart;
     Chart<float, float> tempertureChart;
     GUI::DynamicText forceText;
     GUI::DynamicText tempText;
-    // Save function
     GUI::DynamicText counterText;
-    GUI::HighlightedStaticText notSavedText;
+    // Set null part
+    GUI::StaticText setNullText;
+    GUI::TextButton setNullAsLastButton;
+    GUI::TextButton setNullAsAvarButton;
+    // Save function
+    GUI::StaticText notSavedText;
     GUI::TextButton saveButton;
+    GUI::TextButton folderButton;
 
 public:
     OutputMenu(const Window& window, float X, float Y, float W, float H);

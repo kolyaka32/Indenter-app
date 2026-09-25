@@ -12,13 +12,13 @@
 class DirectControl : GUI::Template {
 private:
     GUI::RoundedBackplate mainBackplate;
-    GUI::HighlightedStaticText title;
+    GUI::StaticText title;
     SDL_FRect separateRect;
-    GUI::HighlightedStaticText portSelectText;
+    GUI::StaticText portSelectText;
     CurrentPort serialPort;
 
     // Texts, showing current state
-    GUI::HighlightedStaticText stateText;
+    GUI::StaticText stateText;
     GUI::RectBackplate stateBackplate;
     GUI::StaticText notConnectedText;
     GUI::StaticText notRespondingText;
@@ -26,6 +26,7 @@ private:
     GUI::StaticText workingText;
 
     // Buttons for start/stop device
+    GUI::StaticText straightText;
     GUI::InfoBox activatableBox;
     GUI::ImageButton slowUpButton;
     GUI::ImageButton normalUpButton;

@@ -9,10 +9,9 @@
 
 WaitLoseNode::WaitLoseNode(const Window& _window, float _X, float _Y, const char* _text)
 : Node(_window, _X, _Y, Textures::BlockLongWait),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y,
-    {"Wait F <", "Ждать F <"}, GUI::Aligment::Left),
-forceTyper(_window, _X + (LanguagedText::getLanguage()==Language::Russian ? 0.002 : -0.01),
-    _Y-0.002, _text, GUI::Aligment::Left, Height::Medium)  {}
+text(_window, {"Wait F <", "Ждать F <"}, {_X-rect.w/(2*window.getWidth())+0.005f, _Y, .horAli=GUI::Left}),
+forceTyper(_window, {_X+(LanguagedText::getLanguage()==Language::Russian ? 0.002f : -0.01f),
+    _Y-0.002f, .height=GUI::Medium, .horAli=GUI::Left, .textColor=BLACK, .backColor=WHITE}, 6, _text)  {}
 
 Node* WaitLoseNode::copy() {
     return new WaitLoseNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -44,12 +43,12 @@ void WaitLoseNode::unclick() {
     forceTyper.unclick();
 }
 
-void WaitLoseNode::type(SDL_Keycode _code) {
-    forceTyper.type(_code);
+bool WaitLoseNode::type(SDL_Keycode _code) {
+    return forceTyper.type(_code);
 }
 
-void WaitLoseNode::writeString(const char* _str) {
-    forceTyper.writeString(_str);
+bool WaitLoseNode::writeString(const char* _str) {
+    return forceTyper.writeString(_str);
 }
 
 void WaitLoseNode::update(float _mouseX) {

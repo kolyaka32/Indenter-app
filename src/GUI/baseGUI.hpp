@@ -13,10 +13,12 @@
 // Namespace of objects for GUI (Graphic User Interface)
 namespace GUI {
     // Text aligment type
-    enum class Aligment : unsigned {
-        Left,
-        Midle,
-        Right,
+    enum Aligment : int {
+        Left = 0,
+        Up = 0,
+        Midle = 1,
+        Right = 2,
+        Down = 2,
     };
 
 
@@ -113,7 +115,6 @@ namespace GUI {
     };
 
 
-    // Textures
     #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
     // Class of slider bar with point on it to control need parameter
     class Slider : public TextureTemplate {
@@ -139,10 +140,9 @@ namespace GUI {
         ImageButton(const Window& window, float X, float Y, float width, Textures name) noexcept;
         ImageButton(ImageButton&& object) noexcept;
     };
-    #endif
+    #endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 
 
-    // Animations
     #if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
     class Animation : public TextureTemplate {
      private:
@@ -158,105 +158,104 @@ namespace GUI {
         ~Animation() noexcept;
         void update();
     };
-    #endif
+    #endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
 
 
     // Text part
     #if (USE_SDL_FONT) && (PRELOAD_FONTS)
-    // Static text on screen
+    // Heights of text (for uniformity)
+    enum Height : int {
+        Title = 40,     // Intuding title
+        SubTitle = 28,  // Title in subcycles
+        Info = 32,
+        Main = 24,      // Main text
+        Medium = 20,
+        Small = 12,     // Small text
+    };
+
+    // Struct for easier store and change arguments for text classes
+    struct TextArgument {
+        float X, Y;
+
+        int frame = 0;  // 0 if hasn't, value if offset
+        Fonts font = Fonts::Main;
+        Height height = Height::Main;
+        Aligment horAli = Aligment::Midle;  // horizontal aligment
+        Aligment verAli = Aligment::Midle;  // vertical aligment
+        Color textColor = WHITE;
+        Color backColor = BLACK;
+
+        template <typename ...Args>
+        SDL_Texture* createTexture(const Window& window, const LanguagedText& texts, Args... args) const;
+        SDL_Texture* createTexture(const Window& window, const char* text) const;
+        SDL_FRect getRect(const Window& window, const SDL_Texture* texture) const;
+        SDL_FRect getRect(const Window& window, float W, float H) const;
+    };
+
+    template <typename ...Args>
+    SDL_Texture* TextArgument::createTexture(const Window& window, const LanguagedText& texts, Args... args) const {
+        // Getting text with arguments
+        char buffer[100];
+        SDL_snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
+        // Creating text itself
+        return createTexture(window, buffer);
+    }
+
+
+    // Static text (not changing in runtime)
     class StaticText : public TextureTemplate {
      public:
         template <typename ...Args>
-        StaticText(const Window& window, float X, float Y, const LanguagedText&& texts,
-            Aligment aligment = Aligment::Midle, float height = Height::Main,
-            Color color = WHITE, const Args... args) noexcept
+        StaticText(const Window& window, const LanguagedText&& texts,
+            const TextArgument&& arguments, Args... args) noexcept
         : TextureTemplate(window) {
-                // Checking for all chars
-                char buffer[100];
-                SDL_snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
-
-                // Creating surface with text
-                texture = window.createTexture(Fonts::Main, height, buffer, 0, color);
-
-                // Updating rect height for correct button
-                rect.w = texture->w;
-                rect.h = texture->h;
-                rect.x = SDL_roundf(window.getWidth() * X - (rect.w * (unsigned)aligment / 2));
-                rect.y = SDL_roundf(window.getHeight() * Y - rect.h / 2);
-            }
+            texture = arguments.createTexture(window, std::move(texts), args...);
+            rect = arguments.getRect(window, texture);
+        }
         StaticText(StaticText&& object) noexcept;
         ~StaticText() noexcept;
     };
 
 
-    // Static text with back highlighting (for better contrast)
-    class HighlightedStaticText : public TextureTemplate {
-     public:
-        HighlightedStaticText(const Window& window, float X, float Y, const LanguagedText&& texts,
-            int frameThickness, Aligment aligment = Aligment::Midle, float height = Height::Main,
-            Color color = WHITE);
-        HighlightedStaticText(HighlightedStaticText&& object) noexcept;
-        ~HighlightedStaticText() noexcept;
-    };
-
-
-    // Dynamicly updated text on screen
+    // Dynamicly updated text
     class DynamicText : public TextureTemplate {
      private:
-        const LanguagedText texts;  // Text to create from
-        const float posX;           // Relative positions on screen
-        const Aligment aligment;    // Aligment type to improve displasment
-        const Color color;          // Base draw color
-        const float height;         // Height of text to draw
+        const LanguagedText texts;
+        const TextArgument argument;
 
      public:
-        DynamicText(const Window& window, float X, float Y, LanguagedText&& texts,
-            Aligment aligment = Aligment::Midle, float height = Height::Main, Color color = WHITE) noexcept;
+        DynamicText(const Window& window, const LanguagedText&& texts,
+            const TextArgument&& arguments) noexcept;
         DynamicText(DynamicText&& object) noexcept;
         ~DynamicText() noexcept;
         template <typename ...Args>
         void setValues(Args&& ...args) {
-            // Checking for all chars
-            char buffer[100];
-            SDL_snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
-
-            // Clearing previous
-            window.destroy(texture);
-
-            // Creating surface with text
-            texture = window.createTexture(Fonts::Main, height, buffer, 0, color);
-
-            // Moving draw rect to new place
-            rect.w = texture->w;
-            rect.h = texture->h;
-            rect.x = window.getWidth() * posX - (rect.w * (unsigned)aligment / 2);
+            window.destroy(texture);  // Clearing previous
+            texture = argument.createTexture(window, texts, args...);
+            rect = argument.getRect(window, texture);
         }
     };
 
 
     // Class of field, where user can type text
-    template <unsigned bufferSize = 16>
     class TypeField : public TextureTemplate {
      protected:
-        // Class constants
-        const Aligment aligment;      // Aligment type for correct placed position
-        const Color textColor;        // Color of typing text (and inversed background)
-        const Color backColor;        // Color of background plate (and inversed text)
-        TTF_Font* font;               // Font for type text
+        TextArgument argument;
 
         // Variables
-        int posX;                     // Relevant x position on screen
-        char buffer[bufferSize+1];    // String, that was typed
-        size_t length = 0;            // Length of all text
+        TTF_Font* font;               // Font (mostly for text measurement)
+        char buffer[100];             // String, that was typed
+        const size_t maxLength;       // Maximal size of typing zone (excluding \0)
+        size_t length = 0;            // Length of buffer text (in bytes)
         size_t caret = 0;             // Position of place, where user type
         timer needSwapCaret = 0;      // Time, when next need to change caret
         int selectLength = 0;         // Length of selected box
 
-        bool showCaret = false;       // Flag, if need to show caret
         SDL_FRect caretRect;          // Place, where caret should be at screen
         SDL_FRect inversedRectDest;   // Rect of inversed selected text, where should be drawn
         SDL_FRect inversedRectSrc;    // Part of text, that should be reversed (relative)
         SDL_Texture* inverseTexture;  // Texture of inversed selected box
+        bool showCaret = false;       // Flag, if need to show caret
         bool pressed = false;         // Flag if currently mouse is pressed and selecting text
         bool selected = false;        // Flag if currently typing in this field
 
@@ -265,37 +264,39 @@ namespace GUI {
         void deleteSelected();        // Clearing selected part
         void writeClipboard();        // Write clipboard content after caret
         void copyToClipboard();       // Writing selected text to clipboard
+        bool isSpec(char c) const;    // Return if special character ( ,./\*-+)
+        int getNextChar(const char* str) const;  // Return next utf8 codepoint length
+        int getPrevChar(const char* str) const;  // Return previous utf8 codepoint length (signed)
+        int getNextBlock(const char* str, int length) const;  // Return length of next block (of chars/spaces)
+        int getPrevBlock(const char* str, int length) const;  // Return length of previous block (of chars/spaces)
 
      public:
-        TypeField(const Window& window, float X, float Y, const char *startText = "",
-            Aligment aligment = Aligment::Midle, float height = Height::TypeBox, 
-            Color textColor = BLACK, Color backColor = WHITE) noexcept;
-        TypeField(TypeField<bufferSize>&& object) noexcept;
+        TypeField(const Window& window, const TextArgument&& arguments,
+            size_t length = 16, const char* start = "") noexcept;
+        TypeField(TypeField&& object) noexcept;
         ~TypeField() noexcept;
         const char* getString();             // Return typed string
         void setString(const char* string);  // Replace text with new string
         // Main cycle
-        void writeString(const char* str);  // Write string to buffer at caret position
-        Code type(SDL_Keycode code);        // Processing special keycodes (like arrows, home, CTRL-C...)   
-        void update(float mouseX);          // Highlated area of typing
-        bool checkOff(const Mouse mouse);   // Check if click in other place, true if end entering
-        Code click(const Mouse mouse);      // Set caret for typing at specified place
-        void unclick();                     // Reset pressing
+        bool writeString(const char* str);   // Write string to buffer at caret position
+        Code type(SDL_Keycode code);         // Processing special keycodes (like arrows, home, CTRL-C...)   
+        void update(float mouseX);           // Highlated area of typing
+        bool checkOff(const Mouse mouse);    // Check if click in other place, true if end entering
+        Code click(const Mouse mouse);       // Set caret for typing at specified place
+        void unclick();                      // Reset pressing
         void move(float X, float Y) override;  // Move current box
-        void blit() const override;         // Draw current text with selection at screen
+        void blit() const override;          // Draw current text with selection at screen
     };
 
 
     // Object for type text with backplate for visability
-    template <unsigned bufferSize = 16>
-    class TypeBox : public TypeField<bufferSize> {
+    class TypeBox : public TypeField {
      private:
         GUI::RectBackplate backplate;
 
      public:
-        TypeBox(const Window& window, float X, float Y, const char* startText = "",
-            Aligment aligment = Aligment::Midle, float height = Height::TypeBox,
-            unsigned frameWidth = 2, Color textColor = BLACK) noexcept;
+        TypeBox(const Window& window, const TextArgument&& arguments,
+            size_t len = 16, const char* start = "") noexcept;
         TypeBox(TypeBox&& object) noexcept;
         bool in(const Mouse mouse) const override;
         void move(float X, float Y) override;
@@ -304,13 +305,12 @@ namespace GUI {
 
 
     // Class of buttons with text on it
-    class TextButton : public HighlightedStaticText {
+    class TextButton : public StaticText {
      private:
         GUI::RoundedBackplate backplate;
 
      public:
-        TextButton(const Window& window, float X, float Y, const LanguagedText&& texts,
-            Aligment aligment = Aligment::Midle, float size = Height::Main, Color color = WHITE);
+        TextButton(const Window& window, const LanguagedText&& texts, const TextArgument&& arguments);
         TextButton(TextButton&& object) noexcept;
         void move(float X, float Y) override;
         void blit() const override;
@@ -332,9 +332,8 @@ namespace GUI {
         SDL_FRect arrowRect;
 
      public:
-        SwitchBox(const Window& window, float X, float Y, float W,
-            std::initializer_list<LanguagedText> texts, unsigned startOption = 0,
-            float size = Height::Main, Color backColor = WHITE, Color frontColor = BLACK) noexcept;
+        SwitchBox(const Window& window, const TextArgument argument, float W,
+            std::initializer_list<LanguagedText> texts, unsigned startOption = 0) noexcept;
         SwitchBox(SwitchBox&& object) noexcept;
         void set(unsigned value);
         unsigned getValue() const;
@@ -345,15 +344,14 @@ namespace GUI {
 
 
     // Class of appearing for time and hidden by time text
-    class InfoBox : public HighlightedStaticText {
+    class InfoBox : public StaticText {
      private:
-        timer endTime = 0;  // Time, when stop showing
+        timer endTime;  // Time, when stop showing
         const timer decayTime;  // Time of full decay
 
      public:
-        InfoBox(const Window& window, float X, float Y, const LanguagedText&& texts,
-            unsigned decayTime = 500, Aligment aligment = Aligment::Midle,
-            float height = Height::Main, Color color = WHITE) noexcept;
+        InfoBox(const Window& window, const LanguagedText&& texts,
+            const TextArgument&& arguments, unsigned decayTime = 500) noexcept;
         InfoBox(InfoBox&& object) noexcept;
         void update();
         void reset();
@@ -363,11 +361,11 @@ namespace GUI {
     // Class for box with message and actions with it
     class OneOptionBox : public SubWindow {
      private:
-        GUI::HighlightedStaticText title;
+        GUI::StaticText title;
         GUI::TextButton button;
 
      public:
-        OneOptionBox(const Window& window, float X, float Y, float W, float H,
+        OneOptionBox(const Window& window, const TextArgument&& argument, float W, float H,
             const LanguagedText&& titleText, const LanguagedText&& buttonText) noexcept;
         OneOptionBox(OneOptionBox&& object) noexcept;
         Code click(const Mouse mouse);
@@ -379,7 +377,7 @@ namespace GUI {
     // Class for box with message and actions with it
     class TwoOptionBox : public SubWindow {
      private:
-        GUI::HighlightedStaticText title;
+        GUI::StaticText title;
         GUI::TextButton button1, button2;
 
      public:
@@ -402,13 +400,13 @@ namespace GUI {
         const int maxItems;  // Total number of elements, showing max at one screen
         int startField = 0;  // Position, from which show
         int endField = 0;    // Position, up to showing
-        const float blockPos;     // Start Y position of blocks (relative)
+        const float blockPos;  // Start Y position of blocks (relative)
         const float blockHeight;  // Height of one block (relative)
         // Items itself in reverse order for easier appending
         std::vector<Item> items;
         // Adding text of absence of objects
         #if (USE_SDL_FONT) && (PRELOAD_FONTS)
-        GUI::HighlightedStaticText emptySavesText;
+        GUI::StaticText emptySavesText;
         #endif
 
         // Slider for showing position
@@ -424,9 +422,9 @@ namespace GUI {
      public:
         // Create menu for scrolling objects, placed at center with (X, Y) and size.
         // Shows "maxShowedItems" items at a time
-        ScrollBox(const Window& window, float X, float Y, float width, float height,
+        ScrollBox(const Window& window, float X, float Y, float W, float H,
             int maxShowedItems, const LanguagedText&& emptyItemsText) noexcept;
-        ScrollBox(const Window& window, float X, float Y, float width, float height,
+        ScrollBox(const Window& window, float X, float Y, float W, float H,
             int maxShowedItems, std::vector<SourceItem> items, const LanguagedText&& emptyItemsText) noexcept;
         ScrollBox(ScrollBox&& object) noexcept;
         ~ScrollBox() noexcept;

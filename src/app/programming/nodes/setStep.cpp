@@ -9,11 +9,12 @@
 
 SetStepNode::SetStepNode(const Window& _window, float _X, float _Y, char _speed, const char* _val)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
-text(_window, _X-rect.w/(2*window.getWidth())+0.005, _Y,
-    {"Steping                µm", "Шагать                 мкм"}, GUI::Aligment::Left),
+text(_window, {"Steping                  µm", "Шагать                   мкм"},
+    {_X-rect.w/(2*window.getWidth())+0.005f, _Y, .horAli=GUI::Left}),
 speed(_speed - '0'),
 speedRect{(_X-0.017f)*window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0},
-distanceTyper(_window, _X+0.004, _Y-0.002, _val, GUI::Aligment::Left) {}
+distanceTyper(_window, {_X+0.004f, _Y-0.002f, .height=GUI::Medium,
+    .horAli=GUI::Left, .textColor=BLACK, .backColor=WHITE}, 5, _val) {}
 
 Node* SetStepNode::copy() {
     return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),
@@ -51,12 +52,12 @@ void SetStepNode::unclick() {
     distanceTyper.unclick();
 }
 
-void SetStepNode::type(SDL_Keycode _code) {
-    distanceTyper.type(_code);
+bool SetStepNode::type(SDL_Keycode _code) {
+    return distanceTyper.type(_code);
 }
 
-void SetStepNode::writeString(const char* _str) {
-    distanceTyper.writeString(_str);
+bool SetStepNode::writeString(const char* _str) {
+    return distanceTyper.writeString(_str);
 }
 
 void SetStepNode::update(float _mouseX) {

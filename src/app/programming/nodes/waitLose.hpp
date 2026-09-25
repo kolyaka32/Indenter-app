@@ -12,7 +12,7 @@
 class WaitLoseNode : public Node {
 private:
     GUI::StaticText text;
-    GUI::TypeBox<6> forceTyper;
+    GUI::TypeBox forceTyper;
 
 public:
     WaitLoseNode(const Window& window, float X, float Y, const char* text = "5");
@@ -23,8 +23,8 @@ public:
     void checkOff(const Mouse mouse) override;
     GUI::Code click(const Mouse mouse) override;
     void unclick() override;
-    void type(SDL_Keycode code) override;
-    void writeString(const char* str) override;
+    bool type(SDL_Keycode code) override;
+    bool writeString(const char* str) override;
     void update(float mouseX) override;
     void blit() const override;
 

@@ -8,11 +8,11 @@
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 
-GUI::OneOptionBox::OneOptionBox(const Window& _window, float _X, float _Y, float _W, float _H,
+GUI::OneOptionBox::OneOptionBox(const Window& _window, const TextArgument&& _arg, float _W, float _H,
     const LanguagedText&& _title, const LanguagedText&& _button) noexcept
-: SubWindow(_window, _X, _Y, _W, _H),
-title(_window, _X, _Y - _H/4, std::move(_title), 1, GUI::Aligment::Left, Height::SubTitle),
-button(_window, _X, _Y + _H/4, std::move(_button)) {}
+: SubWindow(_window, _arg.X, _arg.Y, _W, _H),
+title(_window, std::move(_title), {_arg.X, _arg.Y-_H/4, .frame=1, .height=GUI::SubTitle, .horAli=Left}),
+button(_window, std::move(_button), {_arg.X, _arg.Y+_H/4, .frame=1}) {}
 
 GUI::OneOptionBox::OneOptionBox(OneOptionBox&& _object) noexcept
 : SubWindow(std::move(_object)),

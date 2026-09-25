@@ -10,21 +10,35 @@
 
 #if (SDL_PLATFORM_WINDOWS)
 #include <windows.h>
+#elif (SDL_PLATFORM_UNIX)
+#include <fcntl.h>
+#include <unistd.h>
+#include <termios.h>
+#else
+#error "Can't find avaliable COM port library"
 #endif
 
 
 // Structure for storing com-ports data and it state
 class ComPort {
  private:
-   bool avaliable = false;
-   char name[6] = "COM0";
+    bool avaliable = false;
 
  public:
-   ComPort(int number);
-   bool updateState();  // Update current state of connection and return true, if changed
-   bool isAvaliable() const;
-   const char* getName() const;
+    ComPort(const char* name);
+    bool updateState();  // Update current state of connection and return true, if changed
+    bool isAvaliable() const;
+    
+    // Name of port 
+    const char* name;
 };
 
 // Array of avaliable com-ports
-extern std::array<ComPort, 4> comPorts;  // Ports: 3, 4, 5, 6
+#if (SDL_PLATFORM_WINDOWS)
+// COM ports: 3, 4, 5, 6
+extern std::array<ComPort, 4> comPorts;
+#endif
+#if (SDL_PLATFORM_UNIX)
+// TTY port
+extern std::array<ComPort, 1> comPorts;
+#endif

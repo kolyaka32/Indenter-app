@@ -16,8 +16,7 @@ char* ProgramMenu::loadName = nullptr;
 ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, float _H)
 : Template(_window),
 background(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
-title(_window, _X, _Y-_H*0.45, {"Programming", "Программирование"},
-    2, GUI::Aligment::Midle, Height::Info),
+title(_window, {"Programming", "Программирование"}, {_X, _Y-_H*0.45f, .frame=2, .height=GUI::Info}),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
 newButton(_window,   _X-_W*0.45, _Y-_H*0.45, 0.03, Textures::NewButton),
 clearOption(_window, 0.5, 0.5, 0.2, 0.2, {"Clear program?", "Очистить программу?"}, {"Yes", "Да"}, {"No", "Нет"}),
@@ -25,8 +24,8 @@ saveButton(_window,  _X-_W*0.37, _Y-_H*0.45, 0.03, Textures::SaveButton),
 loadButton(_window,  _X-_W*0.29, _Y-_H*0.45, 0.03, Textures::LoadButton),
 startButton(_window, _X+_W*0.37, _Y-_H*0.45, 0.03, Textures::ResumePauseButton),
 haltButton(_window,  _X+_W*0.45, _Y-_H*0.45, 0.03, Textures::HaltButton),
-stoppedInfo(_window, _X+_W*0.16, _Y-_H*0.38, {"Program stopped", "Программа остановлена"}, 1000),
-netConnectedInfo(_window, _X+_W*0.16, _Y-_H*0.38, {"Not connected", "Не подключён"}, 1000),
+stoppedInfo(_window, {"Program stopped", "Программа остановлена"}, {_X+_W*0.16f, _Y-_H*0.38f, .frame=1}, 1000),
+netConnectedInfo(_window, {"Not connected", "Не подключён"}, {_X+_W*0.16f, _Y-_H*0.38f, .frame=1}, 1000),
 selector(_window, _X-_W/3, _Y+_H*0.05, _W/3, _H*0.9),
 filterText{"Program file", "Файл программы"},
 filter{filterText.getString().c_str(), "prg"} {
@@ -112,6 +111,8 @@ bool ProgramMenu::click(const Mouse _mouse) {
     }
     if (haltButton.in(_mouse)) {
         program.stop();
+        // Additional stop movement
+        device.sendStop();
         return true;
     }
     // Check, if start movement of node
@@ -178,14 +179,24 @@ void ProgramMenu::unclick(const Mouse _mouse) {
     program.unclick();
 }
 
-void ProgramMenu::type(SDL_Keycode _code) {
-    selector.type(_code);
-    program.type(_code);
+bool ProgramMenu::type(SDL_Keycode _code) {
+    if (selector.type(_code)) {
+        return true;
+    }
+    if (program.type(_code)) {
+        return true;
+    }
+    return false;
 }
 
-void ProgramMenu::writeString(const char* _str) {
-    selector.writeString(_str);
-    program.writeString(_str);
+bool ProgramMenu::writeString(const char* _str) {
+    if (selector.writeString(_str)) {
+        return true;
+    }
+    if (program.writeString(_str)) {
+        return true;
+    }
+    return false;
 }
 
 void ProgramMenu::update(const Mouse _mouse) {

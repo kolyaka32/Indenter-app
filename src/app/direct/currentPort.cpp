@@ -13,11 +13,13 @@ int CurrentPort::selected = 0;
 CurrentPort::CurrentPort(const Window& _window, float _X, float _Y, float _W, float _H, float _thickness) noexcept
 : Template(_window),
 texts {
-    {_window, _X-_W/2+arrow, _Y,    {"Not selected", "Не выбран"}, 1, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[0].getName()},       1, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[1].getName()},       1, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[2].getName()},       1, GUI::Aligment::Left},
-    {_window, _X-_W/2+arrow, _Y+_H, {comPorts[3].getName()},       1, GUI::Aligment::Left},
+    {_window, {"Not selected", "Не выбран"}, {_X-_W/2+arrow, _Y, .frame=1, .horAli=GUI::Left}},
+    {_window, {comPorts[0].name}, {_X-_W/2+arrow, _Y+_H, .frame=1, .horAli=GUI::Left}},
+    #if (SDL_PLATFORM_WINDOWS)
+    {_window, {comPorts[1].name}, {_X-_W/2+arrow, _Y+_H, .frame=1, .horAli=GUI::Left}},
+    {_window, {comPorts[2].name}, {_X-_W/2+arrow, _Y+_H, .frame=1, .horAli=GUI::Left}},
+    {_window, {comPorts[3].name}, {_X-_W/2+arrow, _Y+_H, .frame=1, .horAli=GUI::Left}},
+    #endif
 },
 height(_H) {
     background = {_window.getWidth()*(_X-_W/2), _window.getHeight()*(_Y-_H/2),

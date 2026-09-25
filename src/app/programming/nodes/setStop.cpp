@@ -9,7 +9,7 @@
 
 SetStopNode::SetStopNode(const Window& _window, float _X, float _Y)
 : Node(_window, _X, _Y, Textures::BlockAction),
-text(_window, _X-rect.w/2/window.getWidth()+0.005, _Y, {"Stop", "Остановить"}, GUI::Aligment::Left) {}
+text(_window, {"Stop", "Остановить"}, {_X-rect.w/2/window.getWidth()+0.005f, _Y, .horAli=GUI::Left}) {}
 
 Node* SetStopNode::copy() {
     return new SetStopNode{window, (rect.x+rect.w/2)/window.getWidth(),

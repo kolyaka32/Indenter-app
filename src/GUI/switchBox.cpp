@@ -8,20 +8,18 @@
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 
-GUI::SwitchBox::SwitchBox(const Window& _window, float _X, float _Y, float _W,
-    std::initializer_list<LanguagedText> _texts, unsigned _startOption,
-    float _height, Color _backColor, Color _frontColor) noexcept
+GUI::SwitchBox::SwitchBox(const Window& _window, const TextArgument _arg, float _W,
+    std::initializer_list<LanguagedText> _texts, unsigned _startOption) noexcept
 : Template(_window),
-height(_height*1.2f / _window.getHeight()),
-backColor(_backColor) {
+height(_arg.height*1.2f / _window.getHeight()),
+backColor(_arg.backColor) {
     // Setting background
-    background = {(_X-_W/2)*window.getWidth(), (_Y - height/2)*window.getHeight(),
-        _W*window.getWidth(), height*window.getHeight()};
+    background = _arg.getRect(window, _W, height);
 
     // Placing select options
     int i=0;
     for (const LanguagedText* text=_texts.begin(); text != _texts.end(); ++text) {
-        drawnTexts.emplace_back(_window, (_X-_W/2+0.022), _Y, std::move(*text), GUI::Aligment::Left, _height, _frontColor);
+        drawnTexts.emplace_back(_window, std::move(*text), std::move(_arg));
         // Placing text
         drawnTexts[i].move(0.0, height*i);
         i++;
@@ -34,19 +32,19 @@ backColor(_backColor) {
     arrowTexture = window.createTexture(arrowRect.w, arrowRect.h);
     SDL_Vertex vertex[3] = {
         {  // Down point
-            {_X+arrowRect.w*0.5f, _Y+arrowRect.h},
+            {_arg.X+arrowRect.w*0.5f, _arg.Y+arrowRect.h},
             {0.0, 0.0, 0.0, 1.0},  // Black
         },
         {  // Left point
-            {_X, _Y},
+            {_arg.X, _arg.Y},
             {0.0, 0.0, 0.0, 1.0},  // Black
         },
         {  // Right point
-            {_X+arrowRect.w, _Y},
+            {_arg.X+arrowRect.w, _arg.Y},
             {0.0, 0.0, 0.0, 1.0},  // Black
         },
     };
-    window.setDrawColor(_frontColor);
+    window.setDrawColor(_arg.textColor);
     window.setRenderTarget(arrowTexture);
     window.drawGeometry(vertex, 3);
     window.resetRenderTarget();

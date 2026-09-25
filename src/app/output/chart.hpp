@@ -19,7 +19,7 @@ private:
     // Graphic part
     const SDL_FRect drawRect;
     const SDL_Color color;
-    GUI::HighlightedStaticText title;
+    GUI::StaticText title;
     GUI::DynamicText yMarks[5];
     GUI::DynamicText xMarks[2];
 

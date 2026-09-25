@@ -14,6 +14,9 @@
 #include "nodes/getPos.hpp"
 #include "nodes/waitReach.hpp"
 #include "nodes/waitLose.hpp"
+#include "nodes/setNull.hpp"
+#include "nodes/saveData.hpp"
+#include "nodes/comment.hpp"
 #include "nodes/halt.hpp"
 // ! more
 
@@ -29,7 +32,6 @@ protected:
     int getInt(char* &c) const;
     char getChar(char* &c) const;
     char* getString(char* &c) const;
-    //void skip(char* &c) const;
 
 public:
     Program();
@@ -65,8 +67,8 @@ public:
     bool tryConnectTop(Node* node);
     bool tryConnectBottom(Node* node);
     bool tryConnectSubNode(SubNode* subNode);
-    void type(SDL_Keycode code);
-    void writeString(const char* str);
+    bool type(SDL_Keycode code);
+    bool writeString(const char* str);
     void update(const Mouse mouse);
     void blit() const;
 };

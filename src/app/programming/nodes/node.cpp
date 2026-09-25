@@ -75,9 +75,13 @@ GUI::Code Node::click(const Mouse _mouse) {
 
 void Node::unclick() {}
 
-void Node::type(SDL_Keycode _code) {}
+bool Node::type(SDL_Keycode _code) {
+    return false;
+}
 
-void Node::writeString(const char* _str) {}
+bool Node::writeString(const char* _str) {
+    return false;
+}
 
 SubNode* Node::takeSubNode() {
     return nullptr;

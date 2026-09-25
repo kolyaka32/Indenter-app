@@ -169,6 +169,26 @@ void Program::load(const Window& _window, const char* _fileName) {
             }
             break;
 
+        case 'u':
+            // Reinterpret speed as type
+            speed = getChar(c);
+            node = new SetNullNode{_window, x, y, speed};
+            break;
+
+        case 'a':
+            text = getString(c);
+            if (text) {
+                node = new SaveDataNode{_window, x, y, text};
+            }
+            break;
+
+        case 'c':
+            text = getString(c);
+            if (text) {
+                node = new CommentNode{_window, x, y, text};
+            }
+            break;
+
         case 'h':
             node = new HaltNode{_window, x, y};
             break;
@@ -366,16 +386,22 @@ void Program::unclick() {
     }
 }
 
-void Program::type(SDL_Keycode _code) {
+bool Program::type(SDL_Keycode _code) {
     for (int i=0; i < nodes.size(); ++i) {
-        nodes[i]->type(_code);
+        if (nodes[i]->type(_code)) {
+            return true;
+        }
     }
+    return false;
 }
 
-void Program::writeString(const char* _str) {
+bool Program::writeString(const char* _str) {
     for (int i=0; i < nodes.size(); ++i) {
-        nodes[i]->writeString(_str);
+        if (nodes[i]->writeString(_str)) {
+            return true;
+        }
     }
+    return false;
 }
 
 void Program::update(const Mouse _mouse) {

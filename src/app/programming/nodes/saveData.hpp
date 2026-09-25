@@ -5,17 +5,16 @@
 
 #pragma once
 
-#include "getPos.hpp"
+#include "node.hpp"
 
-
-// Node for wait, until force exceed target
-class WaitReachNode : public Node {
+// Node for save collected data
+class SaveDataNode : public Node {
 private:
     GUI::StaticText text;
-    GUI::TypeBox forceTyper;
+    GUI::TypeBox nameTyper;
 
 public:
-    WaitReachNode(const Window& window, float X, float Y, const char* force = "10");
+    SaveDataNode(const Window &window, float X, float Y, const char* val = "result");
 
     // Programming
     Node* copy() override;
@@ -30,6 +29,5 @@ public:
 
     // Execution
     Node* use() override;
-    Node* handleReachForce() const override;
     void save(SDL_IOStream* ofstream) override;
 };

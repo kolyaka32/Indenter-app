@@ -25,9 +25,12 @@ enum class NodeType {
     SavePos,         // Command to get and save current position, 'p'
     WaitReachForce,  // Wait until exceed force, 'r'
     WaitLoseForce,   // Wait until get less force, 'd'
+    SetNull,         // Set force null, 'u'
+    SaveData,        // Save collected data, 'a'
 
     // Control commands
-    Stop,        // Stop program execution, set motor to stop 'h'
+    Comment,     // Comment for readability, 'c'
+    Halt,        // Stop program execution, set motor to stop 'h'
     WhileStart,  // Infinite loop, store nothing, 'w'
     WhileEnd,    // Store position of loop start, 'W'
     LoopStart,   // Basic for-loop, store current position and end (as input parameter) 'l'
@@ -76,8 +79,8 @@ public:
     // Try make action in current node (Button1), Activate for take subnode or start moving it (Some)
     virtual GUI::Code click(const Mouse mouse);
     virtual void unclick();
-    virtual void type(SDL_Keycode code);
-    virtual void writeString(const char* str);
+    virtual bool type(SDL_Keycode code);
+    virtual bool writeString(const char* str);
     // Get subNode to hold and place
     virtual SubNode* takeSubNode();
     virtual void update(float mouseX);

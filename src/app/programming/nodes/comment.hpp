@@ -5,19 +5,18 @@
 
 #pragma once
 
-#include "getPos.hpp"
+#include "node.hpp"
 
 
-// Node for wait, until force exceed target
-class WaitReachNode : public Node {
+// Node for move by setted [distance]
+class CommentNode : public Node {
 private:
-    GUI::StaticText text;
-    GUI::TypeBox forceTyper;
+    GUI::TypeBox typer;
 
 public:
-    WaitReachNode(const Window& window, float X, float Y, const char* force = "10");
+    CommentNode(const Window& window, float X, float Y, const char* val = "comment");
 
-    // Programming
+    // Interaction
     Node* copy() override;
     void move(float X, float Y) override;
     void checkOff(const Mouse mouse) override;
@@ -30,6 +29,5 @@ public:
 
     // Execution
     Node* use() override;
-    Node* handleReachForce() const override;
     void save(SDL_IOStream* ofstream) override;
 };

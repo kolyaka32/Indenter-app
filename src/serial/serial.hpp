@@ -12,8 +12,14 @@
 class Serial {
  private:
     // Information for interacting by serial-port
+    #if (SDL_PLATFORM_WINDOWS)
     DCB dcb;
     HANDLE handle = INVALID_HANDLE_VALUE;
+    #endif
+    #if (SDL_PLATFORM_UNIX)
+    int fd;  // File descriptor for serial port
+    termios portSettings;
+    #endif
 
  public:
     Serial();

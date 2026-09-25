@@ -8,18 +8,18 @@
 
 template <class Item, class SourceItem>
 GUI::ScrollBox<Item, SourceItem>::ScrollBox(const Window& _window, float _X, float _Y,
-    float _width, float _height, int _maxItems, const LanguagedText&& _emptyItemsText) noexcept
+    float _W, float _H, int _maxItems, const LanguagedText&& _emptyItemsText) noexcept
 : Template(_window),
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
-emptySavesText(_window, _X, _Y - _height/4, std::move(_emptyItemsText), 1),
+emptySavesText(_window, {_X, _Y-_H/4, .texts=std::move(_emptyItemsText), .frame=1}),
 #endif
 maxItems(_maxItems),
 startField(0),
 endField(0),
-blockPos(_Y - _height/2),
-blockHeight(_height/_maxItems),
-sliderBackRect({(_X+_width/2-0.04f)*_window.getWidth(), (_Y - _height/2)*_window.getHeight(),
-    0.03f * _window.getWidth(), _height*_window.getHeight()}) {
+blockPos(_Y - _H/2),
+blockHeight(_H/_maxItems),
+sliderBackRect({(_X+_W/2-0.04f)*_window.getWidth(), (_Y - _H/2)*_window.getHeight(),
+    0.03f * _window.getWidth(), _H*_window.getHeight()}) {
     // Side slider
     sliderRect.x = sliderBackRect.x + sliderBackRect.w * 0.15f;
     sliderRect.w = sliderBackRect.w * 0.7f;

@@ -14,6 +14,7 @@ class CollectedData {
     BoundedArray<float> positions;
     BoundedArray<float> forces;
     BoundedArray<float> temperatures;
+    float forceNull;
 
  protected:
     bool saved;  // Flag, is updated since last save
@@ -28,13 +29,19 @@ class CollectedData {
     const BoundedArray<float>& getForces() const;
     const BoundedArray<float>& getTemperatures() const;
 
-    // Interacting with files
     bool isUpdated() const;  // Return true, if updated since last save
-    unsigned getLineCount() const;  // Return current number of lines
+    unsigned getLineCount() const;
     float getLastForce() const;
     float getLastTemp() const;
+    float getForceNull() const;
+    // Set offset of all force elements
+    void setForceNull(float forceNull);
+    void setForceNullAsLast();
+    void setForceNullAsAvar();
+    // Save
+    void trySave(const char* name);
     void save(const char* name);
 };
 
-// Main data-storing object
+// Main collected data-storing object
 extern CollectedData collectedData;

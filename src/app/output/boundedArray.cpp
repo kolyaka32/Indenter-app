@@ -45,6 +45,17 @@ void BoundedArray<T>::add(const T _object) {
 }
 
 template <typename T>
+void BoundedArray<T>::offsetBy(const T _offset) {
+    // Move all values
+    for (int i=0; i < values.size(); ++i) {
+        values[i] += _offset;
+    }
+    // Move borers
+    minVal += _offset;
+    maxVal += _offset;
+}
+
+template <typename T>
 const T BoundedArray<T>::operator[](unsigned _pos) const {
     return values[_pos];
 }
