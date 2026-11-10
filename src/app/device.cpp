@@ -113,8 +113,8 @@ void Device::parseMessage(const char* _data, unsigned _length) {
             break;
 
         default:
-            i += sizeof(Type);
-            return;
+            i += 1;
+            break;
         }
     }
 }
@@ -125,13 +125,13 @@ Device::Speed Device::getSendSpeed(unsigned _speed) const {
         return 1;
 
     case 2:
-        return 4;
-
-    case 3:
         return 10;
 
+    case 3:
+        return 50;
+
     case 4:
-        return 25;
+        return 100;
 
     default:
         return 1;
