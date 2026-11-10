@@ -68,7 +68,7 @@ void Chart<xAxis, yAxis>::blit() const {
     if (pos.size()) {
         float prevPosition = drawRect.x + (pos[0] - pos.min()) * xMul;
         float prevValue = yStart - (val[0] - val.min()) * yMul;
-        for (int i=1; i < val.size(); ++i) {
+        for (unsigned i=1; i < val.size(); ++i) {
             float position = xStart + (pos[i] - pos.min()) * xMul;
             float value = yStart - (val[i] - val.min()) * yMul;
             window.drawLine(prevPosition, prevValue, position, value);

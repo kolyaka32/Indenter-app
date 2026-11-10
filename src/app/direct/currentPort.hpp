@@ -13,7 +13,7 @@
 class CurrentPort : GUI::Template {
  private:
     static bool openned;
-    static int selected;
+    static unsigned selected;
 
     // Graphic part
     const float arrow = 0.02;
@@ -24,8 +24,8 @@ class CurrentPort : GUI::Template {
     GUI::StaticText texts[comPorts.size()+1];
 
  protected:
-    void showPort(int index);
-    void hidePort(int index);
+    void showPort(unsigned index);
+    void hidePort(unsigned index);
     int getPosition(const Mouse mouse);
     void connectToFirst();
     void maximize();

@@ -16,14 +16,6 @@ private:
     Node* holdingNode;        // Node, that is holding by mouse or nullptr if don't
     SubNode* holdingSubNode;  // Special node, refer as argument for other nodes
     SDL_FPoint lastPos;       // Position, where it was holded last time
-    // Save/load
-    static char* saveName;
-    static char* loadName;
-    // Count of saves across which will cycle
-    const unsigned autosaveMaxCount = 3;
-    LanguagedText filterText;  // Text for filter hint
-    const SDL_DialogFileFilter filter;  // Filter for selection program file
-    char saveLocation[100];    // Location with directory for save/load programs
 
     // Graphic part
     GUI::RoundedBackplate background;
@@ -38,6 +30,15 @@ private:
     GUI::ImageButton haltButton;
     GUI::InfoBox netConnectedInfo;
     GUI::InfoBox stoppedInfo;
+
+    // Save/load system
+    static char* saveName;
+    static char* loadName;
+    // Count of saves across which will cycle
+    const unsigned autosaveMaxCount = 3;
+    LanguagedText filterText;  // Text for filter hint
+    const SDL_DialogFileFilter filter;  // Filter for selection program file
+    char saveLocation[100];    // Location with directory for save/load programs
 
 public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);

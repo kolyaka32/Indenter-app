@@ -15,7 +15,7 @@ void Program::save(const char* _fileName) const {
     }
 
     // Writing all nodes
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         // Save node data
         nodes[i]->save(fout);
         // Write string end
@@ -204,7 +204,7 @@ void Program::load(const Window& _window, const char* _fileName) {
             connections.emplace_back(NodeLoad{type, node, next, subNode});
         }
     }
-    for (int i=0; i < connections.size(); ++i) {
+    for (unsigned i=0; i < connections.size(); ++i) {
         // Connect next node
         if (connections[i].next && connections[i].next <= nodes.size()) {
             nodes[connections[i].next-1]->connectTopTo(connections[i].node);
@@ -232,7 +232,7 @@ void Program::deleteNode(Node* _node) {
         if (_node->isDeletable()) {
             // Update all nodes to check on connected
             int node = 0;
-            for (int i=0; i < nodes.size(); ++i) {
+            for (unsigned i=0; i < nodes.size(); ++i) {
                 if (nodes[i] == _node) {
                     node = i;
                 } else {
@@ -243,6 +243,7 @@ void Program::deleteNode(Node* _node) {
             _node = _node->getNext();
             // Remove from array
             delete nodes[node];
+            // ! Check correction of delition
             nodes.erase(nodes.begin() + node);
             logger.additional("Deleted node %d", node);
         } else {
@@ -256,7 +257,7 @@ unsigned Program::getNodePos(const Node* _node) const {
     if (_node == nullptr) {
         return 0;
     }
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         if (nodes[i] == _node) {
             return i+1;
         }
@@ -313,7 +314,7 @@ bool Program::isStopped() {
 
 void Program::start() {
     // Resetting all nodes
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         nodes[i]->reset();
     }
     // Always start from first node (start, can't be changed)
@@ -328,7 +329,7 @@ void Program::stop() {
 }
 
 void Program::checkOff(const Mouse _mouse) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         nodes[i]->checkOff(_mouse);
     }
 }
@@ -348,7 +349,7 @@ void Program::add(Node* _node) {
 }
 
 bool Program::tryConnectTop(Node* _node) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         if (_node->tryConnectTopTo(nodes[i])) {
             return true;
         }
@@ -363,7 +364,7 @@ bool Program::tryConnectBottom(Node* _node) {
         lastNode = lastNode->getNext();
     }
     // Try link last node to node
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         if (lastNode->tryConnectBottomTo(nodes[i])) {
             return true;
         }
@@ -372,7 +373,7 @@ bool Program::tryConnectBottom(Node* _node) {
 }
 
 bool Program::tryConnectSubNode(SubNode* _subNode) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         if (nodes[i]->tryConnectSubNode(_subNode)) {
             return true;
         }
@@ -381,13 +382,13 @@ bool Program::tryConnectSubNode(SubNode* _subNode) {
 }
 
 void Program::unclick() {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         nodes[i]->unclick();
     }
 }
 
 bool Program::type(SDL_Keycode _code) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         if (nodes[i]->type(_code)) {
             return true;
         }
@@ -396,7 +397,7 @@ bool Program::type(SDL_Keycode _code) {
 }
 
 bool Program::writeString(const char* _str) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         if (nodes[i]->writeString(_str)) {
             return true;
         }
@@ -405,7 +406,7 @@ bool Program::writeString(const char* _str) {
 }
 
 void Program::update(const Mouse _mouse) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         nodes[i]->update(_mouse.getX());
     }
 }

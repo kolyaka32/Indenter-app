@@ -12,11 +12,7 @@
 // Object for interact with collected data (show and save)
 class OutputMenu : GUI::Template {
 private:
-    LanguagedText filterText;  // Text for filter hint
-    const SDL_DialogFileFilter filter;  // Filter for selection data file
-    char saveLocation[100];    // Location with directory for save/load datas
-    static char* saveName;
-
+    // Graphical part
     GUI::RoundedBackplate mainBackplate;
     GUI::StaticText title;
     SDL_FRect separateRect;
@@ -34,6 +30,12 @@ private:
     GUI::StaticText notSavedText;
     GUI::TextButton saveButton;
     GUI::TextButton folderButton;
+
+    // Save system
+    LanguagedText filterText;  // Text for filter hint
+    const SDL_DialogFileFilter filter;  // Filter for selection data file
+    char saveLocation[100];    // Location with directory for save/load datas
+    static char* saveName;
 
 public:
     OutputMenu(const Window& window, float X, float Y, float W, float H);

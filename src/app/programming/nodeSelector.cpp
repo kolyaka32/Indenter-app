@@ -28,7 +28,7 @@ background(_window, _X, _Y, _W, _H, 2.0) {
 }
 
 NodeSelector::~NodeSelector() {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         delete nodes[i];
     }
 }
@@ -38,18 +38,18 @@ bool NodeSelector::in(const Mouse _mouse) const {
 }
 
 void NodeSelector::checkOff(const Mouse _mouse) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         nodes[i]->checkOff(_mouse);
     }
 }
 
 Node* NodeSelector::click(const Mouse _mouse) {
     // Check on stop interaction
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         nodes[i]->checkOff(_mouse);
     }
     // Check for all nodes
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         if (GUI::Code code = nodes[i]->click(_mouse)) {
             // Check on action in this block
             if (code == GUI::Some) {
@@ -63,13 +63,13 @@ Node* NodeSelector::click(const Mouse _mouse) {
 }
 
 void NodeSelector::unclick() {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         nodes[i]->unclick();
     }
 }
 
 bool NodeSelector::type(SDL_Keycode _code) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         if (nodes[i]->type(_code)) {
             return true;
         }
@@ -78,7 +78,7 @@ bool NodeSelector::type(SDL_Keycode _code) {
 }
 
 bool NodeSelector::writeString(const char* _str) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         if (nodes[i]->writeString(_str)) {
             return true;
         }
@@ -87,14 +87,14 @@ bool NodeSelector::writeString(const char* _str) {
 }
 
 void NodeSelector::update(const Mouse _mouse) {
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         nodes[i]->update(_mouse.getX());
     }
 }
 
 void NodeSelector::blit() const {
     background.blit();
-    for (int i=0; i < nodes.size(); ++i) {
+    for (unsigned i=0; i < nodes.size(); ++i) {
         nodes[i]->blit();
     }
 }

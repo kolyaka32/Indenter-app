@@ -18,15 +18,15 @@ ProgramMenu::ProgramMenu(const Window& _window, float _X, float _Y, float _W, fl
 background(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, {"Programming", "Программирование"}, {_X, _Y-_H*0.45f, .frame=2, .height=GUI::Info}),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
+selector(_window, _X-_W/3, _Y+_H*0.05, _W/3, _H*0.9),
 newButton(_window,   _X-_W*0.45, _Y-_H*0.45, 0.03, Textures::NewButton),
 clearOption(_window, 0.5, 0.5, 0.2, 0.2, {"Clear program?", "Очистить программу?"}, {"Yes", "Да"}, {"No", "Нет"}),
 saveButton(_window,  _X-_W*0.37, _Y-_H*0.45, 0.03, Textures::SaveButton),
 loadButton(_window,  _X-_W*0.29, _Y-_H*0.45, 0.03, Textures::LoadButton),
 startButton(_window, _X+_W*0.37, _Y-_H*0.45, 0.03, Textures::ResumePauseButton),
 haltButton(_window,  _X+_W*0.45, _Y-_H*0.45, 0.03, Textures::HaltButton),
-stoppedInfo(_window, {"Program stopped", "Программа остановлена"}, {_X+_W*0.16f, _Y-_H*0.38f, .frame=1}, 1000),
 netConnectedInfo(_window, {"Not connected", "Не подключён"}, {_X+_W*0.16f, _Y-_H*0.38f, .frame=1}, 1000),
-selector(_window, _X-_W/3, _Y+_H*0.05, _W/3, _H*0.9),
+stoppedInfo(_window, {"Program stopped", "Программа остановлена"}, {_X+_W*0.16f, _Y-_H*0.38f, .frame=1}, 1000),
 filterText{"Program file", "Файл программы"},
 filter{filterText.getString().c_str(), "prg"} {
     // Getting location
@@ -169,6 +169,7 @@ void ProgramMenu::unclick(const Mouse _mouse) {
         // Check, if could add subnode
         if (!program.tryConnectSubNode(holdingSubNode)) {
             // Delete this node if unconnected
+            // ! Check correction of delition
             delete holdingSubNode;
         }
         holdingSubNode = nullptr;

@@ -44,7 +44,8 @@ enum class NodeType {
 class Node : public GUI::TextureTemplate {
 private:
     // Flags
-    const bool connectableUp, connectableDown;
+    const bool connectableUp;
+    const bool connectableDown;
     const bool delitable;
 
     // Graphical part

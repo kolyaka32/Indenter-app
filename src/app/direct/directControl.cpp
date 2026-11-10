@@ -20,7 +20,6 @@ notConnectedText(_window, {"Not connected", "Нет подключения"}, {_
 notRespondingText(_window, {"Not responding", "Не отвечает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 waitingText(_window, {"Wait", "Ожидает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 workingText(_window, {"Running", "Работает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
-activatableBox(_window, {"Not connected", "Не подключён"}, {_X, _Y-_H*0.05f, .frame=1}, 800),
 straightText(_window, {"Straight control:", "Прямое управление:"}, {_X, _Y+_H*0.01f, .frame=1}),
 slowUpButton(_window,     _X-0.050, _Y+_H*0.10, 0.03, Textures::SlowSpeedButton),
 normalUpButton(_window,   _X-0.017, _Y+_H*0.10, 0.03, Textures::NormalSpeedButton),
@@ -30,7 +29,8 @@ haltButton(_window,       _X,       _Y+_H*0.16, 0.03, Textures::HaltButton),
 slowDownButton(_window,   _X-0.050, _Y+_H*0.22, 0.03, Textures::SlowSpeedButton),
 normalDownButton(_window, _X-0.017, _Y+_H*0.22, 0.03, Textures::NormalSpeedButton),
 fastDownButton(_window,   _X+0.017, _Y+_H*0.22, 0.03, Textures::FastSpeedButton), 
-ultraDownButton(_window,  _X+0.050, _Y+_H*0.22, 0.03, Textures::UltraSpeedButton){}
+ultraDownButton(_window,  _X+0.050, _Y+_H*0.22, 0.03, Textures::UltraSpeedButton),
+activatableBox(_window, {"Not connected", "Не подключён"}, {_X, _Y-_H*0.05f, .frame=1}, 800) {}
 
 void DirectControl::reset() {
     serialPort.reset();
@@ -158,8 +158,8 @@ void DirectControl::blit() const {
     fastUpButton.blit();
     ultraUpButton.blit();
     haltButton.blit();
-    slowDownButton.blitRotated(180.0);
-    normalDownButton.blitRotated(180.0);
-    fastDownButton.blitRotated(180.0);
-    ultraDownButton.blitRotated(180.0);
+    slowDownButton.blitFlipped();
+    normalDownButton.blitFlipped();
+    fastDownButton.blitFlipped();
+    ultraDownButton.blitFlipped();
 }

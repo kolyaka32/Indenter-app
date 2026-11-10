@@ -8,8 +8,8 @@
 
 PosSubNode::PosSubNode(const Window& _window, float _X, float _Y, int _number, Node* _srcNode)
 : SubNode(_window, _X, _Y, _srcNode, Textures::SubBlock),
-text(_window, {"p%d", "p%d"}, {_X-0.007f, _Y, .horAli=GUI::Left, .textColor=BLACK}, _number),
-number(_number) {}
+number(_number),
+text(_window, {"p%d", "p%d"}, {_X-0.007f, _Y, .horAli=GUI::Left, .textColor=BLACK}, _number) {}
 
 SubNode* PosSubNode::copy() {
     return new PosSubNode{window, (rect.x+rect.w/2)/window.getWidth(),

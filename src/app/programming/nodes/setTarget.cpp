@@ -10,8 +10,8 @@
 
 SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y, char _speed)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
-positionNode(nullptr),
 speed(getSpeed(_speed)),
+positionNode(nullptr),
 text(_window, {"Move       to", "Двигаться       к"}, {_X-rect.w/(2*window.getWidth())+0.005f, _Y, .horAli=GUI::Left}),
 speedRect{(_X + (LanguagedText::getLanguage()==Language::Russian ? -0.002f : -0.027f))*window.getWidth(),
     _Y*window.getHeight()-18.0f, 32.0, 32.0},

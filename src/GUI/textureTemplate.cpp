@@ -32,8 +32,8 @@ void GUI::TextureTemplate::blit() const {
     window.blit(texture, rect);
 }
 
-void GUI::TextureTemplate::blitRotated(float _angle) const {
-    window.blit(texture, _angle, rect);
+void GUI::TextureTemplate::blitFlipped() const {
+    window.blit(texture, 0.0f, rect, nullptr, SDL_FLIP_VERTICAL);
 }
 
 bool GUI::TextureTemplate::in(const Mouse mouse) const {

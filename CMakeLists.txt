@@ -1,35 +1,45 @@
 # Setting minimum required for cmake versions
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.7.10)
 
-# Setting minimal c++ version for work
+# Setting minimal C++ version for work
 set(CMAKE_CXX_STANDARD 14)
 
 # Creating project
 project(Indenter)
 
+# Special for windows
+if (WIN32)
+    # Hidding console
+    add_link_options(-mwindows)
+    message("> Hidding console")
+
+    # Setting to link standart libraries staticly
+    add_link_options(-static-libgcc -static-libstdc++)
+endif (WIN32)
+
+# Setting all flags (more warnings), remove debug
+add_compile_options(-Wall)
+
+# Remove debug functions in release
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_compile_options(-s)
+    message("> Removing debug info")
+endif ()
+
 # Add all source files (that needed) under the src directory
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp" "src/*.rc")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Building depending on platform
-if (WIN32)
-    # Hidding console on windows
-    set(CMAKE_CXX_FLAGS "-mwindows")
-    # Linking library for net
-    #target_link_libraries(${PROJECT_NAME} PRIVATE iphlpapi ws2_32)
-    # Setting to link standart libraries statickly
-    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
-endif (WIN32)
-
-# Look for a SDL3 package
+# Look for side libraries
 find_package(SDL3 REQUIRED)
 find_package(SDL3_image REQUIRED)
 find_package(SDL3_ttf REQUIRED)
-#find_package(SDL3_mixer REQUIRED)
 find_package(libzip)
 
-# Link to the actual SDL3 library.
-#target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_mixer::SDL3_mixer)
+# Check, if required library
+message("> SDL3 lib path: " ${SDL3_DIR})
+
+# Linking side libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_ttf::SDL3_ttf)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_image::SDL3_image)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)

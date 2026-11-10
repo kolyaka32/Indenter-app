@@ -212,7 +212,9 @@ void GUI::ScrollBox<Item, SourceItem>::move(float _X, float _Y) {
     for (int i=0; i < items.size(); ++i) {
         items[i].move(_X, _Y);
     }
+    #if (USE_SDL_FONT) && (PRELOAD_FONTS)
     emptySavesText.move(_X, _Y);
+    #endif
     // Sliders
     sliderRect.x += _X*window.getWidth();
     sliderRect.y += _Y*window.getHeight();

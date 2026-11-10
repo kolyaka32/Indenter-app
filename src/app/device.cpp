@@ -61,7 +61,7 @@ void Device::checkRecieve() {
 }
 
 void Device::parseMessage(const char* _data, unsigned _length) {
-    for (int i=0; i < _length;) {
+    for (unsigned i=0; i < _length;) {
         switch (Get(*((Type*)_data))) {
         case Get::None:
             // Nothing
