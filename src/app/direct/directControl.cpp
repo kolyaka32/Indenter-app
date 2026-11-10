@@ -20,15 +20,17 @@ notConnectedText(_window, {"Not connected", "Нет подключения"}, {_
 notRespondingText(_window, {"Not responding", "Не отвечает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 waitingText(_window, {"Wait", "Ожидает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
 workingText(_window, {"Running", "Работает"}, {_X, _Y-_H*0.1f, .textColor=BLACK}),
-activatableBox(_window, {"Not connected", "Не подключён"}, {_X, _Y-_H*0.05f, .frame=1}, 800),
 straightText(_window, {"Straight control:", "Прямое управление:"}, {_X, _Y+_H*0.01f, .frame=1}),
-slowUpButton(_window,   _X-0.035, _Y+_H*0.08, 0.03, Textures::SlowUpButton),
-normalUpButton(_window, _X,       _Y+_H*0.08, 0.03, Textures::NormalUpButton),
-fastUpButton(_window,   _X+0.035, _Y+_H*0.08, 0.03, Textures::FastUpButton),
-haltButton(_window,     _X,       _Y+_H*0.16, 0.03, Textures::HaltButton),
-slowDownButton(_window, _X-0.035, _Y+_H*0.24, 0.03, Textures::SlowDownButton),
-normalDownButton(_window, _X,     _Y+_H*0.24, 0.03, Textures::NormalDownButton),
-fastDownButton(_window, _X+0.035, _Y+_H*0.24, 0.03, Textures::FastDownButton) {}
+slowUpButton(_window,     _X-0.050, _Y+_H*0.10, 0.03, Textures::SlowSpeedButton),
+normalUpButton(_window,   _X-0.017, _Y+_H*0.10, 0.03, Textures::NormalSpeedButton),
+fastUpButton(_window,     _X+0.017, _Y+_H*0.10, 0.03, Textures::FastSpeedButton),
+ultraUpButton(_window,    _X+0.05,  _Y+_H*0.10, 0.03, Textures::UltraSpeedButton),
+haltButton(_window,       _X,       _Y+_H*0.16, 0.03, Textures::HaltButton),
+slowDownButton(_window,   _X-0.050, _Y+_H*0.22, 0.03, Textures::SlowSpeedButton),
+normalDownButton(_window, _X-0.017, _Y+_H*0.22, 0.03, Textures::NormalSpeedButton),
+fastDownButton(_window,   _X+0.017, _Y+_H*0.22, 0.03, Textures::FastSpeedButton), 
+ultraDownButton(_window,  _X+0.050, _Y+_H*0.22, 0.03, Textures::UltraSpeedButton),
+activatableBox(_window, {"Not connected", "Не подключён"}, {_X, _Y-_H*0.05f, .frame=1}, 800) {}
 
 void DirectControl::reset() {
     serialPort.reset();
@@ -59,6 +61,13 @@ bool DirectControl::click(const Mouse _mouse) {
             activatableBox.reset();
         }
     }
+    if (ultraUpButton.in(_mouse)) {
+        if (device.isConnected()) {
+            device.sendMoveDown(4);
+        } else {
+            activatableBox.reset();
+        }
+    }
     if (haltButton.in(_mouse)) {
         if (device.isConnected()) {
             device.sendStop();
@@ -83,6 +92,13 @@ bool DirectControl::click(const Mouse _mouse) {
     if (fastDownButton.in(_mouse)) {
         if (device.isConnected()) {
             device.sendMoveUp(3);
+        } else {
+            activatableBox.reset();
+        }
+    }
+    if (ultraDownButton.in(_mouse)) {
+        if (device.isConnected()) {
+            device.sendMoveUp(4);
         } else {
             activatableBox.reset();
         }
@@ -140,8 +156,10 @@ void DirectControl::blit() const {
     slowUpButton.blit();
     normalUpButton.blit();
     fastUpButton.blit();
+    ultraUpButton.blit();
     haltButton.blit();
-    slowDownButton.blit();
-    normalDownButton.blit();
-    fastDownButton.blit();
+    slowDownButton.blitFlipped();
+    normalDownButton.blitFlipped();
+    fastDownButton.blitFlipped();
+    ultraDownButton.blitFlipped();
 }

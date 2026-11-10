@@ -27,14 +27,17 @@ private:
 
     // Buttons for start/stop device
     GUI::StaticText straightText;
-    GUI::InfoBox activatableBox;
     GUI::ImageButton slowUpButton;
     GUI::ImageButton normalUpButton;
     GUI::ImageButton fastUpButton;
+    GUI::ImageButton ultraUpButton;
     GUI::ImageButton haltButton;
     GUI::ImageButton slowDownButton;
     GUI::ImageButton normalDownButton;
     GUI::ImageButton fastDownButton;
+    GUI::ImageButton ultraDownButton;
+
+    GUI::InfoBox activatableBox;
 
 public:
     DirectControl(const Window& window, float X, float Y, float W, float H);

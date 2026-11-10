@@ -11,7 +11,7 @@
 // Node for move by setted [distance]
 class SetStepNode : public Node {
 private:
-    Uint16 speed;  // Speeds: slow=1, normal=2, fast=3
+    Speed speed;
 
     GUI::StaticText text;
     SDL_FRect speedRect;
