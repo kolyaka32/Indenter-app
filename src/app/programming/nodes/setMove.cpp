@@ -57,10 +57,10 @@ void SetMoveNode::blit() const {
 
 Node* SetMoveNode::use() {
     if (direction) {
-        device.sendMoveUp(getSendSpeed(speed));
+        device.sendMoveUp(speed);
         logger.additional("> Start movement up %d", speed);
     } else {
-        device.sendMoveDown(getSendSpeed(speed));
+        device.sendMoveDown(speed);
         logger.additional("> Start movement down %d", speed);
     }
     return nextNode;

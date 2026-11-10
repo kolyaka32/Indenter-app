@@ -31,10 +31,12 @@ private:
     GUI::ImageButton slowUpButton;
     GUI::ImageButton normalUpButton;
     GUI::ImageButton fastUpButton;
+    GUI::ImageButton ultraUpButton;
     GUI::ImageButton haltButton;
     GUI::ImageButton slowDownButton;
     GUI::ImageButton normalDownButton;
     GUI::ImageButton fastDownButton;
+    GUI::ImageButton ultraDownButton;
 
 public:
     DirectControl(const Window& window, float X, float Y, float W, float H);

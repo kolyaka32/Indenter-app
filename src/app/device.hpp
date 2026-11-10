@@ -56,13 +56,13 @@ class Device {
     // Immidiate stop
     void sendStop();
     // Working speed infinite movement
-    void sendMoveUp(Speed speed);
-    void sendMoveDown(Speed speed);
+    void sendMoveUp(unsigned speed);
+    void sendMoveDown(unsigned speed);
     // Relative movement by step count
-    void sendStepUp(Speed speed, float distance);
-    void sendStepDown(Speed speed, float distance);
+    void sendStepUp(unsigned speed, float distance);
+    void sendStepDown(unsigned speed, float distance);
     // Absolute movement to pos (should by get only from get position)
-    void sendMoveToPos(Speed speed, int pos);
+    void sendMoveToPos(unsigned speed, int pos);
     // Sensors
     void sendReachForce(float force);
     void sendLoseForce(float force);
@@ -91,7 +91,7 @@ class Device {
     const timer exceedWait = 1000;
 
     void parseMessage(const char* data, unsigned length);
-    Speed getSpeed() const;
+    Speed getSendSpeed(unsigned speed) const;
 };
 
 // Object store state of device and interact with him

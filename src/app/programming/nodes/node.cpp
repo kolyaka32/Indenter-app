@@ -10,7 +10,7 @@
 Node::Node(const Window& _window, float _X, float _Y, Textures _texture,
     bool _connectableUp, bool _connectableDown, bool _delitable)
 : TextureTemplate(_window, _window.getTexture(_texture)),
-arrowTexture(window.getTexture(Textures::SlowUpButton)),
+arrowTexture(window.getTexture(Textures::SlowSpeedButton)),
 previousNode(nullptr),
 nextNode(nullptr),
 connectableUp(_connectableUp),
@@ -212,7 +212,7 @@ Node* Node::handleReachForce() const {
 }
 
 Node::Speed Node::getSpeed(char _letter) const {
-    if (_letter > '0' && _letter <= '9') {
+    if (_letter > '0' && _letter <= '4') {
         return _letter - '0';
     }
     return 1;
@@ -223,40 +223,25 @@ char Node::getLetter(Speed _speed) const {
 }
 
 void Node::getNextSpeed(Speed& _current) const {
-    _current = (_current) % 3 + 1;
-}
-
-Uint16 Node::getSendSpeed(Speed _speed) const {
-    switch (_speed) {
-    case 1:
-        return 1;
-
-    case 2:
-        return 4;
-
-    case 3:
-        return 10;
-
-    case 4:
-        return 25;
-
-    default:
-        return 1;
-    }
+    _current = (_current) % 4 + 1;
 }
 
 void Node::blitSpeed(Speed _speed, const SDL_FRect _rect) const {
     switch (_speed) {
     case 1:
-        window.blit(window.getTexture(Textures::SlowUpButton), 90.0, _rect);
+        window.blit(window.getTexture(Textures::SlowSpeedButton), 90.0, _rect);
         break;
 
     case 2:
-        window.blit(window.getTexture(Textures::NormalUpButton), 90.0, _rect);
+        window.blit(window.getTexture(Textures::NormalSpeedButton), 90.0, _rect);
         break;
 
     case 3:
-        window.blit(window.getTexture(Textures::FastUpButton), 90.0, _rect);
+        window.blit(window.getTexture(Textures::FastSpeedButton), 90.0, _rect);
+        break;
+
+    case 4:
+        window.blit(window.getTexture(Textures::UltraSpeedButton), 90.0, _rect);
         break;
 
     default:
@@ -277,9 +262,9 @@ char Node::getLetter(Direction _direction) const {
 
 void Node::blitDirection(Direction _direction, const SDL_FRect _rect) const {
     if (_direction) {
-        window.blit(window.getTexture(Textures::SlowDownButton), _rect);
+        window.blit(window.getTexture(Textures::SlowSpeedButton), 180.0, _rect);
     } else {
-        window.blit(window.getTexture(Textures::SlowUpButton), _rect);
+        window.blit(window.getTexture(Textures::SlowSpeedButton), _rect);
     }
 }
 

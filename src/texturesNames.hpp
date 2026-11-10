@@ -25,12 +25,11 @@ enum class Textures : unsigned {
     ReloadButton,
     ResumePauseButton,
     HaltButton,
-    SlowUpButton,
-    NormalUpButton,
-    FastUpButton,
-    SlowDownButton,
-    NormalDownButton,
-    FastDownButton,
+    SlowSpeedButton,
+    NormalSpeedButton,
+    FastSpeedButton,
+    UltraSpeedButton,
+
     // Base flags in settings
     FlagUSA,
     FlagRUS,

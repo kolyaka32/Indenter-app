@@ -64,6 +64,7 @@ namespace GUI {
         TextureTemplate(TextureTemplate&& object) noexcept;
         void move(float X, float Y) override;
         void blit() const override;
+        void blitRotated(float angle) const;
         virtual bool in(const Mouse mouse) const;
     };
 

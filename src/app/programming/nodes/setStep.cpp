@@ -74,9 +74,9 @@ void SetStepNode::blit() const {
 Node* SetStepNode::use() {
     float distance = SDL_atof(distanceTyper.getString());
     if (distance > 0) {
-        device.sendStepUp(getSendSpeed(speed), distance);
+        device.sendStepUp(speed, distance);
     } else {
-        device.sendStepDown(getSendSpeed(speed), -distance);
+        device.sendStepDown(speed, -distance);
     }
     logger.additional("> Set step by %f", distance);
     return this;

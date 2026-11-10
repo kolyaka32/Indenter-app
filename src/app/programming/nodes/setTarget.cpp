@@ -113,7 +113,7 @@ Node* SetTargetNode::use() {
         GetPosNode* node = (GetPosNode*)positionNode->getSource();
         if (node && node->isLegimate()) {
             // Send move
-            device.sendMoveToPos(getSendSpeed(speed), node->getPos());
+            device.sendMoveToPos(speed, node->getPos());
             logger.additional("Start move to %d", node->getPos());
             return this;
         }

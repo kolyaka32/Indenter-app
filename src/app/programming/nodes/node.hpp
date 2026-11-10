@@ -72,7 +72,6 @@ protected:
     Speed getSpeed(char letter) const;
     char getLetter(Speed speed) const;
     void getNextSpeed(Speed& current) const;
-    Uint16 getSendSpeed(Speed speed) const;
     void blitSpeed(Speed speed, const SDL_FRect rect) const;
 
     Direction getDirection(char letter) const;

@@ -119,6 +119,25 @@ void Device::parseMessage(const char* _data, unsigned _length) {
     }
 }
 
+Device::Speed Device::getSendSpeed(unsigned _speed) const {
+    switch (_speed) {
+    case 1:
+        return 1;
+
+    case 2:
+        return 4;
+
+    case 3:
+        return 10;
+
+    case 4:
+        return 25;
+
+    default:
+        return 1;
+    }
+}
+
 void Device::sendStop() {
     struct Packet {
         Type type;
@@ -128,29 +147,29 @@ void Device::sendStop() {
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendMoveUp(Speed _speed) {
+void Device::sendMoveUp(unsigned _speed) {
     struct Packet {
         Type type;
         Speed speed;
     };
     Packet packet;
     packet.type = Type(Send::SetMoveUp);
-    packet.speed = _speed;
+    packet.speed = getSendSpeed(_speed);
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendMoveDown(Speed _speed) {
+void Device::sendMoveDown(unsigned _speed) {
     struct Packet {
         Type type;
         Speed speed;
     };
     Packet packet;
     packet.type = Type(Send::SetMoveDown);
-    packet.speed = _speed;
+    packet.speed = getSendSpeed(_speed);
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendStepUp(Speed _speed, float _distance) {
+void Device::sendStepUp(unsigned _speed, float _distance) {
     struct Packet {
         Type type;
         Speed speed;
@@ -158,12 +177,12 @@ void Device::sendStepUp(Speed _speed, float _distance) {
     };
     Packet packet;
     packet.type = Type(Send::SetStepUp);
-    packet.speed = _speed;
+    packet.speed = getSendSpeed(_speed);
     packet.distance = _distance;
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendStepDown(Speed _speed, float _distance) {
+void Device::sendStepDown(unsigned _speed, float _distance) {
     struct Packet {
         Type type;
         Speed speed;
@@ -171,12 +190,12 @@ void Device::sendStepDown(Speed _speed, float _distance) {
     };
     Packet packet;
     packet.type = Type(Send::SetStepDown);
-    packet.speed = _speed;
+    packet.speed = getSendSpeed(_speed);
     packet.distance = _distance;
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendMoveToPos(Speed _speed, int _pos) {
+void Device::sendMoveToPos(unsigned _speed, int _pos) {
     struct Packet {
         Type type;
         Speed speed;
@@ -184,7 +203,7 @@ void Device::sendMoveToPos(Speed _speed, int _pos) {
     };
     Packet packet;
     packet.type = Type(Send::SetMoveTo);
-    packet.speed = _speed;
+    packet.speed = getSendSpeed(_speed);
     packet.pos = _pos;
     serial.writeData((char*)&packet, sizeof(packet));
 }
