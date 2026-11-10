@@ -12,6 +12,7 @@ class SetNullNode : public Node {
 private:
     int type;  // 0: as avarage, 1: as last
 
+    const float posX;
     GUI::StaticText text;
     GUI::StaticText avarButton;
     GUI::RectBackplate avarButtonRect;

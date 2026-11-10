@@ -10,21 +10,22 @@
 SetNullNode::SetNullNode(const Window& _window, float _X, float _Y, char _type)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 type(_type - '0'),
+posX(_X + (LanguagedText::getLanguage()==Language::Russian ? 0.014f : 0.002f)),
 text(_window, {"Set null as", "Уст. ноль как"}, {_X-rect.w/(2*window.getWidth())+0.005f, _Y, .horAli=GUI::Left}),
-avarButton(_window, {"avarage", "среднее"}, {_X+0.014f, _Y, .horAli=GUI::Left, .textColor=BLACK}),
-avarButtonRect(_window, _X+0.041f, _Y, 0.06, 0.03, 1.0, WHITE),
-lastButton(_window, {"last", "последнее"}, {_X+0.014f, _Y, .horAli=GUI::Left, .textColor=BLACK}),
-lastButtonRect(_window, _X+0.041f, _Y, 0.06, 0.03, 1.0, WHITE) {}
+avarButton(_window, {"avarage", "среднее"}, {posX, _Y, .horAli=GUI::Left, .textColor=BLACK}),
+avarButtonRect(_window, posX+0.027f, _Y, 0.06, 0.03, 1.0, WHITE),
+lastButton(_window, {"last", "последнее"}, {posX, _Y, .horAli=GUI::Left, .textColor=BLACK}),
+lastButtonRect(_window, posX+0.027f, _Y, 0.06, 0.03, 1.0, WHITE) {}
 
 GUI::Code SetNullNode::click(const Mouse _mouse) {
     if (in(_mouse)) {
         if (type) {
-            if (lastButton.in(_mouse)) {
+            if (lastButtonRect.in(_mouse)) {
                 type = 0;
                 return GUI::Button1;
             }
         } else {
-            if (avarButton.in(_mouse)) {
+            if (avarButtonRect.in(_mouse)) {
                 type = 1;
                 return GUI::Button1;
             }
