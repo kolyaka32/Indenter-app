@@ -11,14 +11,14 @@ SetStepNode::SetStepNode(const Window& _window, float _X, float _Y, char _speed,
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 text(_window, {"Steping                  µm", "Шагать                   мкм"},
     {_X-rect.w/(2*window.getWidth())+0.005f, _Y, .horAli=GUI::Left}),
-speed(_speed - '0'),
+speed(getSpeed(_speed)),
 speedRect{(_X-0.017f)*window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0},
 distanceTyper(_window, {_X+0.004f, _Y-0.002f, .height=GUI::Medium,
     .horAli=GUI::Left, .textColor=BLACK, .backColor=WHITE}, 5, _val) {}
 
 Node* SetStepNode::copy() {
     return new SetStepNode{window, (rect.x+rect.w/2)/window.getWidth(),
-        (rect.y+rect.h/2)/window.getHeight(), char(speed + '0'), distanceTyper.getString()};
+        (rect.y+rect.h/2)/window.getHeight(), getLetter(speed), distanceTyper.getString()};
 }
 
 void SetStepNode::move(float _X, float _Y) {
@@ -36,7 +36,7 @@ void SetStepNode::checkOff(const Mouse _mouse) {
 GUI::Code SetStepNode::click(const Mouse _mouse) {
     if (in(_mouse)){
         if (_mouse.in(speedRect)) {
-            speed = (speed) % 3 + 1;
+            getNextSpeed(speed);
             return GUI::Button1;
         }
         if (distanceTyper.click(_mouse)) {
@@ -68,31 +68,15 @@ void SetStepNode::blit() const {
     Node::blit();
     text.blit();
     distanceTyper.blit();
-    // Speed
-    switch (speed) {
-    case 1:
-        window.blit(window.getTexture(Textures::SlowUpButton), 90.0, speedRect);
-        break;
-
-    case 2:
-        window.blit(window.getTexture(Textures::NormalUpButton), 90.0, speedRect);
-        break;
-
-    case 3:
-        window.blit(window.getTexture(Textures::FastUpButton), 90.0, speedRect);
-        break;
-
-    default:
-        break;
-    }
+    blitSpeed(speed, speedRect);
 }
 
 Node* SetStepNode::use() {
     float distance = SDL_atof(distanceTyper.getString());
     if (distance > 0) {
-        device.sendStepUp(speed, distance);
+        device.sendStepUp(getSendSpeed(speed), distance);
     } else {
-        device.sendStepDown(speed, -distance);
+        device.sendStepDown(getSendSpeed(speed), -distance);
     }
     logger.additional("> Set step by %f", distance);
     return this;
@@ -105,5 +89,5 @@ Node* SetStepNode::handlReachPos() const {
 
 void SetStepNode::save(SDL_IOStream* _fout) {
     saveMain(_fout, 'e');
-    SDL_IOprintf(_fout, " %c %s", speed+'0', distanceTyper.getString());
+    SDL_IOprintf(_fout, " %c %s", getLetter(speed), distanceTyper.getString());
 }

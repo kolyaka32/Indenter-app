@@ -11,7 +11,7 @@
 SetTargetNode::SetTargetNode(const Window& _window, float _X, float _Y, char _speed)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 positionNode(nullptr),
-speed(_speed - '0'),
+speed(getSpeed(_speed)),
 text(_window, {"Move       to", "Двигаться       к"}, {_X-rect.w/(2*window.getWidth())+0.005f, _Y, .horAli=GUI::Left}),
 speedRect{(_X + (LanguagedText::getLanguage()==Language::Russian ? -0.002f : -0.027f))*window.getWidth(),
     _Y*window.getHeight()-18.0f, 32.0, 32.0},
@@ -20,7 +20,7 @@ connectTarget(_window, _X + (LanguagedText::getLanguage()==Language::Russian ? 0
 GUI::Code SetTargetNode::click(const Mouse _mouse) {
     if (in(_mouse)) {
         if (_mouse.in(speedRect)) {
-            speed = (speed) % 3 + 1;
+            getNextSpeed(speed);
             return GUI::Button2;
         }
         if (positionNode && positionNode->in(_mouse)) {
@@ -98,23 +98,7 @@ void SetTargetNode::move(float _X, float _Y) {
 void SetTargetNode::blit() const {
     Node::blit();
     text.blit();
-    // Speed
-    switch (speed) {
-    case 1:
-        window.blit(window.getTexture(Textures::SlowUpButton), 90.0, speedRect);
-        break;
-
-    case 2:
-        window.blit(window.getTexture(Textures::NormalUpButton), 90.0, speedRect);
-        break;
-
-    case 3:
-        window.blit(window.getTexture(Textures::FastUpButton), 90.0, speedRect);
-        break;
-
-    default:
-        break;
-    }
+    blitSpeed(speed, speedRect);
     // Check, what node to draw
     if (positionNode) {
         positionNode->blit();
@@ -129,7 +113,7 @@ Node* SetTargetNode::use() {
         GetPosNode* node = (GetPosNode*)positionNode->getSource();
         if (node && node->isLegimate()) {
             // Send move
-            device.sendMoveToPos(speed, node->getPos());
+            device.sendMoveToPos(getSendSpeed(speed), node->getPos());
             logger.additional("Start move to %d", node->getPos());
             return this;
         }
@@ -152,5 +136,5 @@ void SetTargetNode::save(SDL_IOStream* _fout) {
         pos = ProgramMenu::program.getNodePos(positionNode->getSource());
     }
     // Write speed and pos
-    SDL_IOprintf(_fout, " %c %d", speed+'0', pos);
+    SDL_IOprintf(_fout, " %c %d", getLetter(speed), pos);
 }

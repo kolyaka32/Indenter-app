@@ -65,6 +65,20 @@ protected:
     // Save all basic parameters
     void saveMain(SDL_IOStream* ofstream, char type);
 
+    // Internal types
+    typedef Uint8 Speed;  // Speeds: slow=1, normal=2, fast=3
+    typedef bool Direction;  // false for down and true for up
+
+    Speed getSpeed(char letter) const;
+    char getLetter(Speed speed) const;
+    void getNextSpeed(Speed& current) const;
+    Uint16 getSendSpeed(Speed speed) const;
+    void blitSpeed(Speed speed, const SDL_FRect rect) const;
+
+    Direction getDirection(char letter) const;
+    char getLetter(Direction direction) const;
+    void blitDirection(Direction direction, const SDL_FRect rect) const;
+
 public:
     Node(const Window& window, float X, float Y, Textures texture,
         bool connectableUp = true, bool connectableDown = true, bool delitable = true);

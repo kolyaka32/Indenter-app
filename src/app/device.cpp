@@ -82,7 +82,7 @@ void Device::parseMessage(const char* _data, unsigned _length) {
             // One packet of data
             struct DataPacket {
                 Type type;
-                Uint16 unused;
+                Padding unused;
                 float position;
                 float force;
                 Uint16 temperature;
@@ -95,7 +95,7 @@ void Device::parseMessage(const char* _data, unsigned _length) {
         case Get::Position:
             struct PosPacket {
                 Type type;
-                Uint16 unused;
+                Padding unused;
                 int pos;
             };
             ProgramMenu::program.handlePos(((PosPacket*)_data)->pos);
@@ -122,39 +122,38 @@ void Device::parseMessage(const char* _data, unsigned _length) {
 void Device::sendStop() {
     struct Packet {
         Type type;
-        Uint16 speed;
     };
     Packet packet;
-    packet.type = Uint16(Send::SetStop);
+    packet.type = Type(Send::SetStop);
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendMoveUp(Uint16 _speed) {
+void Device::sendMoveUp(Speed _speed) {
     struct Packet {
         Type type;
-        Uint16 speed;
+        Speed speed;
     };
     Packet packet;
-    packet.type = Uint16(Send::SetMoveUp);
+    packet.type = Type(Send::SetMoveUp);
     packet.speed = _speed;
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendMoveDown(Uint16 _speed) {
+void Device::sendMoveDown(Speed _speed) {
     struct Packet {
         Type type;
-        Uint16 speed;
+        Speed speed;
     };
     Packet packet;
-    packet.type = Uint16(Send::SetMoveDown);
+    packet.type = Type(Send::SetMoveDown);
     packet.speed = _speed;
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendStepUp(Uint16 _speed, float _distance) {
+void Device::sendStepUp(Speed _speed, float _distance) {
     struct Packet {
         Type type;
-        Uint16 speed;
+        Speed speed;
         float distance;
     };
     Packet packet;
@@ -164,10 +163,10 @@ void Device::sendStepUp(Uint16 _speed, float _distance) {
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendStepDown(Uint16 _speed, float _distance) {
+void Device::sendStepDown(Speed _speed, float _distance) {
     struct Packet {
         Type type;
-        Uint16 speed;
+        Speed speed;
         float distance;
     };
     Packet packet;
@@ -177,10 +176,10 @@ void Device::sendStepDown(Uint16 _speed, float _distance) {
     serial.writeData((char*)&packet, sizeof(packet));
 }
 
-void Device::sendMoveToPos(Uint16 _speed, int _pos) {
+void Device::sendMoveToPos(Speed _speed, int _pos) {
     struct Packet {
         Type type;
-        Uint16 speed;
+        Speed speed;
         int pos;
     };
     Packet packet;
@@ -193,7 +192,7 @@ void Device::sendMoveToPos(Uint16 _speed, int _pos) {
 void Device::sendReachForce(float _force) {
     struct Packet {
         Type type;
-        Uint16 unused;
+        Padding unused;
         float force;
     };
     Packet packet;
@@ -206,7 +205,7 @@ void Device::sendReachForce(float _force) {
 void Device::sendLoseForce(float _force) {
     struct Packet {
         Type type;
-        Uint16 unused;
+        Padding unused;
         float force;
     };
     Packet packet;

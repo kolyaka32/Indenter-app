@@ -11,7 +11,7 @@
 // Node for absolute movement to stored 
 class SetTargetNode : public Node {
 private:
-    Uint16 speed;  // Speeds: slow=1, normal=2, fast=3
+    Speed speed;
     PosSubNode* positionNode;
 
     // Graphical part

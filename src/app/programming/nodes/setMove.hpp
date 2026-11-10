@@ -11,8 +11,8 @@
 // Node for set movement in selected [direction] with selected [speed]
 class SetMoveNode : public Node {
 private:
-    Uint16 speed;  // Speeds: slow=1, normal=2, fast=3
-    bool direction;  // false for down and true for up
+    Speed speed;
+    Direction direction;
 
     GUI::StaticText text;
     SDL_FRect speedRect;

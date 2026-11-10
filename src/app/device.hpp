@@ -25,7 +25,10 @@ class Device {
         Waiting,        // Waiting for command
         Working,        // Going to sample at full speed
     };
+    // Types for messages
     typedef Uint16 Type;
+    typedef Uint16 Speed;
+    typedef Uint16 Padding;
     // Main device state
     States state = NotConnected;
 
@@ -53,13 +56,13 @@ class Device {
     // Immidiate stop
     void sendStop();
     // Working speed infinite movement
-    void sendMoveUp(Uint16 speed);
-    void sendMoveDown(Uint16 speed);
+    void sendMoveUp(Speed speed);
+    void sendMoveDown(Speed speed);
     // Relative movement by step count
-    void sendStepUp(Uint16 speed, float distance);
-    void sendStepDown(Uint16 speed, float distance);
+    void sendStepUp(Speed speed, float distance);
+    void sendStepDown(Speed speed, float distance);
     // Absolute movement to pos (should by get only from get position)
-    void sendMoveToPos(Uint16 speed, int pos);
+    void sendMoveToPos(Speed speed, int pos);
     // Sensors
     void sendReachForce(float force);
     void sendLoseForce(float force);
@@ -88,6 +91,7 @@ class Device {
     const timer exceedWait = 1000;
 
     void parseMessage(const char* data, unsigned length);
+    Speed getSpeed() const;
 };
 
 // Object store state of device and interact with him

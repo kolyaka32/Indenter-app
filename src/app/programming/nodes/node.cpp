@@ -211,6 +211,78 @@ Node* Node::handleReachForce() const {
     return (Node*)this;
 }
 
+Node::Speed Node::getSpeed(char _letter) const {
+    if (_letter > '0' && _letter <= '9') {
+        return _letter - '0';
+    }
+    return 1;
+}
+
+char Node::getLetter(Speed _speed) const {
+    return _speed + '0';
+}
+
+void Node::getNextSpeed(Speed& _current) const {
+    _current = (_current) % 3 + 1;
+}
+
+Uint16 Node::getSendSpeed(Speed _speed) const {
+    switch (_speed) {
+    case 1:
+        return 1;
+
+    case 2:
+        return 4;
+
+    case 3:
+        return 10;
+
+    case 4:
+        return 25;
+
+    default:
+        return 1;
+    }
+}
+
+void Node::blitSpeed(Speed _speed, const SDL_FRect _rect) const {
+    switch (_speed) {
+    case 1:
+        window.blit(window.getTexture(Textures::SlowUpButton), 90.0, _rect);
+        break;
+
+    case 2:
+        window.blit(window.getTexture(Textures::NormalUpButton), 90.0, _rect);
+        break;
+
+    case 3:
+        window.blit(window.getTexture(Textures::FastUpButton), 90.0, _rect);
+        break;
+
+    default:
+        break;
+    }
+}
+
+Node::Direction Node::getDirection(char _letter) const {
+    if (_letter == '1') {
+        return true;
+    }
+    return false;
+}
+
+char Node::getLetter(Direction _direction) const {
+    return _direction + '0';
+}
+
+void Node::blitDirection(Direction _direction, const SDL_FRect _rect) const {
+    if (_direction) {
+        window.blit(window.getTexture(Textures::SlowDownButton), _rect);
+    } else {
+        window.blit(window.getTexture(Textures::SlowUpButton), _rect);
+    }
+}
+
 void Node::saveMain(SDL_IOStream* _fout, char _type) {
     // Find position
     int x = (rect.x + rect.w/2)/window.getWidth() * 100;
