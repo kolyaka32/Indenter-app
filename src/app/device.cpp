@@ -113,7 +113,7 @@ void Device::parseMessage(const char* _data, unsigned _length) {
             break;
 
         default:
-            i += 1;
+            i += sizeof(Type);
             break;
         }
     }
