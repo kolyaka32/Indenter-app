@@ -8,11 +8,11 @@
 
 
 CollectedData::CollectedData()
-: saved(false),
-positions(),
+: positions(),
 forces(),
 temperatures(),
-forceNull(0.0) {}
+forceNull(0.0),
+saved(false) {}
 
 void CollectedData::reset() {
     saved = false;
@@ -28,11 +28,22 @@ CollectedData::~CollectedData() {
     }
 }
 
-void CollectedData::addFrame(float _position, float _force, Uint16 _temp) {
-    positions.add(_position);
-    // Adding force with offset
+void CollectedData::addFrame(float _pos, float _force, Uint16 _temp) {
+    // Check, if at new place
+    if (positions.size()) {
+        if (_pos != positions[positions.size()-1]) {
+            addData(_pos, _force, _temp);
+        }
+    } else {
+        addData(_pos, _force, _temp);
+    }
+}
+
+void CollectedData::addData(float _pos, float _force, Uint16 _temp) {
+    positions.add(_pos);
     forces.add(_force + forceNull);
     temperatures.add(_temp/10.0);
+
     // Set that changed
     saved = true;
 }
@@ -95,7 +106,7 @@ void CollectedData::setForceNullAsAvar() {
     if (forces.size()) {
         // Finding avarage
         float sumForce = 0.0;
-        for (int i=0; i < forces.size(); ++i) {
+        for (unsigned i=0; i < forces.size(); ++i) {
             sumForce += forces[i];
         }
         setForceNull(-sumForce/forces.size());
@@ -128,7 +139,7 @@ void CollectedData::save(const char* _fileName) {
     }
 
     // Write data
-    for (int i=0; i < positions.size(); ++i) {
+    for (unsigned i=0; i < positions.size(); ++i) {
         SDL_IOprintf(fout, "%.1f; %.3f; %.1f\n", positions[i], forces[i], temperatures[i]);
     }
     // Updating flag

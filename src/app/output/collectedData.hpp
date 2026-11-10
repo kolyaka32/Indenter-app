@@ -19,6 +19,8 @@ class CollectedData {
  protected:
     bool saved;  // Flag, is updated since last save
 
+    void addData(float position, float force, Uint16 temp);
+
  public:
     CollectedData();
     ~CollectedData();
@@ -34,10 +36,12 @@ class CollectedData {
     float getLastForce() const;
     float getLastTemp() const;
     float getForceNull() const;
+
     // Set offset of all force elements
     void setForceNull(float forceNull);
     void setForceNullAsLast();
     void setForceNullAsAvar();
+
     // Save
     void trySave(const char* name);
     void save(const char* name);
