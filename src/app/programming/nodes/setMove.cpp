@@ -9,9 +9,9 @@
 
 SetMoveNode::SetMoveNode(const Window& _window, float _X, float _Y, char _speed, char _direction)
 : Node(_window, _X, _Y, Textures::BlockAction),
-text(_window, {"Move", "Двигаться"}, {_X-rect.w/(2*window.getWidth())+0.005f, _Y, .horAli=GUI::Left}),
 speed(getSpeed(_speed)),
-direction(getDirection(_direction)) {
+direction(getDirection(_direction)),
+text(_window, {"Move", "Двигаться"}, {_X-rect.w/(2*window.getWidth())+0.005f, _Y, .horAli=GUI::Left}) {
     speedRect = {(_X + (LanguagedText::getLanguage()==Language::Russian ? 0.014f : -0.011f))*
         window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0};
     directionRect = {(_X + (LanguagedText::getLanguage()==Language::Russian ? 0.030f : 0.005f))*

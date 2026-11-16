@@ -65,7 +65,7 @@ namespace GUI {
         TextureTemplate(TextureTemplate&& object) noexcept;
         void move(float X, float Y) override;
         void blit() const override;
-        void blitFlipped() const;
+        void blitRotated(float angle) const;
         // Template function for check, if mouse press in object
         virtual bool in(const Mouse mouse) const;
     };
@@ -152,6 +152,7 @@ namespace GUI {
     class ImageButton : public TextureTemplate {
      public:
         ImageButton(const Window& window, float X, float Y, float width, Textures name) noexcept;
+        ImageButton(const Window& window, float X, float Y, Textures name) noexcept;
         ImageButton(ImageButton&& object) noexcept;
     };
     #endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)

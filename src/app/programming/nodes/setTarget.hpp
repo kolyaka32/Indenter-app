@@ -12,7 +12,7 @@
 class SetTargetNode : public Node {
 private:
     Speed speed;
-    PosSubNode* positionNode;
+    PosSubNode* positionNode;  // Sub node for getting position
 
     // Graphical part
     GUI::StaticText text;

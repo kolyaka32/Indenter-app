@@ -308,7 +308,7 @@ bool Program::isStopped() {
             currentNode = currentNode->use();
         }
     }
-    // ! Could add check for too much time for resend
+    // ! Could add check exceed time for repear action
     return false;
 }
 

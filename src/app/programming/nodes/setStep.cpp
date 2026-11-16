@@ -9,9 +9,9 @@
 
 SetStepNode::SetStepNode(const Window& _window, float _X, float _Y, char _speed, const char* _val)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
+speed(getSpeed(_speed)),
 text(_window, {"Steping                  µm", "Шагать                   мкм"},
     {_X-rect.w/(2*window.getWidth())+0.005f, _Y, .horAli=GUI::Left}),
-speed(getSpeed(_speed)),
 speedRect{(_X-0.017f)*window.getWidth(), _Y*window.getHeight()-18.0f, 32.0, 32.0},
 distanceTyper(_window, {_X+0.004f, _Y-0.002f, .height=GUI::Medium,
     .horAli=GUI::Left, .textColor=BLACK, .backColor=WHITE}, 5, _val) {}

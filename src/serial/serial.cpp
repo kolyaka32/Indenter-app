@@ -43,7 +43,7 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     }
     // Setting timeouts
     COMMTIMEOUTS timeouts = {0};
-    timeouts.ReadIntervalTimeout =         3;
+    timeouts.ReadIntervalTimeout =         3;  // ! Check, if can decrease time
     timeouts.ReadTotalTimeoutConstant =    3;
     timeouts.ReadTotalTimeoutMultiplier =  1;
     timeouts.WriteTotalTimeoutConstant =   3;

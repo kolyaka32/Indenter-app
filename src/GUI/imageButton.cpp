@@ -10,17 +10,20 @@
 
 GUI::ImageButton::ImageButton(const Window& _window, float _X, float _Y,
     float _width, Textures _index) noexcept
-: TextureTemplate(_window) {
-    // Setting base texture
-    texture = window.getTexture(_index);
-
+: TextureTemplate(_window, _window.getTexture(_index)) {
     // Setting destination
-    SDL_GetTextureSize(texture, &rect.w, &rect.h);
     rect.w = _width * window.getWidth();
     rect.h = texture->h * rect.w / texture->w;
-
     rect.x = window.getWidth() * _X - rect.w / 2;
     rect.y = window.getHeight() * _Y - rect.h / 2;
+}
+
+GUI::ImageButton::ImageButton(const Window& _window, float _X, float _Y, Textures _name) noexcept
+: TextureTemplate(_window, _window.getTexture(_name)) {
+    rect.w = texture->w;
+    rect.h = texture->h;
+    rect.x = _X * window.getWidth() - rect.w/2;
+    rect.y = _Y * window.getHeight() - rect.h/2;
 }
 
 GUI::ImageButton::ImageButton(ImageButton&& _object) noexcept

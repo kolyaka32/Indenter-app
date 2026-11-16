@@ -41,7 +41,7 @@ enum class NodeType {
 };
 
 // Simple individual block of command to execute in language with in visual
-class Node : public GUI::TextureTemplate {
+class Node : public GUI::ImageButton {
 private:
     // Flags
     const bool connectableUp;
@@ -49,8 +49,7 @@ private:
     const bool delitable;
 
     // Graphical part
-    SDL_FRect arrowRect;
-    SDL_Texture* arrowTexture;
+    GUI::ImageButton arrow;
     const float connectDistance = 500.0;
 
 protected:

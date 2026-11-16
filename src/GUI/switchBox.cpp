@@ -118,7 +118,7 @@ void GUI::SwitchBox::blit() const {
         for (size_t i=0; i < drawnTexts.size(); ++i) {
             drawnTexts[i].blit();
         }
-        arrow.blitFlipped();
+        arrow.blitRotated(180.0);
     } else {
         drawnTexts[selected].blit();
         arrow.blit();
