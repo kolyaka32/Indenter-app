@@ -81,6 +81,7 @@ protected:
 public:
     Node(const Window& window, float X, float Y, Textures texture,
         bool connectableUp = true, bool connectableDown = true, bool delitable = true);
+    virtual ~Node() noexcept;
 
     // Interaction
     // Create useful copy of current node

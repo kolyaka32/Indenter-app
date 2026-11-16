@@ -6,17 +6,14 @@
 #include "subNode.hpp"
 
 
-SubNode::SubNode(const Window& _window, float _X, float _Y, Node* _srcNode, Textures _texture)
-: TextureTemplate(_window, _window.getTexture(_texture)),
-srcNode(_srcNode) {
-    rect.w = texture->w;
-    rect.h = texture->h;
-    rect.x = _X * window.getWidth() - rect.w/2;
-    rect.y = _Y * window.getHeight() - rect.h/2;
-}
+SubNode::SubNode(const Window& _window, float _X, float _Y, Node* _srcNode, Textures _texture) noexcept
+: ImageButton(_window, _X, _Y, _texture),
+srcNode(_srcNode) {}
 
-SubNode::SubNode(const Window& _window, float _X, float _Y, Textures _texture)
+SubNode::SubNode(const Window& _window, float _X, float _Y, Textures _texture) noexcept
 : SubNode(_window, _X, _Y, nullptr, _texture) {}
+
+SubNode::~SubNode() noexcept {}
 
 bool SubNode::isNear(const SubNode* _other) const {
     return sqr(rect.x-_other->rect.x) + sqr(rect.y-_other->rect.y) < connectDistance;

@@ -17,6 +17,8 @@ arrow(_window, _X-float(_window.getTexture(_texture)->w)/_window.getWidth()/2-0.
 previousNode(nullptr),
 nextNode(nullptr) {}
 
+Node::~Node() noexcept {}
+
 void Node::disconnectPrevious() {
     if (previousNode) {
         previousNode->nextNode = nullptr;
