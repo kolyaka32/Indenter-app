@@ -243,7 +243,6 @@ void Program::deleteNode(Node* _node) {
             _node = _node->getNext();
             // Remove from array
             delete nodes[node];
-            // ! Check correction of delition
             nodes.erase(nodes.begin() + node);
             logger.additional("Deleted node %d", node);
         } else {
@@ -308,7 +307,7 @@ bool Program::isStopped() {
             currentNode = currentNode->use();
         }
     }
-    // ! Could add check exceed time for repear action
+    // ! Could add check exceed time for repeat action
     return false;
 }
 

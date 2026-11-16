@@ -12,7 +12,7 @@
 class NodeSelector : GUI::Template {
 private:
     // Array with selectable variants
-    std::array<Node*, 11> nodes;  // ! For now without loops
+    std::array<Node*, 11> nodes;
     int count = 0;
 
     // Graphical part

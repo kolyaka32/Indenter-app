@@ -169,7 +169,6 @@ void ProgramMenu::unclick(const Mouse _mouse) {
         // Check, if could add subnode
         if (!program.tryConnectSubNode(holdingSubNode)) {
             // Delete this node if unconnected
-            // ! Check correction of delition
             delete holdingSubNode;
         }
         holdingSubNode = nullptr;

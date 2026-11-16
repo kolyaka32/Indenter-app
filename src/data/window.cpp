@@ -11,33 +11,19 @@ Window::Window(int _width, int _height, const LanguagedText _title)
 : displayID(getAvaliableID()),
 width(_width),
 height(_height),
-window(SDL_CreateWindow(titleText.getString().c_str(), _width, _height, 0)),
-renderer(SDL_CreateRenderer(window, NULL)),
-scale(SDL_GetWindowDisplayScale(window)),
+titleText(_title),
+window(createWindow(_width, _height, _title)),
+renderer(createRenderer(window)),
 #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
-textures{renderer},
+textures(renderer),
 #endif
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
-fonts{},
+fonts(),
 #endif
 #if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
-animations{},
+animations(),
 #endif
-titleText(_title) {
-    // Checking on correction of created objects
-    #if (CHECK_CORRECTION)
-    if (window == NULL) {
-        logger.important("Can't create window");
-    }
-    #endif
-
-    // Creating renderer from window
-    #if (CHECK_CORRECTION)
-    if (renderer == NULL) {
-        logger.important("Can't create renderer");
-    }
-    #endif
-}
+scale(SDL_GetWindowDisplayScale(window)) {}
 
 Window::~Window() noexcept {
     // Destroying renderer
@@ -57,13 +43,7 @@ int Window::getHeight() const {
     return height;
 }
 
-void Window::setSize(int _width, int _height) {
-    width = _width;
-    height = _height;
-    SDL_SetWindowSize(window, width, height);
-}
-
-SDL_DisplayID Window::getAvaliableID() const {
+SDL_DisplayID Window::getAvaliableID() {
     // Get avaliable
     int count = 0;
     SDL_DisplayID* idList = SDL_GetDisplays(&count);
@@ -76,6 +56,29 @@ SDL_DisplayID Window::getAvaliableID() const {
     SDL_free(idList);
 
     return selectedID;
+}
+
+SDL_Window* Window::createWindow(int _width, int _height, const LanguagedText _title) {
+    SDL_Window* window = SDL_CreateWindow(_title.getString().c_str(), _width, _height, 0);
+    if (window == nullptr) {
+        logger.important("Can't create window");
+    }
+    return window;
+}
+
+SDL_Renderer* Window::createRenderer(SDL_Window* _window) {
+    // Create renderer from window
+    SDL_Renderer* renderer = SDL_CreateRenderer(_window, nullptr);
+    if (renderer == nullptr) {
+        logger.important("Can't create renderer");
+    }
+    return renderer;
+}
+
+void Window::setSize(int _width, int _height) {
+    width = _width;
+    height = _height;
+    SDL_SetWindowSize(window, width, height);
 }
 
 void Window::setFullscreen() {
@@ -110,12 +113,16 @@ void Window::drawRect(const SDL_FRect& _rect) const {
     SDL_RenderFillRect(renderer, &_rect);
 }
 
-void Window::drawLine(float x1, float y1, float x2, float y2) const {
-    SDL_RenderLine(renderer, x1, y1, x2, y2);
+void Window::drawLine(SDL_FPoint _p1, SDL_FPoint _p2) const {
+    SDL_RenderLine(renderer, _p1.x, _p1.y, _p2.x, _p2.y);
 }
 
 void Window::drawGeometry(const SDL_Vertex* _vertices, int _numVer, SDL_Texture* _texture) const {
     SDL_RenderGeometry(renderer, _texture, _vertices, _numVer, nullptr, 0);
+}
+
+void Window::drawGeometry(const SDL_Vertex* _vertices, int _numVer, const int* _order, unsigned _orderLen, SDL_Texture* _texture) const {
+    SDL_RenderGeometry(renderer, _texture, _vertices, _numVer, _order, _orderLen);
 }
 
 

@@ -61,19 +61,18 @@ void Chart<xAxis, yAxis>::blit() const {
     // Getting multipier for draw
     const float xMul = drawRect.w / (pos.max() - pos.min()) * 0.94; 
     const float yMul = drawRect.h / (val.max() - val.min()) * 0.94;
-    const float xStart = drawRect.x + drawRect.w * 0.02;
-    const float yStart = drawRect.y + drawRect.h - drawRect.w * 0.02;
+    const SDL_FPoint start = {drawRect.x + drawRect.w * 0.02f,
+        drawRect.y + drawRect.h - drawRect.h * 0.02f};
     // Draw chart itself
     window.setDrawColor(color);
     if (pos.size()) {
-        float prevPosition = drawRect.x + (pos[0] - pos.min()) * xMul;
-        float prevValue = yStart - (val[0] - val.min()) * yMul;
+        SDL_FPoint prev = {start.x + (pos[0] - pos.min()) * xMul,
+            start.y - (val[0] - val.min()) * yMul};
         for (unsigned i=1; i < val.size(); ++i) {
-            float position = xStart + (pos[i] - pos.min()) * xMul;
-            float value = yStart - (val[i] - val.min()) * yMul;
-            window.drawLine(prevPosition, prevValue, position, value);
-            prevPosition = position;
-            prevValue = value;
+            SDL_FPoint current = {start.x + (pos[i] - pos.min()) * xMul,
+                start.y - (val[i] - val.min()) * yMul};
+            window.drawLine(prev, current);
+            prev = current;
         }
     }
 }
