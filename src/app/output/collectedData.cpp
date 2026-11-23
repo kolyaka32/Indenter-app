@@ -11,6 +11,7 @@ CollectedData::CollectedData()
 : positions(),
 forces(),
 temperatures(),
+posNull(0.0),
 forceNull(0.0),
 saved(false) {}
 
@@ -82,8 +83,23 @@ const BoundedArray<float>& CollectedData::getTemperatures() const {
     return temperatures;
 }
 
+float CollectedData::getPosNull() const {
+    return posNull;
+}
+
 float CollectedData::getForceNull() const {
     return forceNull;
+}
+
+void CollectedData::setPosNull(float _val) {
+    positions.offsetBy(_val);
+    posNull += _val;
+}
+
+void CollectedData::setPosNull() {
+    if (positions.size()) {
+        setPosNull(positions[positions.size() - 1]);
+    }
 }
 
 void CollectedData::setForceNull(float _forceNull) {

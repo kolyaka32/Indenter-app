@@ -14,6 +14,7 @@ class CollectedData {
     BoundedArray<float> positions;
     BoundedArray<float> forces;
     BoundedArray<float> temperatures;
+    float posNull;
     float forceNull;
 
  protected:
@@ -35,14 +36,16 @@ class CollectedData {
     unsigned getLineCount() const;
     float getLastForce() const;
     float getLastTemp() const;
+    float getPosNull() const;
     float getForceNull() const;
 
     // Set offset of all force elements
+    void setPosNull(float val);
+    void setPosNull();
     void setForceNull(float forceNull);
     void setForceNullAsLast();
     void setForceNullAsAvar();
 
-    // Save
     void trySave(const char* name);
     void save(const char* name);
 };
