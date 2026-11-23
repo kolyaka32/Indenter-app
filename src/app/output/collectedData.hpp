@@ -14,6 +14,7 @@ class CollectedData {
     BoundedArray<float> positions;
     BoundedArray<float> forces;
     BoundedArray<float> temperatures;
+    float prevPos;
     float posNull;
     float forceNull;
 

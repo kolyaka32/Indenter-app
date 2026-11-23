@@ -11,6 +11,7 @@ CollectedData::CollectedData()
 : positions(),
 forces(),
 temperatures(),
+prevPos(0.0),
 posNull(0.0),
 forceNull(0.0),
 saved(false) {}
@@ -32,7 +33,7 @@ CollectedData::~CollectedData() {
 void CollectedData::addFrame(float _pos, float _force, Uint16 _temp) {
     // Check, if at new place
     if (positions.size()) {
-        if (_pos != positions[positions.size()-1]) {
+        if (_pos != prevPos) {
             addData(_pos, _force, _temp);
         }
     } else {
@@ -46,6 +47,7 @@ void CollectedData::addData(float _pos, float _force, Uint16 _temp) {
     temperatures.add(_temp/10.0);
 
     // Set that changed
+    prevPos = _pos;
     saved = true;
 }
 
