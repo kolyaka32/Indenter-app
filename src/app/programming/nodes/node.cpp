@@ -9,24 +9,15 @@
 
 Node::Node(const Window& _window, float _X, float _Y, Textures _texture,
     bool _connectableUp, bool _connectableDown, bool _delitable)
-: TextureTemplate(_window, _window.getTexture(_texture)),
-arrowTexture(window.getTexture(Textures::SlowSpeedButton)),
-previousNode(nullptr),
-nextNode(nullptr),
+: ImageButton(_window, _X, _Y, _texture),
 connectableUp(_connectableUp),
 connectableDown(_connectableDown),
-delitable(_delitable) {
-    // Update pos
-    rect.w = texture->w;
-    rect.h = texture->h;
-    rect.x = _X * window.getWidth() - rect.w/2;
-    rect.y = _Y * window.getHeight() - rect.h/2;
-    // Update arrow rect
-    arrowRect.w = arrowTexture->w;
-    arrowRect.h = arrowTexture->h;
-    arrowRect.x = (_X - 0.05) * window.getWidth() - arrowRect.w/2;
-    arrowRect.y = _Y * window.getHeight() - arrowRect.h/2;
-}
+delitable(_delitable),
+arrow(_window, _X-float(_window.getTexture(_texture)->w)/_window.getWidth()/2-0.01f, _Y, Textures::SlowSpeedButton),
+previousNode(nullptr),
+nextNode(nullptr) {}
+
+Node::~Node() noexcept {}
 
 void Node::disconnectPrevious() {
     if (previousNode) {
@@ -56,11 +47,8 @@ Node* Node::copy() {
 }
 
 void Node::move(float _X, float _Y) {
-    // Move current node
     TextureTemplate::move(_X, _Y);
-    // Move arrow
-    arrowRect.x += _X * window.getWidth();
-    arrowRect.y += _Y * window.getHeight();
+    arrow.move(_X, _Y);
 }
 
 void Node::checkOff(const Mouse _mouse) {}
@@ -94,7 +82,7 @@ void Node::blit() const  {
 }
 
 void Node::blitCurrent() const {
-    window.blit(arrowTexture, 90.0, arrowRect);
+    arrow.blitRotated(90.0);
 }
 
 void Node::connectTopTo(Node* _target) {

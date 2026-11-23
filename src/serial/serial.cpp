@@ -43,10 +43,10 @@ bool Serial::tryConnectTo(const ComPort& _port) {
     }
     // Setting timeouts
     COMMTIMEOUTS timeouts = {0};
-    timeouts.ReadIntervalTimeout =         3;
-    timeouts.ReadTotalTimeoutConstant =    3;
+    timeouts.ReadIntervalTimeout =         1;
+    timeouts.ReadTotalTimeoutConstant =    1;
     timeouts.ReadTotalTimeoutMultiplier =  1;
-    timeouts.WriteTotalTimeoutConstant =   3;
+    timeouts.WriteTotalTimeoutConstant =   1;
     timeouts.WriteTotalTimeoutMultiplier = 1;
     if (!SetCommTimeouts(handle, &timeouts)) {
         logger.important("Can't set timeouts: %d", GetLastError());

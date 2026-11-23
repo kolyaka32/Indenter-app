@@ -11,7 +11,7 @@
 class Node;
 
 // Special node for use as additional argument in function
-class SubNode : public GUI::TextureTemplate {
+class SubNode : public GUI::ImageButton {
 private:
     const float connectDistance = 500.0;
 
@@ -21,9 +21,10 @@ protected:
 
 public:
     // Movable node for connection
-    SubNode(const Window& window, float X, float Y, Node* srcNode, Textures texture = Textures::SubBlock);
+    SubNode(const Window& window, float X, float Y, Node* srcNode, Textures texture = Textures::SubBlock) noexcept;
     // Connection pin constructor
-    SubNode(const Window& window, float X, float Y, Textures texture = Textures::SubBlock);
+    SubNode(const Window& window, float X, float Y, Textures texture = Textures::SubBlock) noexcept;
+    virtual ~SubNode() noexcept;
 
     // Interaction
     bool isNear(const SubNode* other) const;

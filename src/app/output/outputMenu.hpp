@@ -23,9 +23,10 @@ private:
     GUI::DynamicText tempText;
     GUI::DynamicText counterText;
     // Set null part
-    GUI::StaticText setNullText;
-    GUI::TextButton setNullAsLastButton;
-    GUI::TextButton setNullAsAvarButton;
+    GUI::StaticText setForceNullText;
+    GUI::TextButton setForceNullAsLastButton;
+    GUI::TextButton setForceNullAsAvarButton;
+    GUI::TextButton setPosNullButton;
     // Save function
     GUI::StaticText notSavedText;
     GUI::TextButton saveButton;

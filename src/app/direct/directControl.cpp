@@ -158,8 +158,8 @@ void DirectControl::blit() const {
     fastUpButton.blit();
     ultraUpButton.blit();
     haltButton.blit();
-    slowDownButton.blitFlipped();
-    normalDownButton.blitFlipped();
-    fastDownButton.blitFlipped();
-    ultraDownButton.blitFlipped();
+    slowDownButton.blitRotated(180.0);
+    normalDownButton.blitRotated(180.0);
+    fastDownButton.blitRotated(180.0);
+    ultraDownButton.blitRotated(180.0);
 }
