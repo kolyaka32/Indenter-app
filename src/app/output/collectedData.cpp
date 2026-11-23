@@ -41,7 +41,7 @@ void CollectedData::addFrame(float _pos, float _force, Uint16 _temp) {
 }
 
 void CollectedData::addData(float _pos, float _force, Uint16 _temp) {
-    positions.add(_pos);
+    positions.add(_pos + posNull);
     forces.add(_force + forceNull);
     temperatures.add(_temp/10.0);
 
@@ -92,13 +92,16 @@ float CollectedData::getForceNull() const {
 }
 
 void CollectedData::setPosNull(float _val) {
-    positions.offsetBy(_val);
+    if (positions.size()) {
+        positions.offsetBy(_val);
+    }
     posNull += _val;
 }
 
 void CollectedData::setPosNull() {
+    // Setting pos null as last element
     if (positions.size()) {
-        setPosNull(positions[positions.size() - 1]);
+        setPosNull(-positions[positions.size() - 1]);
     }
 }
 
@@ -111,14 +114,14 @@ void CollectedData::setForceNull(float _forceNull) {
 }
 
 void CollectedData::setForceNullAsLast() {
-    // Getting force null as last element
+    // Setting force null as last element
     if (forces.size()) {
         setForceNull(-forces[forces.size() - 1]);
     }
 }
 
 void CollectedData::setForceNullAsAvar() {
-    // Getting force null as last element
+    // Setting force null as avarage between all
     if (forces.size()) {
         // Finding avarage
         float sumForce = 0.0;
