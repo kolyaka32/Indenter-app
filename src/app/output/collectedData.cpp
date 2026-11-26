@@ -13,8 +13,6 @@ positions(),
 forces(),
 temperatures(),
 prevPos(0.0),
-posNull(0.0),
-forceNull(0.0),
 changed(false),
 saveRepeat(false) {}
 
@@ -46,8 +44,8 @@ void CollectedData::addFrame(Uint32 _time, float _pos, float _force, Uint16 _tem
 
 void CollectedData::addData(Uint32 _time, float _pos, float _force, Uint16 _temp) {
     time.add(_time/1000.0f);
-    positions.add(_pos + posNull);
-    forces.add(_force + forceNull);
+    positions.add(_pos);
+    forces.add(_force);
     temperatures.add(_temp/10.0f);
 
     // Set that changed
@@ -64,17 +62,11 @@ unsigned CollectedData::getLineCount() const {
 }
 
 float CollectedData::getLastForce() const {
-    if (positions.size()) {
-        return forces[forces.size()-1];
-    }
-    return 0.0;
+    return forces.last();
 }
 
 float CollectedData::getLastTemp() const {
-    if (positions.size()) {
-        return temperatures[temperatures.size()-1];
-    }
-    return 0.0;
+    return temperatures.last();
 }
 
 const BoundedArray& CollectedData::getPositions() const {
@@ -90,51 +82,34 @@ const BoundedArray& CollectedData::getTemperatures() const {
 }
 
 float CollectedData::getPosNull() const {
-    return posNull;
+    return positions.getOffset();
 }
 
 float CollectedData::getForceNull() const {
-    return forceNull;
+    return forces.getOffset();
 }
 
 void CollectedData::setPosNull(float _val) {
-    if (positions.size()) {
-        positions.offsetBy(_val);
-    }
-    posNull += _val;
+    positions.offsetBy(_val);
 }
 
 void CollectedData::setPosNull() {
     // Setting pos null as last element
-    if (positions.size()) {
-        setPosNull(-positions[positions.size() - 1]);
-    }
+    setPosNull(-positions.last());
 }
 
 void CollectedData::setForceNull(float _forceNull) {
-    if (forces.size()) {
-        forces.offsetBy(_forceNull);
-    }
-    forceNull += _forceNull;
+    forces.offsetBy(_forceNull);
 }
 
 void CollectedData::setForceNullAsLast() {
     // Setting force null as last element
-    if (forces.size()) {
-        setForceNull(-forces[forces.size() - 1]);
-    }
+    setForceNull(-forces.last());
 }
 
 void CollectedData::setForceNullAsAvar() {
     // Setting force null as avarage between all
-    if (forces.size()) {
-        // Finding avarage
-        float sumForce = 0.0;
-        for (unsigned i=0; i < forces.size(); ++i) {
-            sumForce += forces[i];
-        }
-        setForceNull(-sumForce/forces.size());
-    }
+    setForceNull(-forces.avr());
 }
 
 void CollectedData::trySave(const char* _name) {

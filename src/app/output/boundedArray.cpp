@@ -24,6 +24,7 @@ void BoundedArray::reset() {
 }
 
 void BoundedArray::add(float _object) {
+    _object += offset;
     values.emplace_back(_object);
     // Check, if first value
     if (values.size() == 1) {
@@ -48,10 +49,19 @@ void BoundedArray::offsetBy(float _offset) {
     // Move borers
     minVal += _offset;
     maxVal += _offset;
+    offset += _offset;
+}
+
+float BoundedArray::getOffset() const {
+    return offset;
 }
 
 float BoundedArray::operator[](unsigned _pos) const {
     return values[_pos];
+}
+
+unsigned BoundedArray::size() const {
+    return values.size();
 }
 
 float BoundedArray::min() const {
@@ -62,6 +72,20 @@ float BoundedArray::max() const {
     return maxVal;
 }
 
-unsigned BoundedArray::size() const {
-    return values.size();
+float BoundedArray::last() const {
+    if (values.size()) {
+        return values[values.size() - 1];
+    }
+    return 0.0;
+}
+
+float BoundedArray::avr() const {
+    float sum = 0.0;
+    for (unsigned i=0; i < values.size(); ++i) {
+        sum += values[i];
+    }
+    if (values.size()) {
+        return sum / values.size();
+    }
+    return 0.0;
 }

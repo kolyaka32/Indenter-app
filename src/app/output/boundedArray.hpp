@@ -14,6 +14,7 @@ class BoundedArray {
 private:
     std::vector<float> values;
     float minVal, maxVal;
+    float offset;
 
 public:
     BoundedArray();
@@ -24,10 +25,13 @@ public:
     void add(float object);
     // Offset all values by offset (including min/max)
     void offsetBy(float offset);
+    float getOffset() const;
 
     // Getters
     float operator[](unsigned pos) const;
+    unsigned size() const;
     float min() const;
     float max() const;
-    unsigned size() const;
+    float last() const;
+    float avr() const;
 };

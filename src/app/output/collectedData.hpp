@@ -16,8 +16,6 @@ private:
     BoundedArray forces;
     BoundedArray temperatures;
     float prevPos;
-    float posNull;  // ! Should be moved to bounded array
-    float forceNull;
 
 protected:
     bool changed;  // Flag, is changed since last save
