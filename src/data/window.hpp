@@ -6,7 +6,6 @@
 #pragma once
 
 #include <SDL3/SDL_render.h>
-#include <SDL3/SDL_dialog.h>
 #include "colors.hpp"
 #include "time.hpp"
 #include "preloaded/textures.hpp"
@@ -124,9 +123,9 @@ class Window {
 
     // Work with dialog
     void showSaveFileDialog(SDL_DialogFileCallback callback, const SDL_DialogFileFilter *filters,
-        int nfilters, const char *default_location, void* argument = nullptr) const;
+        int nfilters, const char *default_location, void* arguments) const;
     void showOpenFileDialog(SDL_DialogFileCallback callback, const SDL_DialogFileFilter *filters,
-        int nfilters, const char *default_location, bool allowMany, void* argument = nullptr) const;
+        int nfilters, const char *default_location, bool allowMany, void* arguments) const;
 };
 
 

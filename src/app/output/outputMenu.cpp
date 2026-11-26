@@ -29,14 +29,7 @@ setPosNullButton(_window, {"Set null pos", "Обнулить позицию"},  
 notSavedText(_window, {"Not saved", "Не сохранено"},    {_X-_W*0.3f, _Y+_H*0.47f, .frame=1}),
 saveButton(_window,   {"Save", "Сохранить"},            {_X,         _Y+_H*0.47f, .frame=1}),
 folderButton(window,  {"Open folder", "Открыть папку"}, {_X+_W*0.3f, _Y+_H*0.47f, .frame=1}),
-filterText{"Table", "Таблица"},
-filter{filterText.getString().c_str(), "csv"} {
-    // Getting location
-    char* directory = SDL_GetCurrentDirectory();
-    SDL_CreateDirectory("records");
-    snprintf(saveLocation, sizeof(saveLocation), "%srecords\\data.csv", directory);
-    SDL_free(directory);
-
+fileDialog(_window, "records", {"Table", "Таблица"}, "csv", "data") {
     reset();
 }
 
@@ -46,7 +39,7 @@ void OutputMenu::reset() {
 
 bool OutputMenu::click(const Mouse _mouse) {
     if (saveButton.in(_mouse)) {
-        window.showSaveFileDialog(save, &filter, 1, saveLocation);
+        fileDialog.showSave(save);
         return true;
     }
     if (folderButton.in(_mouse)) {

@@ -27,14 +27,7 @@ startButton(_window, _X+_W*0.37, _Y-_H*0.45, 0.03, Textures::ResumePauseButton),
 haltButton(_window,  _X+_W*0.45, _Y-_H*0.45, 0.03, Textures::HaltButton),
 netConnectedInfo(_window, {"Not connected", "Не подключён"}, {_X+_W*0.16f, _Y-_H*0.38f, .frame=1}, 1000),
 stoppedInfo(_window, {"Program stopped", "Программа остановлена"}, {_X+_W*0.16f, _Y-_H*0.38f, .frame=1}, 1000),
-filterText{"Program file", "Файл программы"},
-filter{filterText.getString().c_str(), "prg"} {
-    // Getting location
-    char* directory = SDL_GetCurrentDirectory();
-    SDL_CreateDirectory("scripts");
-    SDL_snprintf(saveLocation, sizeof(saveLocation), "%sscripts\\script.prg", directory);
-    SDL_free(directory);
-
+fileDialog(_window, "scripts", {"Program file", "Файл программы"}, "prg", "script") {
     // Check autosave count
     if (autosaveCount >= autosaveMaxCount) {
         autosaveCount = autosaveMaxCount - 1;
@@ -94,11 +87,11 @@ bool ProgramMenu::click(const Mouse _mouse) {
         return true;
     }
     if (saveButton.in(_mouse)) {
-        window.showSaveFileDialog(save, &filter, 1, saveLocation);
+        fileDialog.showSave(save);
         return true;
     }
     if (loadButton.in(_mouse)) {
-        window.showOpenFileDialog(load, &filter, 1, saveLocation, false);
+        fileDialog.showOpen(load);
         return true;
     }
     if (startButton.in(_mouse)) {

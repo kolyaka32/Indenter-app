@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include <vector>
 #include "nodeSelector.hpp"
 
 
@@ -31,14 +30,12 @@ private:
     GUI::InfoBox netConnectedInfo;
     GUI::InfoBox stoppedInfo;
 
-    // Save/load system
-    static char* saveName;
-    static char* loadName;
     // Count of saves across which will cycle
     const unsigned autosaveMaxCount = 3;
-    LanguagedText filterText;  // Text for filter hint
-    const SDL_DialogFileFilter filter;  // Filter for selection program file
-    char saveLocation[100];    // Location with directory for save/load programs
+
+    FileDialog fileDialog;
+    static char* saveName;
+    static char* loadName;
 
 public:
     ProgramMenu(const Window& window, float X, float Y, float W, float H);

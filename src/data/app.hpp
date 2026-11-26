@@ -9,6 +9,7 @@
 #include "window.hpp"
 #include "mouse.hpp"
 #include "macroses.hpp"
+#include "fileDialog.hpp"
 #include "../cyclesNames.hpp"
 
 
