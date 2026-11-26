@@ -41,10 +41,10 @@ void InitFile::loadSettings() {
             }*/
         } else if (parameter == "autoSaveCount") {
             ProgramMenu::autosaveCount = getValue(currentLine);
-        } else if (parameter == "forceOffset") {
-            collectedData.setForceNull(getValue(currentLine) / 100.0f);
         } else if (parameter == "posOffset") {
-            collectedData.setPosNull(getValue(currentLine) / 100.0f);
+            collectedData.forces.offsetBy(getValue(currentLine) / 100.0f);
+        } else if (parameter == "forceOffset") {
+            collectedData.forces.offsetBy(getValue(currentLine) / 100.0f);
         } else if (parameter == "saveRepeat") {
             collectedData.saveRepeat = getValue(currentLine);
         } /*else if (parameter == "music") {
@@ -88,8 +88,8 @@ void InitFile::saveSettings() {
     }
     // Writing autosave counter (for correct loading)
     outSettings << "autoSaveCount = " << ProgramMenu::autosaveCount << '\n';
-    outSettings << "forceOffset = " << int(collectedData.getForceNull()*100.0f) << '\n';
-    outSettings << "posOffset = " << int(collectedData.getPosNull()*100.0f) << '\n';
+    outSettings << "posOffset = " << int(collectedData.positions.getOffset()*100.0f) << '\n';
+    outSettings << "forceOffset = " << int(collectedData.forces.getOffset()*100.0f) << '\n';
     outSettings << "saveRepeat = " << collectedData.saveRepeat << '\n';
 
     // Writing music and sounds volumes

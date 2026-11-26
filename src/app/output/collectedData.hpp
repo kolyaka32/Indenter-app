@@ -10,15 +10,15 @@
 
 // Class for storing collected data and show it
 class CollectedData {
-private:
+public:
     BoundedArray time;
     BoundedArray positions;
     BoundedArray forces;
     BoundedArray temperatures;
-    float prevPos;
 
 protected:
-    bool changed;  // Flag, is changed since last save
+    float prevPos;  // Last get position for better saving
+    bool changed;   // Flag, is changed since last save
 
     void addData(Uint32 time, float position, float force, Uint16 temp);
 
@@ -28,20 +28,9 @@ public:
     void reset();
     void addFrame(Uint32 time, float position, float force, Uint16 temp);
 
-    const BoundedArray& getPositions() const;
-    const BoundedArray& getForces() const;
-    const BoundedArray& getTemperatures() const;
-
     unsigned getLineCount() const;
-    float getLastForce() const;
-    float getLastTemp() const;
 
-    // Offset of forces/positions
-    float getPosNull() const;
-    void setPosNull(float val);
-    void setPosNull();
-    float getForceNull() const;
-    void setForceNull(float forceNull);
+    void setPosNullAsLast();
     void setForceNullAsLast();
     void setForceNullAsAvar();
 

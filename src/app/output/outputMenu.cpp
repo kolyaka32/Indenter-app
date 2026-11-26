@@ -14,9 +14,9 @@ mainBackplate(_window, _X, _Y, _W, _H, 20.0, 2.0, DARK_GREY),
 title(_window, {"Getted data", "Полученные данные"}, {_X, _Y-_H*0.45f, .frame=2, .height=GUI::Info, .horAli=GUI::Midle}),
 separateRect{(_X-_W/2)*_window.getWidth(), (_Y-_H*0.4f)*_window.getHeight(), _W*_window.getWidth(), 2},
 forceChart(_window, _X+0.015, _Y-0.24*_H, _W*0.85, _H*0.25,
-    collectedData.getPositions(), collectedData.getForces(), {"Force", "Сила"}, RED),
+    collectedData.positions, collectedData.forces, {"Force", "Сила"}, RED),
 tempertureChart(_window, _X+0.015, _Y+0.07*_H, _W*0.85, _H*0.25,
-    collectedData.getPositions(), collectedData.getTemperatures(), {"Temperature", "Температура"}, BLUE),
+    collectedData.positions, collectedData.temperatures, {"Temperature", "Температура"}, BLUE),
 forceText(_window, {"Last force: %.1f", "Последнee усилие: %.1f"},
     {_X-(LanguagedText::getLanguage()==Language::Russian ? 0.055f : 0.035f), _Y+_H*0.25f, .frame=1, .horAli=GUI::Left}),
 tempText(_window, {"Last temperature: %.1f", "Последняя температура: %.1f"},
@@ -66,7 +66,7 @@ bool OutputMenu::click(const Mouse _mouse) {
         return true;
     }
     if (setPosNullButton.in(_mouse)) {
-        collectedData.setPosNull();
+        collectedData.setPosNullAsLast();
         return true;
     }
     return false;
@@ -76,8 +76,8 @@ void OutputMenu::update() {
     counterText.setValues(collectedData.getLineCount());
     forceChart.update();
     tempertureChart.update();
-    forceText.setValues(collectedData.getLastForce());
-    tempText.setValues(collectedData.getLastTemp());
+    forceText.setValues(collectedData.forces.last());
+    tempText.setValues(collectedData.temperatures.last());
     // Check on saving
     if (saveName) {
         // Writing data itself

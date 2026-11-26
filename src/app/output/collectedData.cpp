@@ -61,55 +61,16 @@ unsigned CollectedData::getLineCount() const {
     return positions.size();
 }
 
-float CollectedData::getLastForce() const {
-    return forces.last();
-}
-
-float CollectedData::getLastTemp() const {
-    return temperatures.last();
-}
-
-const BoundedArray& CollectedData::getPositions() const {
-    return positions;
-}
-
-const BoundedArray& CollectedData::getForces() const {
-    return forces;
-}
-
-const BoundedArray& CollectedData::getTemperatures() const {
-    return temperatures;
-}
-
-float CollectedData::getPosNull() const {
-    return positions.getOffset();
-}
-
-float CollectedData::getForceNull() const {
-    return forces.getOffset();
-}
-
-void CollectedData::setPosNull(float _val) {
-    positions.offsetBy(_val);
-}
-
-void CollectedData::setPosNull() {
-    // Setting pos null as last element
-    setPosNull(-positions.last());
-}
-
-void CollectedData::setForceNull(float _forceNull) {
-    forces.offsetBy(_forceNull);
+void CollectedData::setPosNullAsLast() {
+    positions.offsetBy(-positions.last());
 }
 
 void CollectedData::setForceNullAsLast() {
-    // Setting force null as last element
-    setForceNull(-forces.last());
+    forces.offsetBy(-forces.last());
 }
 
 void CollectedData::setForceNullAsAvar() {
-    // Setting force null as avarage between all
-    setForceNull(-forces.avr());
+    forces.offsetBy(-forces.avr());
 }
 
 void CollectedData::trySave(const char* _name) {
