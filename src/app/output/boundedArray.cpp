@@ -6,28 +6,24 @@
 #include "boundedArray.hpp"
 
 
-template <typename T>
-BoundedArray<T>::BoundedArray()
+BoundedArray::BoundedArray()
 : minVal(0),
 maxVal(0) {
     // Reserving space for frames
     values.reserve(1000);
 }
 
-template <typename T>
-BoundedArray<T>::~BoundedArray() {
+BoundedArray::~BoundedArray() {
     reset();
 }
 
-template <typename T>
-void BoundedArray<T>::reset() {
+void BoundedArray::reset() {
     values.clear();
     minVal = 0;
     maxVal = 0;
 }
 
-template <typename T>
-void BoundedArray<T>::add(const T _object) {
+void BoundedArray::add(float _object) {
     values.emplace_back(_object);
     // Check, if first value
     if (values.size() == 1) {
@@ -44,8 +40,7 @@ void BoundedArray<T>::add(const T _object) {
     }
 }
 
-template <typename T>
-void BoundedArray<T>::offsetBy(const T _offset) {
+void BoundedArray::offsetBy(float _offset) {
     // Move all values
     for (unsigned i=0; i < values.size(); ++i) {
         values[i] += _offset;
@@ -55,22 +50,18 @@ void BoundedArray<T>::offsetBy(const T _offset) {
     maxVal += _offset;
 }
 
-template <typename T>
-const T BoundedArray<T>::operator[](unsigned _pos) const {
+float BoundedArray::operator[](unsigned _pos) const {
     return values[_pos];
 }
 
-template <typename T>
-T BoundedArray<T>::min() const {
+float BoundedArray::min() const {
     return minVal;
 }
 
-template <typename T>
-T BoundedArray<T>::max() const {
+float BoundedArray::max() const {
     return maxVal;
 }
 
-template <typename T>
-unsigned BoundedArray<T>::size() const {
+unsigned BoundedArray::size() const {
     return values.size();
 }

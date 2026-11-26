@@ -79,15 +79,15 @@ void Device::parseMessage(const char* _data, unsigned _length) {
             break;
 
         case Get::Packet:
-            // One packet of data
             struct DataPacket {
                 Type type;
                 Padding unused;
+                Uint32 time;
                 float position;
                 float force;
                 Uint16 temperature;
             };
-            collectedData.addFrame(((DataPacket*)_data)->position, 
+            collectedData.addFrame(((DataPacket*)_data)->time, ((DataPacket*)_data)->position,
                 ((DataPacket*)_data)->force, ((DataPacket*)_data)->temperature);
             i += sizeof(DataPacket);
             break;

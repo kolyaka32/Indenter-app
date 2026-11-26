@@ -5,16 +5,16 @@
 
 #pragma once
 
-#include "boundedArray.cpp"
+#include "boundedArray.hpp"
 
 
 // Class for storing collected data and show it
 class CollectedData {
 private:
-    // ! Should add time scale
-    BoundedArray<float> positions;  // ! Should remove templated part
-    BoundedArray<float> forces;
-    BoundedArray<float> temperatures;
+    BoundedArray time;
+    BoundedArray positions;
+    BoundedArray forces;
+    BoundedArray temperatures;
     float prevPos;
     float posNull;  // ! Should be moved to bounded array
     float forceNull;
@@ -22,17 +22,17 @@ private:
 protected:
     bool changed;  // Flag, is changed since last save
 
-    void addData(float position, float force, Uint16 temp);
+    void addData(Uint32 time, float position, float force, Uint16 temp);
 
 public:
     CollectedData();
     ~CollectedData();
     void reset();
-    void addFrame(float position, float force, Uint16 temp);
+    void addFrame(Uint32 time, float position, float force, Uint16 temp);
 
-    const BoundedArray<float>& getPositions() const;
-    const BoundedArray<float>& getForces() const;
-    const BoundedArray<float>& getTemperatures() const;
+    const BoundedArray& getPositions() const;
+    const BoundedArray& getForces() const;
+    const BoundedArray& getTemperatures() const;
 
     unsigned getLineCount() const;
     float getLastForce() const;

@@ -8,7 +8,8 @@
 
 
 CollectedData::CollectedData()
-: positions(),
+: time(),
+positions(),
 forces(),
 temperatures(),
 prevPos(0.0),
@@ -19,6 +20,7 @@ saveRepeat(false) {}
 
 void CollectedData::reset() {
     changed = false;
+    time.reset();
     positions.reset();
     forces.reset();
     temperatures.reset();
@@ -31,21 +33,22 @@ CollectedData::~CollectedData() {
     }
 }
 
-void CollectedData::addFrame(float _pos, float _force, Uint16 _temp) {
+void CollectedData::addFrame(Uint32 _time, float _pos, float _force, Uint16 _temp) {
     // Check, if at new place
     if (positions.size()) {
         if (saveRepeat || _pos != prevPos) {
-            addData(_pos, _force, _temp);
+            addData(_time, _pos, _force, _temp);
         }
     } else {
-        addData(_pos, _force, _temp);
+        addData(_time, _pos, _force, _temp);
     }
 }
 
-void CollectedData::addData(float _pos, float _force, Uint16 _temp) {
+void CollectedData::addData(Uint32 _time, float _pos, float _force, Uint16 _temp) {
+    time.add(_time/1000.0f);
     positions.add(_pos + posNull);
     forces.add(_force + forceNull);
-    temperatures.add(_temp/10.0);
+    temperatures.add(_temp/10.0f);
 
     // Set that changed
     prevPos = _pos;
@@ -74,15 +77,15 @@ float CollectedData::getLastTemp() const {
     return 0.0;
 }
 
-const BoundedArray<float>& CollectedData::getPositions() const {
+const BoundedArray& CollectedData::getPositions() const {
     return positions;
 }
 
-const BoundedArray<float>& CollectedData::getForces() const {
+const BoundedArray& CollectedData::getForces() const {
     return forces;
 }
 
-const BoundedArray<float>& CollectedData::getTemperatures() const {
+const BoundedArray& CollectedData::getTemperatures() const {
     return temperatures;
 }
 
@@ -161,7 +164,7 @@ void CollectedData::save(const char* _fileName) {
 
     // Write data
     for (unsigned i=0; i < positions.size(); ++i) {
-        SDL_IOprintf(fout, "%.1f; %.3f; %.1f\n", positions[i], forces[i], temperatures[i]);
+        SDL_IOprintf(fout, "%4d %.2f %.1f; %.3f; %.1f\n", i, time[i], positions[i], forces[i], temperatures[i]);
     }
     changed = false;
 

@@ -6,9 +6,8 @@
 #include "chart.hpp"
 
 
-template <typename xAxis, typename yAxis>
-Chart<xAxis, yAxis>::Chart(const Window& _window, float _X, float _Y, float _W, float _H,
-    const BoundedArray<xAxis>& _pos, const BoundedArray<yAxis>& _val, const LanguagedText&& _title, SDL_Color _color)
+Chart::Chart(const Window& _window, float _X, float _Y, float _W, float _H,
+    const BoundedArray& _pos, const BoundedArray& _val, const LanguagedText&& _title, SDL_Color _color)
 : Template(_window),
 pos(_pos),
 val(_val),
@@ -29,8 +28,7 @@ xMarks {
     update();
 }
 
-template <typename xAxis, typename yAxis>
-void Chart<xAxis, yAxis>::update() {
+void Chart::update() {
     yMarks[0].setValues(val.max());
     yMarks[1].setValues(val.max()*3/4+val.min()/4);
     yMarks[2].setValues(val.max()/2+  val.min()/2);
@@ -40,8 +38,7 @@ void Chart<xAxis, yAxis>::update() {
     xMarks[1].setValues(pos.max());
 }
 
-template <typename xAxis, typename yAxis>
-void Chart<xAxis, yAxis>::blit() const {
+void Chart::blit() const {
     // Draw background
     window.setDrawColor(WHITE);
     window.drawRect(drawRect);

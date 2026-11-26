@@ -10,25 +10,24 @@
 
 
 // Data type, storing getted value with known upper and lower borders
-template <typename T>
 class BoundedArray {
 private:
-    std::vector<T> values;
-    T minVal, maxVal;
+    std::vector<float> values;
+    float minVal, maxVal;
 
 public:
-   BoundedArray();
-   ~BoundedArray();
-   // Clear all values
-   void reset();
-   // Add new value with update of min/max
-   void add(const T object);
-   // Offset all values by offset (including min/max)
-   void offsetBy(const T offset);
+    BoundedArray();
+    ~BoundedArray();
+    // Clear all values
+    void reset();
+    // Add new value with update of min/max
+    void add(float object);
+    // Offset all values by offset (including min/max)
+    void offsetBy(float offset);
 
-   // Getters
-   const T operator[](unsigned pos) const;
-    T min() const;
-    T max() const;
+    // Getters
+    float operator[](unsigned pos) const;
+    float min() const;
+    float max() const;
     unsigned size() const;
 };

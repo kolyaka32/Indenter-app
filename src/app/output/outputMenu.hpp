@@ -6,7 +6,7 @@
 #pragma once
 
 #include "collectedData.hpp"
-#include "chart.cpp"
+#include "chart.hpp"
 
 
 // Object for interact with collected data (show and save)
@@ -17,8 +17,8 @@ private:
     GUI::StaticText title;
     SDL_FRect separateRect;
     // Getted data
-    Chart<float, float> forceChart;
-    Chart<float, float> tempertureChart;
+    Chart forceChart;
+    Chart tempertureChart;
     GUI::DynamicText forceText;
     GUI::DynamicText tempText;
     GUI::DynamicText counterText;
