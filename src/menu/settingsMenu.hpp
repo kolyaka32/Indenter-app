@@ -37,6 +37,8 @@ class SettingsMenu : public GUI::SubWindow {
     GUI::StaticText creditCopyright;
 
     // Reset buttons
+    GUI::StaticText saveRepeatText;
+    GUI::Checkbox saveRepeatCheck;
     GUI::TextButton resetButton;
     GUI::TextButton exitButton;
     GUI::TextButton closeButton;

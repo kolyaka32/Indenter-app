@@ -23,6 +23,8 @@ rect(_object.rect) {
     _object.texture = nullptr;
 }
 
+GUI::TextureTemplate::~TextureTemplate() noexcept {}
+
 void GUI::TextureTemplate::move(float _X, float _Y) {
     rect.x += _X*window.getWidth();
     rect.y += _Y*window.getHeight();

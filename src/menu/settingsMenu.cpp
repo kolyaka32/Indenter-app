@@ -28,17 +28,27 @@ musicSlider{_window, 0.5, 0.64, 0.5, audio.music.getVolume()},
 soundText{_window, {"Sounds", "Звуки", "Geräusche", "Гук"}, {0.5, 0.7, .frame=1}},
 soundSlider{_window, 0.5, 0.76, 0.5, audio.sounds.getVolume()},
 #endif
-creditTitle(_window, {"About", "О приложении"}, {0.5, 0.48, .frame=2, .height=GUI::Info}),
-creditText(_window, {"\"Indenter\" app", "Приложение \"Индентер\""}, {0.5, 0.52, .frame=1, .height=GUI::SubTitle}),
+creditTitle(_window, {"About", "О приложении"},
+    {0.5, 0.48, .frame=2, .height=GUI::Info}),
+creditText(_window, {"\"Indenter\" app", "Приложение \"Индентер\""},
+    {0.5, 0.52, .frame=1, .height=GUI::SubTitle}),
 creditLicense(_window, {"Distributed under a license GNU GPL v3.0",
-    "Распространяется по лицензии GNU GPL v3.0"}, {0.5, 0.55, .frame=1}),
+    "Распространяется по лицензии GNU GPL v3.0"},
+    {0.5, 0.55, .frame=1}),
 creditCathedra(_window, {"department \"Robotics and integrated automation\"",
-    "кафедра \"Робототехника и комплексная автоматизация\""}, {0.5, 0.61, .frame=1}),
-creditCopyright(_window, {"© 2026. BMSTU,", "© 2026. МГТУ им. Баумана,"}, {0.5, 0.58, .frame=1}),
-//exitButton{_window, {"Close", "Закрыть", "Ausfahrt", "Выхад"}, {0.5, 0.82, .frame=1}}
-resetButton(_window, {"Reset data", "Очистить данные"}, {0.5, 0.72, .frame=1}),
-exitButton{_window, {"Exit from app", "Выйти из приложения"}, {0.5, 0.78, .frame=1}},
-closeButton{_window, {"Close", "Закрыть"}, {0.5, 0.84, .frame=1}}
+    "кафедра \"Робототехника и комплексная автоматизация\""},
+    {0.5, 0.61, .frame=1}),
+creditCopyright(_window, {"© 2026. BMSTU,", "© 2026. МГТУ им. Баумана,"},
+    {0.5, 0.58, .frame=1}),
+saveRepeatText(_window, {"Save repeat packets:", "Сохранять повторяющиеся пакеты:"},
+    {(LanguagedText::getLanguage()==Language::Russian ? 0.58f : 0.53f), 0.69, .frame=1, .horAli=GUI::Right}),
+saveRepeatCheck(_window, collectedData.saveRepeat, (LanguagedText::getLanguage()==Language::Russian ? 0.6f : 0.55f), 0.69),
+resetButton(_window, {"Reset data", "Очистить данные"},
+    {0.5, 0.74, .frame=1}),
+exitButton{_window, {"Exit from app", "Выйти из приложения"},
+    {0.5, 0.79, .frame=1}},
+closeButton{_window, {"Close", "Закрыть"},
+    {0.5, 0.84, .frame=1}}
 {}
 
 bool SettingsMenu::click(const Mouse _mouse) {
@@ -61,6 +71,9 @@ bool SettingsMenu::click(const Mouse _mouse) {
         }
         if (resetButton.in(_mouse)) {
             collectedData.reset();
+            return true;
+        }
+        if (saveRepeatCheck.click(_mouse)) {
             return true;
         }
         // Check on changing language
@@ -186,6 +199,8 @@ void SettingsMenu::blit() const {
         creditCathedra.blit();
         creditCopyright.blit();
         // Additional buttons
+        saveRepeatText.blit();
+        saveRepeatCheck.blit();
         resetButton.blit();
         exitButton.blit();
         closeButton.blit();

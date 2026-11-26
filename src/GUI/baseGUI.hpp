@@ -63,6 +63,7 @@ namespace GUI {
         TextureTemplate(const Window& window, SDL_FRect rect, SDL_Texture* texture = nullptr);
         TextureTemplate(const TextureTemplate& object) = delete;
         TextureTemplate(TextureTemplate&& object) noexcept;
+        virtual ~TextureTemplate() noexcept;
         void move(float X, float Y) override;
         void blit() const override;
         void blitRotated(float angle) const;
@@ -79,7 +80,7 @@ namespace GUI {
         RoundedBackplate(const Window& window, const SDL_FRect& rect, int radius, int border,
             Color frontColor = GREY, Color backColor = BLACK) noexcept;
         RoundedBackplate(RoundedBackplate&& object) noexcept;
-        ~RoundedBackplate() noexcept;
+        ~RoundedBackplate() noexcept override;
     };
 
 
@@ -92,7 +93,7 @@ namespace GUI {
             float border, Color frontColor = GREY, Color backColor = BLACK) noexcept;
         RectBackplate(const RectBackplate& copyObject) noexcept;
         RectBackplate(RectBackplate&& moveObject) noexcept;
-        ~RectBackplate() noexcept;
+        ~RectBackplate() noexcept override;
     };
 
 
@@ -103,7 +104,7 @@ namespace GUI {
         Arrow(const Window& window, const SDL_FRect& rect, Color color = BLACK) noexcept;
         Arrow(const Arrow& copyObject) noexcept;
         Arrow(Arrow&& moveObject) noexcept;
-        ~Arrow() noexcept;
+        ~Arrow() noexcept override;
     };
 
 
@@ -169,8 +170,9 @@ namespace GUI {
      public:
         Animation(const Window& window, float X, float Y, float width, float height, Animations type);
         Animation(const Window& window, const SDL_FRect& destination, Animations type);
+        Animation(const Animation& object) = delete;
         Animation(Animation&& object) noexcept;
-        ~Animation() noexcept;
+        ~Animation() noexcept override;
         void update();
     };
     #endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
@@ -228,7 +230,7 @@ namespace GUI {
             rect = arguments.getRect(window, texture);
         }
         StaticText(StaticText&& object) noexcept;
-        ~StaticText() noexcept;
+        ~StaticText() noexcept override;
     };
 
 
@@ -242,7 +244,7 @@ namespace GUI {
         DynamicText(const Window& window, const LanguagedText&& texts,
             const TextArgument&& arguments) noexcept;
         DynamicText(DynamicText&& object) noexcept;
-        ~DynamicText() noexcept;
+        ~DynamicText() noexcept override;
         template <typename ...Args>
         void setValues(Args&& ...args) {
             window.destroy(texture);  // Clearing previous
@@ -289,18 +291,19 @@ namespace GUI {
         TypeField(const Window& window, const TextArgument&& arguments,
             size_t length = 16, const char* start = "") noexcept;
         TypeField(TypeField&& object) noexcept;
-        ~TypeField() noexcept;
-        const char* getString();             // Return typed string
-        void setString(const char* string);  // Replace text with new string
+        ~TypeField() noexcept override;
+        const char* getString();               // Return typed string
+        void setString(const char* string);    // Replace text with new string
+
         // Main cycle
-        bool writeString(const char* str);   // Write string to buffer at caret position
-        Code type(SDL_Keycode code);         // Processing special keycodes (like arrows, home, CTRL-C...)   
-        void update(float mouseX);           // Highlated area of typing
-        bool checkOff(const Mouse mouse);    // Check if click in other place, true if end entering
-        Code click(const Mouse mouse);       // Set caret for typing at specified place
-        void unclick();                      // Reset pressing
+        bool writeString(const char* str);     // Write string to buffer at caret position
+        Code type(SDL_Keycode code);           // Processing special keycodes (like arrows, home, CTRL-C...)   
+        void update(float mouseX);             // Highlated area of typing
+        bool checkOff(const Mouse mouse);      // Check if click in other place, true if end entering
+        Code click(const Mouse mouse);         // Set caret for typing at specified place
+        void unclick();                        // Reset pressing
         void move(float X, float Y) override;  // Move current box
-        void blit() const override;          // Draw current text with selection at screen
+        void blit() const override;            // Draw current text with selection at screen
     };
 
 
@@ -327,6 +330,24 @@ namespace GUI {
      public:
         TextButton(const Window& window, const LanguagedText&& texts, const TextArgument&& arguments);
         TextButton(TextButton&& object) noexcept;
+        void move(float X, float Y) override;
+        void blit() const override;
+    };
+
+
+    // Switchable object for bool variable
+    class Checkbox : public TextureTemplate {
+     private:
+        bool& state;
+        GUI::RectBackplate backplate;
+
+     public:
+        Checkbox(const Window& window, bool& state, SDL_FRect rect);
+        Checkbox(const Window& window, bool& state, float X, float Y, float W = 0.02);
+        Checkbox(const Checkbox& object) = delete;
+        Checkbox(Checkbox&& object) noexcept;
+        ~Checkbox() noexcept override;
+        Code click(const Mouse mouse);
         void move(float X, float Y) override;
         void blit() const override;
     };

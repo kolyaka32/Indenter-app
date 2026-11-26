@@ -39,7 +39,7 @@ void InitFile::loadSettings() {
             } else if (lang == "belarusian") {
                 LanguagedText::setLanguage(Language::Bellarusian);
             }*/
-        } else if (parameter == "autocount") {
+        } else if (parameter == "autoSaveCount") {
             ProgramMenu::autosaveCount = getValue(currentLine);
         } else if (parameter == "forceOffset") {
             collectedData.setForceNull(getValue(currentLine) / 100.0f);
@@ -87,7 +87,7 @@ void InitFile::saveSettings() {
         break;
     }
     // Writing autosave counter (for correct loading)
-    outSettings << "autocount = " << ProgramMenu::autosaveCount << '\n';
+    outSettings << "autoSaveCount = " << ProgramMenu::autosaveCount << '\n';
     outSettings << "forceOffset = " << int(collectedData.getForceNull()*100.0f) << '\n';
     outSettings << "posOffset = " << int(collectedData.getPosNull()*100.0f) << '\n';
     outSettings << "saveRepeat = " << collectedData.saveRepeat << '\n';

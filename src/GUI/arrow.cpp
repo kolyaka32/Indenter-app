@@ -12,21 +12,12 @@ GUI::Arrow::Arrow(const Window& _window, float _X, float _Y, float _H, Color _co
 
 GUI::Arrow::Arrow(const Window& _window, const SDL_FRect& _rect, Color _color) noexcept
 : TextureTemplate(_window, _rect, _window.createTexture(_rect.w, _rect.h)) {
+    SDL_FColor color = {0.0, 0.0, 0.0, 1.0};  // Black
     SDL_Vertex vertex[3] = {
-        {  // Left point
-            {0.0, 0.0},
-            {0.0, 0.0, 0.0, 1.0},  // Black
-        },
-        {  // Down point
-            {rect.h/2, rect.h},
-            {0.0, 0.0, 0.0, 1.0},  // Black
-        },
-        {  // Right point
-            {rect.h, 0.0},
-            {0.0, 0.0, 0.0, 1.0},  // Black
-        },
+        {{0.0,      0.0},    color},  // Left point
+        {{rect.h/2, rect.h}, color},  // Down point
+        {{rect.h,   0.0},    color},  // Right point
     };
-    window.setDrawColor(_color);
     window.setRenderTarget(texture);
     window.drawGeometry(vertex, 3);
     window.resetRenderTarget();
