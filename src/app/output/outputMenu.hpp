@@ -32,7 +32,7 @@ private:
     GUI::TextButton saveButton;
     GUI::TextButton folderButton;
 
-    // Save system
+    // Save system  // ! Rework to own class
     LanguagedText filterText;  // Text for filter hint
     const SDL_DialogFileFilter filter;  // Filter for selection data file
     char saveLocation[100];    // Location with directory for save/load datas

@@ -104,7 +104,7 @@ void OutputMenu::blit() const {
     setForceNullAsAvarButton.blit();
     setPosNullButton.blit();
 
-    if (collectedData.isUpdated()) {
+    if (collectedData.isChanged()) {
         notSavedText.blit();
     }
     saveButton.blit();

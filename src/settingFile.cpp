@@ -17,7 +17,6 @@
 #include "app/output/collectedData.hpp"
 
 
-// Data, load from setting file
 void InitFile::loadSettings() {
     // Reading file
     std::ifstream inSettings(SETTING_FILE);
@@ -46,6 +45,8 @@ void InitFile::loadSettings() {
             collectedData.setForceNull(getValue(currentLine) / 100.0f);
         } else if (parameter == "posOffset") {
             collectedData.setPosNull(getValue(currentLine) / 100.0f);
+        } else if (parameter == "saveRepeat") {
+            collectedData.saveRepeat = getValue(currentLine);
         } /*else if (parameter == "music") {
             audio.music.setVolume(getValue(currentLine) / 100.0f);
         } else if (parameter == "sounds") {
@@ -56,7 +57,6 @@ void InitFile::loadSettings() {
     inSettings.close();
 }
 
-// Data, saved to setting file
 void InitFile::saveSettings() {
     // Creating output file
     std::ofstream outSettings(SETTING_FILE);
@@ -86,15 +86,17 @@ void InitFile::saveSettings() {
     default:
         break;
     }
+    // Writing autosave counter (for correct loading)
+    outSettings << "autocount = " << ProgramMenu::autosaveCount << '\n';
+    outSettings << "forceOffset = " << int(collectedData.getForceNull()*100.0f) << '\n';
+    outSettings << "posOffset = " << int(collectedData.getPosNull()*100.0f) << '\n';
+    outSettings << "saveRepeat = " << collectedData.saveRepeat << '\n';
 
     // Writing music and sounds volumes
     //outSettings << "music = " << int(audio.music.getVolume()*100) << '\n';
     //outSettings << "sounds = " << int(audio.sounds.getVolume()*100) << '\n';
 
-    // Writing autosave counter (for correct loading)
-    outSettings << "autocount = " << ProgramMenu::autosaveCount << '\n';
-    outSettings << "forceOffset = " << int(collectedData.getForceNull()*100.0f) << '\n';
-    outSettings << "posOffset = " << int(collectedData.getPosNull()*100.0f) << '\n';
+    outSettings << std::endl;
 }
 
 #endif  // (USE_SETTING_FILE)

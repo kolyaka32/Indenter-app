@@ -14,10 +14,11 @@ temperatures(),
 prevPos(0.0),
 posNull(0.0),
 forceNull(0.0),
-saved(false) {}
+changed(false),
+saveRepeat(false) {}
 
 void CollectedData::reset() {
-    saved = false;
+    changed = false;
     positions.reset();
     forces.reset();
     temperatures.reset();
@@ -25,7 +26,7 @@ void CollectedData::reset() {
 
 CollectedData::~CollectedData() {
     // Check, if not saved
-    if (saved) {
+    if (changed) {
         trySave("data");
     }
 }
@@ -33,7 +34,7 @@ CollectedData::~CollectedData() {
 void CollectedData::addFrame(float _pos, float _force, Uint16 _temp) {
     // Check, if at new place
     if (positions.size()) {
-        if (_pos != prevPos) {
+        if (saveRepeat || _pos != prevPos) {
             addData(_pos, _force, _temp);
         }
     } else {
@@ -48,11 +49,11 @@ void CollectedData::addData(float _pos, float _force, Uint16 _temp) {
 
     // Set that changed
     prevPos = _pos;
-    saved = true;
+    changed = true;
 }
 
-bool CollectedData::isUpdated() const {
-    return saved;
+bool CollectedData::isChanged() const {
+    return changed;
 }
 
 unsigned CollectedData::getLineCount() const {
@@ -109,7 +110,6 @@ void CollectedData::setPosNull() {
 
 void CollectedData::setForceNull(float _forceNull) {
     if (forces.size()) {
-        // ! Should check timings - O(n) complexity
         forces.offsetBy(_forceNull);
     }
     forceNull += _forceNull;
@@ -163,8 +163,7 @@ void CollectedData::save(const char* _fileName) {
     for (unsigned i=0; i < positions.size(); ++i) {
         SDL_IOprintf(fout, "%.1f; %.3f; %.1f\n", positions[i], forces[i], temperatures[i]);
     }
-    // Updating flag
-    saved = false;
+    changed = false;
 
     // Closing file
     SDL_CloseIO(fout);
