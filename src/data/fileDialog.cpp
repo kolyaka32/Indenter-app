@@ -8,7 +8,7 @@
 
 FileDialog::FileDialog(const Window& _window, const char* _folder, const LanguagedText&& _filter, const char* _pattern,
     const char* _baseName)
-: window(_window),
+: window(_window.window),
 filter{nullptr, _pattern} {
     SDL_CreateDirectory(_folder);
     SDL_snprintf(filterText, sizeof(filterText), "%s", _filter.getString().c_str());
@@ -19,9 +19,9 @@ filter{nullptr, _pattern} {
 }
 
 void FileDialog::showSave(SDL_DialogFileCallback _callback, void* _argument) const {
-    window.showSaveFileDialog(_callback, &filter, 1, saveLocation, _argument);
+    SDL_ShowSaveFileDialog(_callback, _argument, window, &filter, 1, saveLocation);
 }
 
 void FileDialog::showOpen(SDL_DialogFileCallback _callback, void* _argument) const {
-    window.showOpenFileDialog(_callback, &filter, 1, saveLocation, false, _argument);
+    SDL_ShowOpenFileDialog(_callback, _argument, window, &filter, 1, saveLocation, false);
 }

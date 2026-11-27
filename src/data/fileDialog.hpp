@@ -13,7 +13,7 @@
 // System for work with file dialogs (save/load files)
 class FileDialog {
 private:
-    const Window& window;
+    SDL_Window* window;
     SDL_DialogFileFilter filter;  // Filter for selection data file
     char filterText[100];
     char saveLocation[100];  // Location with directory for save/load

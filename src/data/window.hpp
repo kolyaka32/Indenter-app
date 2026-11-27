@@ -121,11 +121,8 @@ class Window {
     void setTitle(const LanguagedText newTitles) const;
     void updateTitle() const;
 
-    // Work with dialog
-    void showSaveFileDialog(SDL_DialogFileCallback callback, const SDL_DialogFileFilter *filters,
-        int nfilters, const char *default_location, void* arguments) const;
-    void showOpenFileDialog(SDL_DialogFileCallback callback, const SDL_DialogFileFilter *filters,
-        int nfilters, const char *default_location, bool allowMany, void* arguments) const;
+    // Straight access for SDL_Window object
+    friend class FileDialog;
 };
 
 
