@@ -10,7 +10,7 @@
 
 GUI::TextButton::TextButton(const Window& _window, const LanguagedText&& _texts, const TextArgument&& _arguments)
 : StaticText(_window, std::move(_texts), std::move(_arguments)),
-backplate(_window, {rect.x-10, rect.y-1, rect.w+20, rect.h+4}, (rect.h+4)/2, 3) {}
+backplate(_window, {rect.x-10, rect.y-1, rect.w+20, rect.h+4}, (rect.h+4)/2, 3, _arguments.backColor) {}
 
 GUI::TextButton::TextButton(TextButton&& _object) noexcept
 : StaticText(std::move(_object)),

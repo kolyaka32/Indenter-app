@@ -117,6 +117,7 @@ void Program::load(const Window& _window, const char* _fileName) {
         unsigned subNode = 0;
         char speed = 0;
         char direction = 0;
+        char mode = 0;
         char* text = nullptr;
 
         // Data for switch
@@ -155,17 +156,11 @@ void Program::load(const Window& _window, const char* _fileName) {
             node = new GetPosNode{_window, x, y};
             break;
 
-        case NodeType::WaitReachForce:
+        case NodeType::WaitForce:
+            mode = getChar(c);
             text = getString(c);
-            if (text) {
-                node = new WaitReachNode{_window, x, y, text};
-            }
-            break;
-
-        case NodeType::WaitLoseForce:
-            text = getString(c);
-            if (text) {
-                node = new WaitLoseNode{_window, x, y, text};
+            if (mode && text) {
+                node = new WaitForceNode{_window, x, y, mode, text};
             }
             break;
 

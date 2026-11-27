@@ -5,17 +5,21 @@
 
 #pragma once
 
-#include "getPos.hpp"
+#include "node.hpp"
 
 
-// Node for wait, until force exceed target
-class WaitReachNode : public Node {
+// Node for wait, until force exceed or loose target value
+class WaitForceNode : public Node {
 private:
+    bool mode;  // 0: as exceed, 1: as loose
+
     GUI::StaticText text;
+    GUI::TextButton moreButton;
+    GUI::TextButton lessButton;
     GUI::TypeBox forceTyper;
 
 public:
-    WaitReachNode(const Window& window, float X, float Y, const char* force = "10");
+    WaitForceNode(const Window& window, float X, float Y, char type = '0', const char* force = "10");
 
     // Programming
     Node* copy() override;

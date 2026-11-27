@@ -7,6 +7,7 @@
 
 #include "node.hpp"
 
+
 // Node for stop program execution
 class HaltNode : public Node {
 private:

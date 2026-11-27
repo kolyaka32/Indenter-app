@@ -7,10 +7,11 @@
 
 #include "node.hpp"
 
+
 // Node for set force graph null
 class SetForceNullNode : public Node {
 private:
-    int type;  // 0: as avarage, 1: as last
+    int mode;  // 0: as avarage, 1: as last
 
     const float posX;
     GUI::StaticText text;
@@ -20,7 +21,7 @@ private:
     GUI::RectBackplate lastButtonRect;
 
 public:
-    SetForceNullNode(const Window &window, float X, float Y, char type = '0');
+    SetForceNullNode(const Window &window, float X, float Y, char mode = '0');
 
     // Programming
     GUI::Code click(const Mouse mouse) override;

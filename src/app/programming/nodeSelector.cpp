@@ -17,8 +17,7 @@ background(_window, _X, _Y, _W, _H, 2.0) {
     addNode<SetStepNode>(_X, _Y, _H);
     addNode<SetTargetNode>(_X, _Y, _H);
     addNode<GetPosNode>(_X, _Y, _H);
-    addNode<WaitReachNode>(_X, _Y, _H);
-    addNode<WaitLoseNode>(_X, _Y, _H);
+    addNode<WaitForceNode>(_X, _Y, _H);
     addNode<SetForceNullNode>(_X, _Y, _H);
     addNode<SaveDataNode>(_X, _Y, _H);
     addNode<CommentNode>(_X, _Y, _H);

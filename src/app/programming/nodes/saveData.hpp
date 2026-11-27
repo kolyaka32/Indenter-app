@@ -7,6 +7,7 @@
 
 #include "node.hpp"
 
+
 // Node for save collected data
 class SaveDataNode : public Node {
 private:

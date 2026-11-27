@@ -22,12 +22,11 @@ enum class NodeType : char {
     SetTarget = 't',  // Set absolute [target], move to
 
     // Sensors, waiting until condition
-    GetPos         = 'p',  // Command to get and save current position
-    WaitReachForce = 'r',  // Wait until exceed [force]
-    WaitLoseForce  = 'd',  // Wait until get less [force]
-    SetForceNull   = 'u',  // Set force null [type]
-    SetPosNull     = 'y',  // Set position null
-    SaveData       = 'a',  // Save collected data as [name]
+    GetPos       = 'p',  // Command to get and save current position
+    WaitForce    = 'f',  // Wait until get [more/less] [force]
+    SetForceNull = 'u',  // Set force null [type]
+    SetPosNull   = 'y',  // Set position null
+    SaveData     = 'a',  // Save collected data as [name]
 
     // Control commands
     Comment = 'c',  // [Comment] for readability

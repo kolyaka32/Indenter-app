@@ -7,6 +7,7 @@
 
 #include "node.hpp"
 
+
 // Node for stop movement
 class SetStopNode : public Node {
 private:

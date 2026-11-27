@@ -200,7 +200,7 @@ namespace GUI {
         Aligment horAli = Aligment::Midle;  // horizontal aligment
         Aligment verAli = Aligment::Midle;  // vertical aligment
         Color textColor = WHITE;
-        Color backColor = BLACK;
+        Color backColor = GREY;
 
         template <typename ...Args>
         SDL_Texture* createTexture(const Window& window, const LanguagedText& texts, Args... args) const;
