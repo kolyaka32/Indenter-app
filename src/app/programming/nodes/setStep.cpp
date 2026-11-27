@@ -88,6 +88,6 @@ Node* SetStepNode::handlReachPos() const {
 }
 
 void SetStepNode::save(SDL_IOStream* _fout) {
-    saveMain(_fout, 'e');
+    saveMain(_fout, NodeType::SetSteps);
     SDL_IOprintf(_fout, " %c %s", getLetter(speed), distanceTyper.getString());
 }

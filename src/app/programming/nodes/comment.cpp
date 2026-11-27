@@ -63,6 +63,6 @@ Node* CommentNode::use() {
 }
 
 void CommentNode::save(SDL_IOStream* _fout) {
-    saveMain(_fout, 'c');
+    saveMain(_fout, NodeType::Comment);
     SDL_IOprintf(_fout, " %s", typer.getString());
 }

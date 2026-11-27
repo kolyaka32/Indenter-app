@@ -67,6 +67,6 @@ Node* SetMoveNode::use() {
 }
 
 void SetMoveNode::save(SDL_IOStream* _fout) {
-    saveMain(_fout, 'm');
+    saveMain(_fout, NodeType::SetMove);
     SDL_IOprintf(_fout, " %c %c", getLetter(speed), getLetter(direction));
 }

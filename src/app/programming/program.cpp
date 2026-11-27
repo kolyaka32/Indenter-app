@@ -94,7 +94,7 @@ void Program::load(const Window& _window, const char* _fileName) {
 
     // Struct for save nodes with corresponding subNode argument
     struct NodeLoad {
-        char type;  // Not using, for better comparison
+        NodeType type;  // Not using for now, for more subnodes
         Node* node;
         unsigned next;
         unsigned subNode;
@@ -105,7 +105,7 @@ void Program::load(const Window& _window, const char* _fileName) {
     // Read all getted data
     for (char* c = buffer; *c; ++c) {
         // Get type
-        char type = *c;
+        NodeType type = (NodeType)*c;
         c++;
         // Get x position
         float x = getInt(c) / 100.0;
@@ -123,21 +123,21 @@ void Program::load(const Window& _window, const char* _fileName) {
         Node* node = nullptr;
         // Create node by text description
         switch (type) {
-        case 'i':
+        case NodeType::Start:
             node = new StartNode{_window, x, y};
             break;
 
-        case 's':
+        case NodeType::SetStop:
             node = new SetStopNode{_window, x, y};
             break;
 
-        case 'm':
+        case NodeType::SetMove:
             speed = getChar(c);
             direction = getChar(c);
             node = new SetMoveNode{_window, x, y, speed, direction};
             break;
 
-        case 'e':
+        case NodeType::SetSteps:
             speed = getChar(c);
             text = getString(c);
             if (text) {
@@ -145,51 +145,51 @@ void Program::load(const Window& _window, const char* _fileName) {
             }
             break;
 
-        case 't':
+        case NodeType::SetTarget:
             speed = getChar(c);
             subNode = getInt(c);
             node = new SetTargetNode{_window, x, y, speed};
             break;
 
-        case 'p':
+        case NodeType::GetPos:
             node = new GetPosNode{_window, x, y};
             break;
 
-        case 'r':
+        case NodeType::WaitReachForce:
             text = getString(c);
             if (text) {
                 node = new WaitReachNode{_window, x, y, text};
             }
             break;
 
-        case 'd':
+        case NodeType::WaitLoseForce:
             text = getString(c);
             if (text) {
                 node = new WaitLoseNode{_window, x, y, text};
             }
             break;
 
-        case 'u':
+        case NodeType::SetForceNull:
             // Reinterpret speed as type
             speed = getChar(c);
-            node = new SetNullNode{_window, x, y, speed};
+            node = new SetForceNullNode{_window, x, y, speed};
             break;
 
-        case 'a':
+        case NodeType::SaveData:
             text = getString(c);
             if (text) {
                 node = new SaveDataNode{_window, x, y, text};
             }
             break;
 
-        case 'c':
+        case NodeType::Comment:
             text = getString(c);
             if (text) {
                 node = new CommentNode{_window, x, y, text};
             }
             break;
 
-        case 'h':
+        case NodeType::Halt:
             node = new HaltNode{_window, x, y};
             break;
         // ! Finish adding all nodes

@@ -3,11 +3,11 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include "setNull.hpp"
+#include "setForceNull.hpp"
 #include "../../output/collectedData.hpp"
 
 
-SetNullNode::SetNullNode(const Window& _window, float _X, float _Y, char _type)
+SetForceNullNode::SetForceNullNode(const Window& _window, float _X, float _Y, char _type)
 : Node(_window, _X, _Y, Textures::BlockLongAction),
 type(_type - '0'),
 posX(_X + (LanguagedText::getLanguage()==Language::Russian ? 0.014f : 0.002f)),
@@ -17,7 +17,7 @@ avarButtonRect(_window, posX+0.027f, _Y, 0.06, 0.03, 1.0, WHITE),
 lastButton(_window, {"last", "последнее"}, {posX, _Y, .horAli=GUI::Left, .textColor=BLACK}),
 lastButtonRect(_window, posX+0.027f, _Y, 0.06, 0.03, 1.0, WHITE) {}
 
-GUI::Code SetNullNode::click(const Mouse _mouse) {
+GUI::Code SetForceNullNode::click(const Mouse _mouse) {
     if (in(_mouse)) {
         if (type) {
             if (lastButtonRect.in(_mouse)) {
@@ -36,12 +36,12 @@ GUI::Code SetNullNode::click(const Mouse _mouse) {
     return GUI::None;
 }
 
-Node* SetNullNode::copy() {
-    return new SetNullNode{window, (rect.x+rect.w/2)/window.getWidth(),
+Node* SetForceNullNode::copy() {
+    return new SetForceNullNode{window, (rect.x+rect.w/2)/window.getWidth(),
         (rect.y+rect.h/2)/window.getHeight(), char(type+'0')};
 }
 
-void SetNullNode::move(float _X, float _Y) {
+void SetForceNullNode::move(float _X, float _Y) {
     Node::move(_X, _Y);
     text.move(_X, _Y);
     avarButton.move(_X, _Y);
@@ -50,7 +50,7 @@ void SetNullNode::move(float _X, float _Y) {
     lastButtonRect.move(_X, _Y);
 }
 
-void SetNullNode::blit() const {
+void SetForceNullNode::blit() const {
     Node::blit();
     text.blit();
     if (type) {
@@ -62,7 +62,7 @@ void SetNullNode::blit() const {
     }
 }
 
-Node* SetNullNode::use() {
+Node* SetForceNullNode::use() {
     if (type) {
         collectedData.setForceNullAsAvar();
     } else {
@@ -72,7 +72,7 @@ Node* SetNullNode::use() {
     return nextNode;
 }
 
-void SetNullNode::save(SDL_IOStream* _fout) {
-    saveMain(_fout, 'u');
+void SetForceNullNode::save(SDL_IOStream* _fout) {
+    saveMain(_fout, NodeType::SetForceNull);
     SDL_IOprintf(_fout, " %c", type+'0');
 }

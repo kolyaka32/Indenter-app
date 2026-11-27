@@ -68,5 +68,5 @@ Node* SaveDataNode::use() {
 }
 
 void SaveDataNode::save(SDL_IOStream* _fout) {
-    saveMain(_fout, 'a');
+    saveMain(_fout, NodeType::SaveData);
 }

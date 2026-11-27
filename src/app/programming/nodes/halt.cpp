@@ -31,5 +31,5 @@ Node* HaltNode::use() {
 }
 
 void HaltNode::save(SDL_IOStream* _fout) {
-    saveMain(_fout, 'h');
+    saveMain(_fout, NodeType::Halt);
 }

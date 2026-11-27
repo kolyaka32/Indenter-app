@@ -128,7 +128,7 @@ Node* SetTargetNode::handlReachPos() const {
 }
 
 void SetTargetNode::save(SDL_IOStream* _fout) {
-    saveMain(_fout, 't');
+    saveMain(_fout, NodeType::SetTarget);
 
     // Find subNode source
     unsigned pos = 0;

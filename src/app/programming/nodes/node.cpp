@@ -13,7 +13,8 @@ Node::Node(const Window& _window, float _X, float _Y, Textures _texture,
 connectableUp(_connectableUp),
 connectableDown(_connectableDown),
 delitable(_delitable),
-arrow(_window, _X-float(_window.getTexture(_texture)->w)/_window.getWidth()/2-0.01f, _Y, Textures::SlowSpeedButton),
+arrow(_window, _X-float(_window.getTexture(_texture)->w)/_window.getWidth()/2-0.01f, _Y,
+    Textures::SlowSpeedButton),
 previousNode(nullptr),
 nextNode(nullptr) {}
 
@@ -256,7 +257,7 @@ void Node::blitDirection(Direction _direction, const SDL_FRect _rect) const {
     }
 }
 
-void Node::saveMain(SDL_IOStream* _fout, char _type) {
+void Node::saveMain(SDL_IOStream* _fout, NodeType _type) {
     // Find position
     int x = (rect.x + rect.w/2)/window.getWidth() * 100;
     int y = (rect.y + rect.h/2)/window.getHeight() * 100;
@@ -265,9 +266,9 @@ void Node::saveMain(SDL_IOStream* _fout, char _type) {
     unsigned next = ProgramMenu::program.getNodePos(nextNode);
 
     // Write all data
-    SDL_IOprintf(_fout, "%c %02d %02d %03u", _type, x, y, next);
+    SDL_IOprintf(_fout, "%c %02d %02d %03u", (char)_type, x, y, next);
 }
 
 void Node::save(SDL_IOStream* _fout) {
-    saveMain(_fout, 'n');
+    saveMain(_fout, NodeType::None);
 }

@@ -10,34 +10,33 @@
 
 
 // posible variants of nodes
-enum class NodeType {
+enum class NodeType : char {
     // System nodes (can't create)
-    None,   // 'n'
-    Start,  // First node, from which program started, 'i'
+    None  = 'n',
+    Start = 'i',  // First node, from which program started
 
     // Control commands
-    SetStop,    // Command to stop move, 's'
-    SetMove,    // Set infinite movement in [selected] direction with [selected] speed, 'm'
-    SetSteps,   // Set realtive movement in [mm], work speed, 'e'
-    SetTarget,  // Set absolute [target], move to, 't'
+    SetStop   = 's',  // Command to stop move
+    SetMove   = 'm',  // Set infinite movement in [selected] direction with [selected] speed
+    SetSteps  = 'e',  // Set realtive movement in [mm], work speed
+    SetTarget = 't',  // Set absolute [target], move to
 
     // Sensors, waiting until condition
-    SavePos,         // Command to get and save current position, 'p'
-    WaitReachForce,  // Wait until exceed force, 'r'
-    WaitLoseForce,   // Wait until get less force, 'd'
-    SetNull,         // Set force null, 'u'
-    SaveData,        // Save collected data, 'a'
+    GetPos         = 'p',  // Command to get and save current position
+    WaitReachForce = 'r',  // Wait until exceed [force]
+    WaitLoseForce  = 'd',  // Wait until get less [force]
+    SetForceNull   = 'u',  // Set force null [type]
+    SetPosNull     = 'y',  // Set position null
+    SaveData       = 'a',  // Save collected data as [name]
 
     // Control commands
-    Comment,     // Comment for readability, 'c'
-    Halt,        // Stop program execution, set motor to stop 'h'
-    WhileStart,  // Infinite loop, store nothing, 'w'
-    WhileEnd,    // Store position of loop start, 'W'
-    LoopStart,   // Basic for-loop, store current position and end (as input parameter) 'l'
-    LoopEnd,     // Store position of loop start, 'L'
-
-    // Final count
-    Count,
+    Comment = 'c',  // [Comment] for readability
+    Halt    = 'h',  // Stop program execution, set motor to stop 
+    Wait    = 'v',  // Node for wait time in [sec]
+    //WhileStart = 'w',  // Infinite loop, store nothing
+    //WhileEnd   = 'W',  // Store position of loop start
+    //LoopStart  = 'l',  // Basic for-loop, store current position and end (as input parameter)
+    //LoopEnd    = 'L',  // Store position of loop start
 };
 
 // Simple individual block of command to execute in language with in visual
@@ -63,7 +62,7 @@ protected:
     SDL_FPoint getBottomPin() const;
     SDL_FPoint getUpperPin() const;
     // Save all basic parameters
-    void saveMain(SDL_IOStream* ofstream, char type);
+    void saveMain(SDL_IOStream* ofstream, NodeType type);
 
     // Internal types
     typedef Uint8 Speed;  // Speeds: slow=1, normal=2, fast=3

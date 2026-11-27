@@ -14,7 +14,7 @@
 #include "nodes/getPos.hpp"
 #include "nodes/waitReach.hpp"
 #include "nodes/waitLose.hpp"
-#include "nodes/setNull.hpp"
+#include "nodes/setForceNull.hpp"
 #include "nodes/saveData.hpp"
 #include "nodes/comment.hpp"
 #include "nodes/halt.hpp"
